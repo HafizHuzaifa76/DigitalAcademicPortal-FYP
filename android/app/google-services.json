@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "849792758725",
+    "project_id": "digital-academic-portal",
+    "storage_bucket": "digital-academic-portal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849792758725:android:10b9b0b477898c6a8911ac",
+        "android_client_info": {
+          "package_name": "com.example.digital_academic_portal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu3YCSGvdi_iH0eCpYIH3XL_sfE3yWdgY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
