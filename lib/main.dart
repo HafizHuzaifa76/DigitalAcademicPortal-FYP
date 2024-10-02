@@ -1,11 +1,25 @@
+import 'package:digital_academic_portal/features/admin/presentation/pages/AdministratorDashboardPage.dart';
+import 'package:digital_academic_portal/features/admin/shared/courses/presentation/bindings/CourseBindings.dart';
+import 'package:digital_academic_portal/features/admin/shared/courses/presentation/pages/AllCoursesPage.dart';
+import 'package:digital_academic_portal/features/admin/shared/courses/presentation/pages/DepartmentCoursePage.dart';
+import 'package:digital_academic_portal/features/admin/shared/student/presentation/bindings/StudentBindings.dart';
+import 'package:digital_academic_portal/features/admin/shared/student/presentation/pages/DepartmentStudentsPage.dart';
+import 'package:digital_academic_portal/features/admin/shared/student/presentation/pages/SemesterStudentsPage.dart';
+import 'package:digital_academic_portal/features/admin/shared/teachers/presentation/bindings/TeacherBindings.dart';
+import 'package:digital_academic_portal/features/admin/shared/teachers/presentation/pages/AllTeachersPage.dart';
+import 'package:digital_academic_portal/features/admin/shared/teachers/presentation/pages/DeptTeacherPage.dart';
 import 'package:digital_academic_portal/shared/presentation/pages/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
+import 'features/admin/shared/courses/presentation/pages/SemesterCoursePage.dart';
 import 'features/admin/shared/departments/presentation/bindings/DepartmentBindings.dart';
 import 'features/admin/shared/departments/presentation/pages/DepartmentPage.dart';
+import 'features/admin/shared/student/presentation/pages/AllStudentsPage.dart';
 import 'features/auth/presentation/bindings/AuthBinding.dart';
 
 Future<void> main() async {
@@ -13,6 +27,22 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const MyApp());
+  configLoading();
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..indicatorType = EasyLoadingIndicatorType.cubeGrid
+    ..loadingStyle = EasyLoadingStyle.custom
+    ..indicatorSize = 52.0
+    ..radius = 10.0
+    ..progressColor = Colors.blue
+    ..backgroundColor = const Color(0xFF9FE2BF)
+    ..indicatorColor = const Color(0xFF145849)
+    ..textColor = const Color(0xFF145849)
+    ..textStyle = const TextStyle(fontSize: 18, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold, color: Color(0xFF145849))
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = false;
 }
 
 class MyApp extends StatelessWidget {
@@ -26,26 +56,79 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF145849)),
         primaryColor: const Color(0xFF145849),
+        primaryColorLight: const Color(0xFFF2E8AD),
+        // primaryColorDark: const Color(0xFFE1AD01),
+        primaryColorDark: const Color(0xFF9FE2BF),
+        // primaryColorDark: const Color(0xFFc3dfb7),
+        // primaryColorLight: const Color(0xFF581420),
+        // primaryColorLight: const Color(0xFF881452),
         useMaterial3: true,
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF145849),
+          iconTheme: IconThemeData(color: Colors.white), // Set icon color to white
           centerTitle: true,
           titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold)
-        )
+        ),
       ),
       initialBinding: AuthBinding(),
+      builder: EasyLoading.init(),
+
       getPages: [
+        GetPage(
+            name: '/admin',
+            page: () => const AdministratorDashboardPage(),
+          // binding: DepartmentBinding()
+        ),
         GetPage(
             name: '/departments',
             page: () => const DepartmentPage(),
           binding: DepartmentBinding()
-        )
+        ),
+        GetPage(
+            name: '/departmentStudents',
+            page: () => DepartmentStudentsPage(deptName: Get.arguments['deptName'], sectionLength: Get.arguments['sectionLength'], deptCode: Get.arguments['deptCode'],),
+          binding: StudentBinding()
+        ),
+        GetPage(
+            name: '/semesterStudents',
+            page: () => SemesterStudentsPage(deptName: Get.arguments['deptName'], semester: Get.arguments['semester'],),
+          binding: StudentBinding()
+        ),
+        GetPage(
+            name: '/allStudents',
+            page: () => const AllStudentsPage(),
+            binding: StudentBinding()
+        ),
+        GetPage(
+            name: '/deptTeachers',
+            page: () => DeptTeacherPage(deptName: Get.arguments['deptName']),
+            binding: TeacherBinding()
+        ),
+        GetPage(
+            name: '/allTeachers',
+            page: () => const AllTeachersPage(),
+            binding: TeacherBinding()
+        ),
+        GetPage(
+          name: '/deptCourses',
+          page: () => DepartmentCoursePage(deptName: Get.arguments['deptName'], semestersList: Get.arguments['semesterList']),
+          binding: CourseBinding(),
+        ),
+        GetPage(
+            name: '/semesterCourses',
+            page: () => SemesterCoursePage(deptName: Get.arguments['deptName'], semester: Get.arguments['semester']),
+            binding: CourseBinding()
+        ),
+        GetPage(
+          name: '/allCourses',
+          page: () => const AllCoursesPage(),
+          binding: CourseBinding(),
+        ),
       ],
       home: const SplashScreen(),
     );
   }
 }
-
 
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {

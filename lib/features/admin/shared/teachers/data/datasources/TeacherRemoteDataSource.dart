@@ -9,6 +9,7 @@ abstract class TeacherRemoteDataSource{
   Future<TeacherModel> editTeacher(TeacherModel department);
   Future<void> deleteTeacher(String departmentName);
   Future<List<TeacherModel>> allTeachers();
+  Future<List<TeacherModel>> getTeachersByDepartment(String deptName);
 }
 
 class TeacherRemoteDataSourceImpl implements TeacherRemoteDataSource{
@@ -56,4 +57,14 @@ class TeacherRemoteDataSourceImpl implements TeacherRemoteDataSource{
         .toList();
   }
 
+  @override
+  Future<List<TeacherModel>> getTeachersByDepartment(String deptName) async {
+    final querySnapshot = await _firestore.collection('teachers')
+        .where('teacherDept', isEqualTo: deptName)
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) => TeacherModel.fromMap(doc.data()))
+        .toList();
+  }
 }

@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
+
 import '../controllers/TeacherController.dart';
 
-class TeacherPage extends StatefulWidget {
-  const TeacherPage({super.key});
+
+class AllTeachersPage extends StatefulWidget {
+
+  const AllTeachersPage({super.key});
 
   @override
-  State<TeacherPage> createState() => _TeacherPageState();
+  State<AllTeachersPage> createState() => _AllTeachersPageState();
 }
 
-class _TeacherPageState extends State<TeacherPage> {
+class _AllTeachersPageState extends State<AllTeachersPage> {
+  final TeacherController controller = Get.find();
+
+  @override
+  void initState() {
+    controller.showAllTeachers();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TeacherController controller = Get.find();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Teachers'),
@@ -20,7 +31,12 @@ class _TeacherPageState extends State<TeacherPage> {
       body: Center(
         child: Obx(() {
           if (controller.isLoading.value) {
-            return const CircularProgressIndicator();
+            return Lottie.asset(
+              'assets/animations/loading_animation4.json',
+              width: 100,
+              height: 100,
+              fit: BoxFit.scaleDown,
+            );
           }
           else {
             if (controller.teacherList.isEmpty) {
@@ -31,10 +47,11 @@ class _TeacherPageState extends State<TeacherPage> {
                 itemBuilder: (context, index) {
                   final teacher = controller.teacherList[index];
                   return ListTile(
-                    title: Text(teacher.teacherName),
-                    subtitle: const Text(''),
+                    title: Text(teacher.teacherID),
+                    subtitle: Text(
+                        'Name: ${teacher.teacherName}, Dept: ${teacher.teacherDept}'),
                     onTap: () {
-
+                      // Handle tap, e.g., navigate to Student details or edit
                     },
                   );
                 },

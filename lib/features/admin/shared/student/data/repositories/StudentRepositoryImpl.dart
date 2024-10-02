@@ -28,7 +28,7 @@ class StudentRepositoryImpl implements StudentRepository{
   @override
   Future<Either<Fail, void>> deleteStudent(Student student) async {
     try {
-      return Right(await studentRemoteDataSource.deleteStudent(student.studentID));
+      return Right(await studentRemoteDataSource.deleteStudent(student.studentRollNo));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');
@@ -57,6 +57,48 @@ class StudentRepositoryImpl implements StudentRepository{
   Future<Either<Fail, List<Student>>> showAllStudents() async {
     try {
       return Right(await studentRemoteDataSource.allStudents());
+    } catch (e) {
+      String message = e.toString();
+      int startIndex = message.indexOf(']');
+      if (startIndex != -1){
+        message = message.substring(startIndex+2);
+      }
+      return Left(Fail(message));
+    }
+  }
+
+  @override
+  Future<Either<Fail, List<Student>>> showDepartmentStudents(String deptName) async {
+    try {
+      return Right(await studentRemoteDataSource.getStudentsByDepartment(deptName));
+    } catch (e) {
+      String message = e.toString();
+      int startIndex = message.indexOf(']');
+      if (startIndex != -1){
+        message = message.substring(startIndex+2);
+      }
+      return Left(Fail(message));
+    }
+  }
+
+  @override
+  Future<Either<Fail, List<Student>>> showSemesterStudents(String deptName, String semester) async {
+    try {
+      return Right(await studentRemoteDataSource.getStudentsBySemester(deptName, semester));
+    } catch (e) {
+      String message = e.toString();
+      int startIndex = message.indexOf(']');
+      if (startIndex != -1){
+        message = message.substring(startIndex+2);
+      }
+      return Left(Fail(message));
+    }
+  }
+
+  @override
+  Future<Either<Fail, void>> setSectionLimit(String deptName, String semester, int limit) async {
+    try {
+      return Right(await studentRemoteDataSource.setSectionLimit(deptName, semester, limit));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');

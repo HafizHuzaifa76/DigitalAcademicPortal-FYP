@@ -8,5 +8,6 @@ abstract class TeacherRepository{
   Future<Either<Fail, Teacher>> editTeacher(Teacher Teacher);
   Future<Either<Fail, void>> deleteTeacher(Teacher Teacher);
   Future<Either<Fail, List<Teacher>>> showAllTeachers();
+  Future<Either<Fail, List<Teacher>>> showDeptTeachers(String deptName);
 
 }

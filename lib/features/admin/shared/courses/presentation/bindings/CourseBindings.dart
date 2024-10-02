@@ -1,0 +1,29 @@
+
+import 'package:digital_academic_portal/features/admin/shared/courses/domain/usecases/DeptCoursesUseCase.dart';
+import 'package:digital_academic_portal/features/admin/shared/courses/domain/usecases/SemesterCoursesUseCase.dart';
+import 'package:get/get.dart';
+
+import '../../data/datasources/CourseRemoteDataSource.dart';
+import '../../data/repositories/CourseRepositoryImpl.dart';
+import '../../domain/repositories/CourseRepository.dart';
+import '../../domain/usecases/AddCourseUseCase.dart';
+import '../../domain/usecases/AllCourseUseCase.dart';
+import '../../domain/usecases/DeleteCourseUseCase.dart';
+import '../../domain/usecases/EditCourseUseCase.dart';
+import '../controllers/CourseController.dart';
+
+class CourseBinding extends Bindings{
+  @override
+  void dependencies() {
+    Get.lazyPut<CourseRemoteDataSource>(() => CourseRemoteDataSourceImpl());
+    Get.lazyPut<CourseRepository>(() => CourseRepositoryImpl(courseRemoteDataSource: Get.find()));
+    Get.lazyPut(() => AllCoursesUseCase(Get.find()));
+    Get.lazyPut(() => AddCourseUseCase(Get.find()));
+    Get.lazyPut(() => EditCourseUseCase(Get.find()));
+    Get.lazyPut(() => DeleteCourseUseCase(Get.find()));
+    Get.lazyPut(() => DeptCoursesUseCase(Get.find()));
+    Get.lazyPut(() => SemesterCoursesUseCase(Get.find()));
+    Get.lazyPut(() => CourseController(addCourseUseCase: Get.find(), deleteCourseUseCase: Get.find(), editCourseUseCase: Get.find(), allCoursesUseCase: Get.find(), deptCoursesUseCase: Get.find(), semesterCoursesUseCase: Get.find()));
+  }
+
+}

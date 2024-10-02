@@ -19,7 +19,7 @@ class TeacherBinding extends Bindings{
     Get.lazyPut(() => AddTeacherUseCase(Get.find()));
     Get.lazyPut(() => EditTeacherUseCase(Get.find()));
     Get.lazyPut(() => DeleteTeacherUseCase(Get.find()));
-    Get.lazyPut(() => TeacherController(addTeacherUseCase: Get.find(), deleteTeacherUseCase: Get.find(), editTeacherUseCase: Get.find(), allTeachersUseCase: Get.find()));
+    Get.lazyPut(() => TeacherController(addTeacherUseCase: Get.find(), deleteTeacherUseCase: Get.find(), editTeacherUseCase: Get.find(), allTeachersUseCase: Get.find(), deptTeachersUseCase: Get.find()));
   }
 
 }

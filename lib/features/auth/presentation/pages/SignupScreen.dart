@@ -162,7 +162,7 @@ class SignupScreen_State extends State<SignupScreen> {
                     ).then((value){
                       Utils().toast("Account Created", context);
                       auth.signInWithEmailAndPassword(email: emailController.text.toString(), password: passwordController.text.toString()).then((value) {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
                       }).onError((error, stackTrace){
                         Utils().toastErrorMessage(error.toString(), context);
                       });

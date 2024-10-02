@@ -41,7 +41,7 @@ class AuthController extends GetxController {
             colorText: Colors.white,
             icon: Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
         );
-        Get.to(HomeScreen());
+        Get.toNamed('/admin');
       });
     } catch (e) {
       print(e);

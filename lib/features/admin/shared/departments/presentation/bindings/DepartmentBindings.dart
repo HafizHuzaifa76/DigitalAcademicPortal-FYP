@@ -1,3 +1,4 @@
+import 'package:digital_academic_portal/features/admin/shared/departments/domain/usecases/AllSemestersUseCase.dart';
 import 'package:get/get.dart';
 
 import '../../data/datasources/DepartmentRemoteDataSource.dart';
@@ -18,7 +19,8 @@ class DepartmentBinding extends Bindings{
     Get.lazyPut(() => AddDepartmentUseCase(Get.find()));
     Get.lazyPut(() => EditDepartmentUseCase(Get.find()));
     Get.lazyPut(() => DeleteDepartmentUseCase(Get.find()));
-    Get.lazyPut(() => DepartmentController(addDepartmentUseCase: Get.find(), deleteDepartmentUseCase: Get.find(), editDepartmentUseCase: Get.find(), allDepartmentsUseCase: Get.find()));
+    Get.lazyPut(() => AllSemestersUseCase(Get.find()));
+    Get.lazyPut(() => DepartmentController(addDepartmentUseCase: Get.find(), deleteDepartmentUseCase: Get.find(), editDepartmentUseCase: Get.find(), allDepartmentsUseCase: Get.find(), allSemestersUseCase: Get.find()));
   }
 
 }

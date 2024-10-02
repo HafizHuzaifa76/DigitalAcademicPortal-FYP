@@ -47,7 +47,7 @@ class LoginScreen_State extends State<LoginScreen> {
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            height: MediaQuery.of(context).size.height,
+            height: double.maxFinite,
             child: Column(
               children: [
                 Container(

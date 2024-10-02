@@ -1,43 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 import '../controllers/StudentController.dart';
+import 'StudentDetailPage.dart';
 
+class AllStudentsPage extends StatefulWidget {
 
-class StudentPage extends StatefulWidget {
-  const StudentPage({super.key});
+  const AllStudentsPage({super.key});
 
   @override
-  State<StudentPage> createState() => _StudentPageState();
+  State<AllStudentsPage> createState() => _AllStudentsPageState();
 }
 
-class _StudentPageState extends State<StudentPage> {
+class _AllStudentsPageState extends State<AllStudentsPage> {
+  final StudentController controller = Get.find();
+
+  @override
+  void initState() {
+    controller.showAllStudents();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final StudentController controller = Get.find();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Students'),
+        title: const Text('Students'),
       ),
       body: Center(
         child: Obx(() {
           if (controller.isLoading.value) {
-            return const CircularProgressIndicator();
+            return Lottie.asset(
+              'assets/animations/loading_animation4.json',
+              width: 100,
+              height: 100,
+              fit: BoxFit.scaleDown,
+            );
           }
           else {
             if (controller.studentList.isEmpty) {
-              return Center(child: Text("No Students available"));
+              return const Center(child: Text("No Students available"));
             } else {
               return ListView.builder(
                 itemCount: controller.studentList.length,
                 itemBuilder: (context, index) {
                   final student = controller.studentList[index];
                   return ListTile(
-                    title: Text(student.studentID),
+                    title: Text(student.studentRollNo),
                     subtitle: Text(
                         'name: ${student.studentName}, father: ${student.fatherName}'),
                     onTap: () {
-                      // Handle tap, e.g., navigate to Student details or edit
+                      Get.to(StudentDetailPage(student: student));
                     },
                   );
                 },

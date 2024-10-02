@@ -15,7 +15,7 @@ class SplashServices{
 
     if(user != null){
       Timer(const Duration(seconds: 3), () async {
-        Get.off(() =>const HomeScreen());
+        Get.offNamed('/admin');
         // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
       });
     }

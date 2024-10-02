@@ -1,7 +1,6 @@
 import 'package:digital_academic_portal/core/services/SplashServices.dart';
 import 'package:flutter/material.dart';
 
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 

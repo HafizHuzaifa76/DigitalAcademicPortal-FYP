@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../domain/usecases/AddTeacherUseCase.dart';
 import '../../domain/usecases/AllTeacherUseCase.dart';
 import '../../domain/usecases/DeleteTeacherUseCase.dart';
+import '../../domain/usecases/DeptTeacherUseCase.dart';
 import '../../domain/usecases/EditTeacherUseCase.dart';
 
 import '../../domain/entities/Teacher.dart';
@@ -14,14 +15,9 @@ class TeacherController extends GetxController{
   final DeleteTeacherUseCase deleteTeacherUseCase;
   final EditTeacherUseCase editTeacherUseCase;
   final AllTeachersUseCase allTeachersUseCase;
+  final DeptTeachersUseCase deptTeachersUseCase;
 
-  TeacherController({required this.addTeacherUseCase, required this.deleteTeacherUseCase, required this.editTeacherUseCase, required this.allTeachersUseCase});
-
-  @override
-  void onInit() {
-    showAllTeachers(); // Fetch the list of Teachers when the controller is initialized
-    super.onInit();
-  }
+  TeacherController({required this.addTeacherUseCase, required this.deleteTeacherUseCase, required this.editTeacherUseCase, required this.allTeachersUseCase, required this.deptTeachersUseCase});
 
   var teacherNameController = TextEditingController();
   var teacherDeptController = TextEditingController();
@@ -165,6 +161,29 @@ class TeacherController extends GetxController{
   Future<void> showAllTeachers() async {
       isLoading(true);
       final result = await allTeachersUseCase.execute(null);
+
+      result.fold((left) {
+        String message = left.failure.toString();
+        Get.snackbar(
+            'Error', message,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
+        );
+
+      }, (teacher) {
+        teacherList.assignAll(teacher);
+        print('Teachers fetched');
+      });
+
+      isLoading(false);
+  }
+
+  Future<void> showDeptTeachers(String deptName) async {
+      isLoading(true);
+      final result = await deptTeachersUseCase.execute(deptName);
 
       result.fold((left) {
         String message = left.failure.toString();

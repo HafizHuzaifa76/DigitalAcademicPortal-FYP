@@ -10,11 +10,10 @@ class TeacherRepositoryImpl implements TeacherRepository{
 
   TeacherRepositoryImpl({required this.teacherRemoteDataSource});
 
-
   @override
-  Future<Either<Fail, Teacher>> addTeacher(Teacher Teacher) async {
+  Future<Either<Fail, Teacher>> addTeacher(Teacher teacher) async {
     try {
-      return Right(await teacherRemoteDataSource.addTeacher(TeacherModel.fromTeacher(Teacher)));
+      return Right(await teacherRemoteDataSource.addTeacher(TeacherModel.fromTeacher(teacher)));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');
@@ -26,9 +25,9 @@ class TeacherRepositoryImpl implements TeacherRepository{
   }
 
   @override
-  Future<Either<Fail, void>> deleteTeacher(Teacher Teacher) async {
+  Future<Either<Fail, void>> deleteTeacher(Teacher teacher) async {
     try {
-      return Right(await teacherRemoteDataSource.deleteTeacher('id'));
+      return Right(await teacherRemoteDataSource.deleteTeacher(teacher.teacherEmail));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');
@@ -40,9 +39,9 @@ class TeacherRepositoryImpl implements TeacherRepository{
   }
 
   @override
-  Future<Either<Fail, Teacher>> editTeacher(Teacher Teacher) async {
+  Future<Either<Fail, Teacher>> editTeacher(Teacher teacher) async {
     try {
-      return Right(await teacherRemoteDataSource.editTeacher(TeacherModel.fromTeacher(Teacher)));
+      return Right(await teacherRemoteDataSource.editTeacher(TeacherModel.fromTeacher(teacher)));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');
@@ -64,6 +63,20 @@ class TeacherRepositoryImpl implements TeacherRepository{
         message = message.substring(startIndex+2);
       }
       return Left(Fail(message));
+    }
+  }
+
+  @override
+  Future<Either<Fail, List<Teacher>>> showDeptTeachers(String deptName) async {
+    try {
+      return Right(await teacherRemoteDataSource.getTeachersByDepartment(deptName));
+    } catch (e) {
+    String message = e.toString();
+    int startIndex = message.indexOf(']');
+    if (startIndex != -1){
+      message = message.substring(startIndex+2);
+    }
+    return Left(Fail(message));
     }
   }
 
