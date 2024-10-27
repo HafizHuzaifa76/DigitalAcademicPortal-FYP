@@ -17,10 +17,11 @@ class TeacherController extends GetxController{
   final AllTeachersUseCase allTeachersUseCase;
   final DeptTeachersUseCase deptTeachersUseCase;
 
+  var selectedGender = ''.obs;
+
   TeacherController({required this.addTeacherUseCase, required this.deleteTeacherUseCase, required this.editTeacherUseCase, required this.allTeachersUseCase, required this.deptTeachersUseCase});
 
   var teacherNameController = TextEditingController();
-  var teacherDeptController = TextEditingController();
   var teacherEmailController = TextEditingController();
   var teacherCNICController = TextEditingController();
   var teacherContactController = TextEditingController();
@@ -30,14 +31,25 @@ class TeacherController extends GetxController{
   var isLoading = false.obs;
 
   var teacherList = <Teacher>[].obs;
+  var filteredTeacherList = <Teacher>[].obs;
 
-  Future<void> addTeacher(String teacherID) async {
+  void filterTeachers(String query) {
+    if (query.isEmpty) {
+      filteredTeacherList.assignAll(teacherList);
+    } else {
+      filteredTeacherList.assignAll(
+        teacherList.where((teacher) =>
+            teacher.teacherName.toLowerCase().contains(query.toLowerCase())).toList(),
+      );
+    }
+  }
 
-    // Create a Teacher using the controllers
+  Future<void> addTeacher(String deptName) async {
+
     var newTeacher = Teacher(
-      teacherID: teacherID,
+      teacherID: DateTime.now().toString(),
       teacherName: teacherNameController.text,
-      teacherDept: teacherDeptController.text,
+      teacherDept: deptName,
       teacherEmail: teacherEmailController.text,
       teacherCNIC: teacherCNICController.text,
       teacherContact: teacherContactController.text,
@@ -74,6 +86,7 @@ class TeacherController extends GetxController{
       });
 
     } finally {
+      showAllTeachers();
       isLoading(false);
     }
   }
@@ -83,7 +96,7 @@ class TeacherController extends GetxController{
     var newTeacher = Teacher(
       teacherID: teacherID,
       teacherName: teacherNameController.text,
-      teacherDept: teacherDeptController.text,
+      teacherDept: 'dept',
       teacherEmail: teacherEmailController.text,
       teacherCNIC: teacherCNICController.text,
       teacherContact: teacherContactController.text,
@@ -120,6 +133,7 @@ class TeacherController extends GetxController{
       });
 
     } finally {
+      showAllTeachers();
       isLoading(false);
     }
   }
@@ -154,6 +168,7 @@ class TeacherController extends GetxController{
       });
 
     } finally {
+      showAllTeachers();
       isLoading(false);
     }
   }
@@ -175,6 +190,7 @@ class TeacherController extends GetxController{
 
       }, (teacher) {
         teacherList.assignAll(teacher);
+        filteredTeacherList.assignAll(teacher);
         print('Teachers fetched');
       });
 
@@ -198,9 +214,11 @@ class TeacherController extends GetxController{
 
       }, (teacher) {
         teacherList.assignAll(teacher);
+        filteredTeacherList.assignAll(teacher);
         print('Teachers fetched');
       });
 
       isLoading(false);
   }
+
 }

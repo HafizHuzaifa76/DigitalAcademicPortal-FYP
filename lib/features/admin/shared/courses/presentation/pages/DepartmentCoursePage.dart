@@ -1,17 +1,21 @@
-import 'package:digital_academic_portal/features/admin/shared/departments/domain/entities/Semester.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-
+import '../../../departments/domain/entities/Semester.dart';
 import '../../domain/entities/Course.dart';
 import '../controllers/CourseController.dart';
 import 'CourseDetailPage.dart';
 
-
 class DepartmentCoursePage extends StatefulWidget {
   final String deptName;
   final List<Semester> semestersList;
-  const DepartmentCoursePage({super.key, required this.deptName, required this.semestersList});
+
+  const DepartmentCoursePage({
+    super.key,
+    required this.deptName,
+    required this.semestersList,
+  });
 
   @override
   State<DepartmentCoursePage> createState() => _DepartmentCoursePageState();
@@ -19,6 +23,7 @@ class DepartmentCoursePage extends StatefulWidget {
 
 class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
   final CourseController controller = Get.find();
+  final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -29,170 +34,706 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Courses'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: ()=> addCourseDialog(),
-          )
-        ],
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme
+            .of(context)
+            .primaryColor,
+        onPressed: () => semestersBottomSheet(context),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
-      body: Center(
-        child: Obx(() {
-          if (controller.isLoading.value) {
-
-            return Lottie.asset(
-              'assets/animations/loading_animation4.json',
-              width: 100,
-              height: 100,
-              fit: BoxFit.scaleDown,
-            );
-          }
-          else {
-            if (controller.courseList.isEmpty) {
-              return const Center(child: Text("No Courses available"));
-            } else {
-              return ListView.builder(
-                itemCount: controller.courseList.length,
-                itemBuilder: (context, index) {
-                  final course = controller.courseList[index];
-                  return ListTile(
-                    title: Text(course.courseName),
-                    subtitle: const Text(''),
-                    onTap: () {
-                      Get.to(()=> CourseDetailPage(deptName: widget.deptName, course: course));
-                    },
-                  );
-                },
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 150.0,
+            floating: true,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.only(bottom: 70),
+              centerTitle: true,
+              title: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Courses',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontFamily: 'Ubuntu',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    'Department of ${widget.deptName}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.0,
+                      fontFamily: 'Ubuntu',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Theme
+                          .of(context)
+                          .primaryColor,
+                      const Color(0xFF1B7660),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 55,
+                      child: TextField(
+                        controller: searchController,
+                        onChanged: (query) {
+                          controller.filterCourses(query);
+                        },
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(2),
+                          hintText: 'Search Courses...',
+                          prefixIcon: const Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50.0),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Obx(() {
+            if (controller.isLoading.value) {
+              return SliverFillRemaining(
+                child: Center(
+                  child: Lottie.asset(
+                    'assets/animations/loading_animation4.json',
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.scaleDown,
+                  ),
+                ),
               );
+            } else {
+              if (controller.filteredCourseList.isEmpty) {
+                return const SliverFillRemaining(
+                  child: Center(child: Text("No Courses available")),
+                );
+              } else {
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                      final course = controller.filteredCourseList[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 5.0),
+                        child: Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: ListTile(
+                            title: Text(
+                              course.courseName,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme
+                                    .of(context)
+                                    .primaryColor,
+                              ),
+                            ),
+                            subtitle: Text('Code: ${course.courseCode}'),
+                            trailing: const Icon(Icons.arrow_forward_ios),
+                            onTap: () {
+                              Get.to(() =>
+                                  CourseDetailPage(
+                                      deptName: widget.deptName,
+                                      course: course));
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    childCount: controller.filteredCourseList.length,
+                  ),
+                );
+              }
             }
-          }
-        }),
+          }),
+        ],
       ),
     );
   }
 
-  Future addCourseDialog() async{
+  void _showAddCourseOptions(String semester) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.school),
+              title: const Text('Add Compulsory Course'),
+              onTap: () {
+                Navigator.pop(context);
+                addCourseBottomSheet(context, semester);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.library_books),
+              title: const Text('Add Elective Course'),
+              onTap: () {
+                Navigator.pop(context);
+                addElectiveCourseBottomSheet(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future addCourseBottomSheet(BuildContext context, String semester) async {
     final List<double> creditHoursOptions = [1.0, 2.0, 3.0];
     double selectedCreditHours = creditHoursOptions.last;
-    var semesters = widget.semestersList;
-    String selectedSemester = semesters[0].semesterName;
-    return Get.defaultDialog(
-      title: 'Add Course',
 
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: controller.courseCodeController,
-            decoration: const InputDecoration(labelText: 'Course Code'),
-          ),
-          TextField(
-            controller: controller.courseNameController,
-            decoration: const InputDecoration(labelText: 'Course Name'),
-          ),
-          DropdownButtonFormField<String>(
-            value: selectedSemester,
-            decoration: const InputDecoration(labelText: 'Semester'),
-            items: semesters.map((semester) {
-              return DropdownMenuItem(
-                value: semester.semesterName,
-                child: Text(semester.semesterName),
-              );
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                selectedSemester = value!;
-              });
-            },
-          ),
-          DropdownButtonFormField<double>(
-            value: selectedCreditHours,
-            decoration: const InputDecoration(labelText: 'Credit Hours'),
-            items: creditHoursOptions.map((hours) {
-              return DropdownMenuItem(
-                value: hours,
-                child: Text('$hours Credit Hours'),
-              );
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                selectedCreditHours = value!;
-              });
-            },
-          ),
-        ],
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
-      onCancel: ()=> Get.back(),
-      textConfirm: 'Add',
-      onConfirm: (){
-        var newCourse = Course(
-          courseCode: controller.courseCodeController.text,
-          courseName: controller.courseNameController.text,
-          courseDept: widget.deptName,
-          courseCreditHours: selectedCreditHours,
-          courseSemester: selectedSemester,
-        );
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery
+                .of(context)
+                .viewInsets
+                .bottom,
+            left: 16.0,
+            right: 16.0,
+            top: 16.0,
+          ),
+          child: SizedBox(
+            height: MediaQuery
+                .of(context)
+                .size
+                .height * 0.6,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Add Compulsory Course\n$semester',
+                  style: TextStyle(
+                    fontFamily: 'Ubuntu',
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Theme
+                        .of(context)
+                        .primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          controller: controller.courseCodeController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(color: Colors.grey),
+                            ),
+                            labelText: 'Course Code',
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: controller.courseNameController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(color: Colors.grey),
+                            ),
+                            labelText: 'Course Name',
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        DropdownButtonFormField<double>(
+                          value: selectedCreditHours,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(color: Colors.grey),
+                            ),
+                            labelText: 'Credit Hours',
+                          ),
+                          items: creditHoursOptions.map((hours) {
+                            return DropdownMenuItem(
+                              value: hours,
+                              child: Text('$hours Credit Hours'),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedCreditHours = value!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: const ButtonStyle(
+                      fixedSize:
+                      MaterialStatePropertyAll(Size(double.maxFinite, 45))),
+                  onPressed: () {
+                    var newCourse = Course(
+                      courseCode: controller.courseCodeController.text,
+                      courseName: controller.courseNameController.text,
+                      courseDept: widget.deptName,
+                      courseCreditHours: selectedCreditHours,
+                      courseSemester: semester,
+                      courseType: 'compulsory',
+                    );
 
-        controller.addCourse(newCourse);
-        Get.back();
-      }
+                    controller.addCourse(newCourse);
+                    Get.back();
+                  },
+                  child: const Text(
+                    'Add',
+                    style: TextStyle(
+                        fontFamily: 'Ubuntu',
+                        fontSize: 20,
+                        color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Future editCourseDialog(Course course) async {
-    // Initialize fields with the values from the existing course
-    final List<double> creditHoursOptions = [1.0, 2.0, 3.0];
-    double selectedCreditHours = course.courseCreditHours;
+  Future addElectiveCourseBottomSheet(BuildContext context) async {
+    TextEditingController electiveController = TextEditingController();
+    TextEditingController selectionController = TextEditingController();
+    String selectionDescription = "Enter number of selections";
 
-    // Create controllers and set their initial values
-    controller.courseCodeController = TextEditingController(text: course.courseCode);
-    controller.courseNameController = TextEditingController(text: course.courseName);
-
-    return Get.defaultDialog(
-      title: 'Edit Course',
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: controller.courseCodeController,
-            decoration: const InputDecoration(labelText: 'Course Code'),
-          ),
-          TextField(
-            controller: controller.courseNameController,
-            decoration: const InputDecoration(labelText: 'Course Name'),
-          ),
-          DropdownButtonFormField<double>(
-            value: selectedCreditHours,
-            decoration: const InputDecoration(labelText: 'Credit Hours'),
-            items: creditHoursOptions.map((hours) {
-              return DropdownMenuItem(
-                value: hours,
-                child: Text('$hours Credit Hours'),
-              );
-            }).toList(),
-            onChanged: (value) {
-              selectedCreditHours = value!;
-            },
-          ),
-        ],
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
-      onCancel: () => Get.back(),
-      textConfirm: 'Save',
-      onConfirm: () {
-        var updatedCourse = Course(
-          courseCode: controller.courseCodeController.text,
-          courseName: controller.courseNameController.text,
-          courseDept: course.courseDept,
-          courseCreditHours: selectedCreditHours,
-          courseSemester: course.courseSemester,
-        );
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery
+                .of(context)
+                .viewInsets
+                .bottom,
+            left: 16.0,
+            right: 16.0,
+            top: 16.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Add Elective Courses',
+                style: TextStyle(
+                  fontFamily: 'Ubuntu',
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Theme
+                      .of(context)
+                      .primaryColor,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: electiveController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+                      labelText: "Total Elective Courses",
+                      hintText: "Enter total electives",
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        int total = int.tryParse(value) ?? 0;
+                        selectionDescription = total > 0
+                            ? "Select number of courses (1 to $total)"
+                            : "Enter number of selections";
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: selectionController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+                      labelText: "Number of Selection Courses",
+                      hintText: selectionDescription,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: const ButtonStyle(
+                  fixedSize: MaterialStatePropertyAll(
+                      Size(double.maxFinite, 45)),
+                ),
+                onPressed: () {
+                  int totalElectives = int.tryParse(electiveController.text) ??
+                      0;
+                  int numSelections = int.tryParse(selectionController.text) ??
+                      0;
 
-        controller.editCourse(updatedCourse);
-        Get.back();
+                  if (numSelections > totalElectives) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text(
+                              "Selections cannot exceed total electives")),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ElectiveCourseScreen(
+                              totalElectives: totalElectives,
+                            ),
+                      ),
+                    );
+                  }
+                },
+                child: const Text(
+                  'Next',
+                  style: TextStyle(
+                      fontFamily: 'Ubuntu', fontSize: 20, color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void semestersBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7.5),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 7,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade800,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
+                const SizedBox(height: 6.5),
+
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: widget.semestersList.map((semester) =>
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+
+                            var filteredCourses = controller.filteredCourseList
+                                .where((course) =>
+                            course.courseSemester == semester.semesterName)
+                                .toList();
+
+                            if (filteredCourses.isEmpty) {
+                              selectCourseOptionsBottomSheet(context);
+                            }
+                            else {
+                              if (semester.numOfElectiveCourses != 0) {
+                                _showAddCourseOptions(semester.semesterName);
+                              }
+                              else {
+                                addCourseBottomSheet(
+                                    context, semester.semesterName);
+                              }
+                            }
+                          },
+                          child: Text(
+                            semester.semesterName,
+                            style: const TextStyle(color: Colors.white,
+                                fontSize: 20,
+                                fontFamily: 'Ubuntu'),
+                          ),
+                        ),
+                      )).toList(),
+                ),
+              ],
+            ),
+          );
+        }
+    );
+  }
+
+  Future selectCourseOptionsBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery
+                .of(context)
+                .viewInsets
+                .bottom,
+            left: 16.0,
+            right: 16.0,
+            top: 16.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Text(
+                  'Select Courses',
+                  style: TextStyle(
+                    fontFamily: 'Ubuntu',
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Theme
+                        .of(context)
+                        .primaryColor,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Cupertino Picker for Total Courses
+              const Text(
+                'Total Courses',
+                style: TextStyle(
+                  fontFamily: 'Ubuntu',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(
+                height: 130,
+                child: CupertinoPicker(
+                  itemExtent: 30,
+                  onSelectedItemChanged: (int value) {
+                    controller.updateTotalCourses(
+                        value); // Adjust value based on index
+                  },
+                  scrollController: FixedExtentScrollController(
+                    initialItem: 5,
+                  ),
+                  children: List.generate(
+                    10,
+                        (index) =>
+                        Text(
+                          "${index + 1} Courses",
+                          style: const TextStyle(
+                            fontFamily: 'Ubuntu',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Cupertino Picker for Elective Courses
+              const Text(
+                'Number of Elective Courses',
+                style: TextStyle(
+                  fontFamily: 'Ubuntu',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(
+                height: 130,
+                child: Obx(() {
+                  return CupertinoPicker(
+                    itemExtent: 30,
+                    onSelectedItemChanged: (int value) {
+                      controller.updateElectiveCourses(value); // Adjust value based on index
+                    },
+                    scrollController: FixedExtentScrollController(
+                      initialItem: 3,
+                    ),
+                    children: List.generate(
+                      controller.selectedTotalCourses.value + 1,
+                          (index) =>
+                          Text(
+                            "$index Elective Courses",
+                            style: const TextStyle(
+                              fontFamily: 'Ubuntu',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                    ),
+                  );
+                }),
+              ),
+              const SizedBox(height: 5),
+
+              Obx(() {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Total Courses: ${controller.selectedTotalCourses.value}',
+                      style: TextStyle(
+                        color: Theme
+                            .of(context)
+                            .primaryColor,
+                        fontFamily: 'Ubuntu',
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+
+                    Text(
+                      'Compulsory: ${controller.selectedTotalCourses.value - controller.selectedElectiveCourses.value}',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontFamily: 'Ubuntu',
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+
+                    Text(
+                      'Elective: ${controller.selectedElectiveCourses.value}',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontFamily: 'Ubuntu',
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                );
+              }),
+              const SizedBox(height: 10),
+              // Save Button
+              ElevatedButton(
+                style: const ButtonStyle(
+                  fixedSize: MaterialStatePropertyAll(
+                      Size(double.maxFinite, 45)),
+                ),
+                onPressed: () {
+                  // Implement saving logic here
+                  Navigator.pop(context); // Close the bottom sheet
+                },
+                child: const Text(
+                  'Next',
+                  style: TextStyle(
+                    fontFamily: 'Ubuntu',
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        );
       },
     );
   }
 
 }
+
+class ElectiveCourseScreen extends StatelessWidget {
+  final int totalElectives;
+
+  ElectiveCourseScreen({required this.totalElectives});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Enter Elective Courses'),
+      ),
+      body: ListView.builder(
+        itemCount: totalElectives,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text('Elective Course ${index + 1}'),
+            subtitle: TextField(
+              decoration: InputDecoration(
+                labelText: 'Course Name for Elective ${index + 1}',
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+

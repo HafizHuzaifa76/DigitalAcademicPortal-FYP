@@ -80,7 +80,6 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
     }
   }
 
-
   Future<String> _assignSection(StudentModel student) async {
     int sectionLimit = await _getSectionLimit(student.studentDepartment, student.studentSemester);
 

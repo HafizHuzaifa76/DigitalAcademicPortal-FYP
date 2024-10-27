@@ -1,13 +1,14 @@
 import '../../domain/entities/Course.dart';
 
 class CourseModel extends Course{
-  CourseModel({required super.courseCode, required super.courseName, required super.courseDept, required super.courseCreditHours, required super.courseSemester});
+  CourseModel({required super.courseCode, required super.courseName, required super.courseDept, required super.courseCreditHours, required super.courseSemester, required super.courseType});
 
   factory CourseModel.fromCourse(Course course){
     return CourseModel(
         courseCode: course.courseCode,
         courseName: course.courseName,
         courseDept: course.courseDept,
+        courseType: course.courseType,
         courseCreditHours: course.courseCreditHours,
         courseSemester: course.courseSemester
     );
@@ -18,6 +19,7 @@ class CourseModel extends Course{
       'courseCode': courseCode,
       'courseName': courseName,
       'courseDept': courseDept,
+      'courseType': courseType,
       'courseSemester': courseSemester,
       'courseCreditHours': courseCreditHours,
     };
@@ -28,6 +30,7 @@ class CourseModel extends Course{
       courseCode: map['courseCode'] as String,
       courseName: map['courseName'] as String,
       courseDept: map['courseDept'] as String,
+      courseType: map['courseType'] as String,
       courseSemester: map['courseSemester'] as String,
       courseCreditHours: map['courseCreditHours'].toDouble(),
     );

@@ -29,6 +29,17 @@ class SectionController extends GetxController{
   var isLoading = false.obs;
 
   var sectionList = <Section>[].obs;
+  var filteredSectionList = <Section>[].obs;
+
+  void filterSections(String query) {
+    if (query.isEmpty) {
+      filteredSectionList.assignAll(sectionList);
+    } else {
+      filteredSectionList.assignAll(
+        sectionList.where((section) => section.sectionName.toLowerCase().contains(query.toLowerCase())).toList(),
+      );
+    }
+  }
 
   Future<void> addSection(String deptName, String semester) async {
     var newSection = Section(
@@ -155,6 +166,7 @@ class SectionController extends GetxController{
 
       }, (sections) {
         sectionList.assignAll(sections);
+        filteredSectionList.assignAll(sections);
         if (kDebugMode) {
           print('sections fetched');
         }

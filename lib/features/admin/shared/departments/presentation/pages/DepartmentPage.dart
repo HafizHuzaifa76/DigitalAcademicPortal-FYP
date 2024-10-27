@@ -8,7 +8,6 @@ import 'package:lottie/lottie.dart';
 import '../../domain/entities/Department.dart';
 import '../controllers/DepartmentController.dart';
 
-
 class DepartmentPage extends StatefulWidget {
   const DepartmentPage({super.key});
 
@@ -24,264 +23,483 @@ class _DepartmentPageState extends State<DepartmentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Departments'),
-        actions: [
-          IconButton(
-              onPressed: () => addDepartmentDialog(context),
-              icon: const Icon(Icons.add, size: 25)
-          )
-        ],
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
+        onPressed: () => addDepartmentBottomSheet(context),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
-      body: Center(
-        child: Obx(() {
-          if (controller.isLoading.value) {
-            return Lottie.asset(
-              'assets/animations/loading_animation4.json',
-              width: 100,
-              height: 100,
-              fit: BoxFit.scaleDown,
-            );
-          }
-          else {
-            if (controller.departmentList.isEmpty) {
-              return const Center(child: Text("No departments available"));
-            } else {
-              return ListView.builder(
-                itemCount: controller.departmentList.length,
-                itemBuilder: (context, index) {
-                  final department = controller.departmentList[index];
-                  return Card(
-                    borderOnForeground: true,
-                    shape: Border.all(color: Theme.of(context).primaryColor),
-                    child: ListTile(
-                      title: Text(department.departmentName),
-                      subtitle: Text(
-                          'Code: ${department.departmentCode}, HOD: ${department.headOfDepartment}'),
-                      onTap: () {
-                        Get.to(DepartmentDetailPage(department: department));
-                      },
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                              onPressed: ()=> editDepartmentDialog(context, department),
-                              icon: const Icon(Icons.edit, size: 25,)
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 150.0,
+            floating: true,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.only(bottom: 80),
+              centerTitle: true,
+              title: const Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Departments',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontFamily: 'Ubuntu',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                ],
+              ),
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Theme.of(context).primaryColor,
+                      const Color(0xFF1B7660),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 55,
+                      child: TextField(
+                        onChanged: (query) {
+                          controller.filterDepartments(query); // Add filtering logic
+                        },
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(2),
+                          hintText: 'Search Departments...',
+                          prefixIcon: const Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50.0),
                           ),
-                    
-                          IconButton(
-                              onPressed: ()=> controller.deleteDepartment(department),
-                              icon: const Icon(Icons.delete, size: 25,)
-                          ),
-                        ],
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
                       ),
                     ),
-                  );
-                },
-              );
-            }
-          }
-        }),
-      ),
-    );
-  }
-
-  Future addDepartmentDialog(BuildContext context){
-    controller.clearFields();
-    return Get.defaultDialog(
-      title: 'Add Department',
-      titleStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 24, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold),
-      content: SingleChildScrollView(
-        child: Form(
-          key: addDeptKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: controller.departmentNameController,
-                keyboardType: TextInputType.name,
-                textCapitalization: TextCapitalization.words,
-                decoration: const InputDecoration(labelText: 'Department Name'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter complete information';
-                  }
-                  return null;
-                },
+                  ),
+                ),
               ),
-              TextFormField(
-                controller: controller.departmentCodeController,
-                keyboardType: TextInputType.name,
-                textCapitalization: TextCapitalization.characters,
-                decoration: const InputDecoration(labelText: 'Department Code'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter complete information';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: controller.headOfDepartmentController,
-                decoration: const InputDecoration(labelText: 'Head of Department'),
-                keyboardType: TextInputType.name,
-                textCapitalization: TextCapitalization.words,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter complete information';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: controller.contactPhoneController,
-                decoration: const InputDecoration(labelText: 'Contact Phone'),
-                keyboardType: TextInputType.phone,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter complete information';
-                  }
-                  return null;
-                },
-              ),
-
-              TextFormField(
-                controller: controller.semesterController,
-                decoration: const InputDecoration(labelText: 'Semesters'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter complete information';
-                  }
-                  return null;
-                },
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset('assets/images/department_icon.png', height: 40, width: 40,),
               ),
             ],
           ),
-        ),
-      ),
-      textConfirm: 'Add',
-      confirm: Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-            shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-            fixedSize: MaterialStatePropertyAll(Size(100, 20))
-          ),
-            onPressed: () {
-              if (addDeptKey.currentState!.validate()) {
-                controller.addDepartment();
+
+          // Main content list of Departments
+          Obx(() {
+            if (controller.isLoading.value) {
+              return SliverFillRemaining(
+                child: Center(
+                  child: Lottie.asset(
+                    'assets/animations/loading_animation4.json',
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.scaleDown,
+                  ),
+                ),
+              );
+            } else {
+              if (controller.filteredDepartmentList.isEmpty) {
+                return const SliverFillRemaining(
+                  child: Center(child: Text("No departments available")),
+                );
+              } else {
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                      final department = controller.filteredDepartmentList[index]; // Filtered list of departments
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                            side: BorderSide(color: Theme.of(context).primaryColor),
+                          ),
+                          child: ListTile(
+                            title: Text(
+                              department.departmentName,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            subtitle: Text(
+                                'Code: ${department.departmentCode} \nHOD: ${department.headOfDepartment}'),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  onPressed: () => editDepartmentBottomSheet(context, department),
+                                  icon: const Icon(Icons.edit, size: 25),
+                                ),
+                                IconButton(
+                                  onPressed: () => controller.deleteDepartment(department),
+                                  icon: const Icon(Icons.delete, size: 25),
+                                ),
+                              ],
+                            ),
+                            onTap: () {
+                              Get.to(DepartmentDetailPage(department: department));
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    childCount: controller.filteredDepartmentList.length, // Use filtered list
+                  ),
+                );
               }
-            },
-            child: Text('Add', style: Theme.of(context).appBarTheme.titleTextStyle,)
-        ),
+            }
+          }),
+        ],
       ),
     );
   }
 
-  Future editDepartmentDialog(BuildContext context, Department department){
-    controller.departmentNameController.text = department.departmentName;
-    controller.departmentCodeController.text = department.departmentCode;
-    controller.headOfDepartmentController.text = department.headOfDepartment;
-    controller.contactPhoneController.text = department.contactPhone;
-    controller.semesterController.text = department.totalSemesters.toString();
-
-    return showDialog(
+  Future addDepartmentBottomSheet(BuildContext context) {
+    controller.clearFields(); // Clear fields when the bottom sheet opens
+    return showModalBottomSheet(
       context: context,
+      isScrollControlled: true, // Allows full-height bottom sheet
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Department Details'),
-          content: Form(
-            key: editDeptKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: controller.departmentNameController,
-                  decoration: const InputDecoration(labelText: 'Department Name'),
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.words,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter complete information';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: controller.departmentCodeController,
-                  decoration: const InputDecoration(labelText: 'Department Code'),
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.characters,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter complete information';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: controller.headOfDepartmentController,
-                  decoration: const InputDecoration(labelText: 'Head of Department'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter complete information';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: controller.contactPhoneController,
-                  decoration: const InputDecoration(labelText: 'Contact Phone'),
-                  keyboardType: TextInputType.phone,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter complete information';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: controller.semesterController,
-                  decoration: const InputDecoration(labelText: 'Semesters'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter complete information';
-                    }
-                    return null;
-                  },
-                ),
-              ],
-            ),
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom, // Handles soft keyboard
+            left: 16.0,
+            right: 16.0,
+            top: 16.0,
           ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                if (editDeptKey.currentState!.validate()) {
-                  var newDepartment = Department(
-                    departmentID: department.departmentID,
-                    totalSemesters: int.parse(controller.semesterController.text),
-                    totalStudents: department.totalStudents,
-                    totalTeachers: department.totalTeachers,
-                    totalCourses: department.totalCourses,
-                    sectionLength: department.sectionLength,
-                    departmentName: controller.departmentNameController.text,
-                    departmentCode: controller.departmentCodeController.text,
-                    headOfDepartment: controller.headOfDepartmentController.text,
-                    contactPhone: controller.contactPhoneController.text,
-                  );
-
-                  controller.editDepartment(newDepartment);
-                }
-              },
-              child: const Text('Save'),
-            ),
-          ],
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Add Department',
+                style: TextStyle(
+                  fontFamily: 'Ubuntu',
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.only(right: 13.0),
+                child: Form(
+                  key: addDeptKey, // Assuming you have defined a GlobalKey<FormState>
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        controller: controller.departmentNameController,
+                        keyboardType: TextInputType.name,
+                        textCapitalization: TextCapitalization.words,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          labelText: 'Department Name',
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter complete information';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: controller.departmentCodeController,
+                        keyboardType: TextInputType.name,
+                        textCapitalization: TextCapitalization.characters,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          labelText: 'Department Code',
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter complete information';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: controller.headOfDepartmentController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          labelText: 'Head of Department',
+                        ),
+                        keyboardType: TextInputType.name,
+                        textCapitalization: TextCapitalization.words,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter complete information';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: controller.contactPhoneController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          labelText: 'Contact Phone',
+                        ),
+                        keyboardType: TextInputType.phone,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter complete information';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: controller.semesterController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          labelText: 'Semesters',
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter complete information';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Add button
+              ElevatedButton(
+                style: const ButtonStyle(
+                  fixedSize: MaterialStatePropertyAll(Size(double.maxFinite, 45)),
+                ),
+                onPressed: () {
+                  if (addDeptKey.currentState!.validate()) {
+                    controller.addDepartment(); // Call your addDepartment method
+                    Get.back(); // Closes the bottom sheet after saving
+                  }
+                },
+                child: const Text(
+                  'Add',
+                  style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20, color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
         );
       },
     );
   }
 
+  Future editDepartmentBottomSheet(BuildContext context, Department department) {
+    controller.updateDepartmentDetails(department); // Populate the fields with existing department data
+
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Allows full-height bottom sheet
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom, // Handles soft keyboard
+            left: 16.0,
+            right: 16.0,
+            top: 16.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Department Details',
+                style: TextStyle(
+                  fontFamily: 'Ubuntu',
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.only(right: 13.0),
+                child: Form(
+                  key: editDeptKey, // Assuming you have defined a GlobalKey<FormState>
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        controller: controller.departmentNameController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          labelText: 'Department Name',
+                        ),
+                        keyboardType: TextInputType.name,
+                        textCapitalization: TextCapitalization.words,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter complete information';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: controller.departmentCodeController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          labelText: 'Department Code',
+                        ),
+                        keyboardType: TextInputType.name,
+                        textCapitalization: TextCapitalization.characters,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter complete information';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: controller.headOfDepartmentController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          labelText: 'Head of Department',
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter complete information';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: controller.contactPhoneController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          labelText: 'Contact Phone',
+                        ),
+                        keyboardType: TextInputType.phone,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter complete information';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Save button
+              ElevatedButton(
+                style: const ButtonStyle(
+                  fixedSize: MaterialStatePropertyAll(Size(double.maxFinite, 45)),
+                ),
+                onPressed: () {
+                  if (editDeptKey.currentState!.validate()) {
+                    var newDepartment = Department(
+                      departmentID: department.departmentID,
+                      totalSemesters: department.totalSemesters,
+                      totalStudents: department.totalStudents,
+                      totalTeachers: department.totalTeachers,
+                      totalCourses: department.totalCourses,
+                      sectionLength: department.sectionLength,
+                      departmentName: controller.departmentNameController.text,
+                      departmentCode: controller.departmentCodeController.text,
+                      headOfDepartment: controller.headOfDepartmentController.text,
+                      contactPhone: controller.contactPhoneController.text,
+                    );
+
+                    controller.editDepartment(newDepartment); // Call your editDepartment method
+                    Get.back(); // Closes the bottom sheet after saving
+                  }
+                },
+                child: const Text(
+                  'Save',
+                  style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20, color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
 }

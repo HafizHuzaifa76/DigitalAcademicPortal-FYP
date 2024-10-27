@@ -27,6 +27,34 @@ class CourseController extends GetxController{
   var isLoading = false.obs;
 
   var courseList = <Course>[].obs;
+  var filteredCourseList = <Course>[].obs;
+  var selectedTotalCourses = 5.obs;
+  var selectedElectiveCourses = 0.obs;
+
+  void updateTotalCourses(int value) {
+    selectedTotalCourses.value = value + 1;
+    // Ensure elective courses don't exceed total courses
+    if (selectedElectiveCourses.value > selectedTotalCourses.value) {
+      selectedElectiveCourses.value = selectedTotalCourses.value;
+    }
+  }
+
+  void updateElectiveCourses(int value) {
+    selectedElectiveCourses.value = value;
+  }
+
+  void filterCourses(String query) {
+    if (query.isEmpty) {
+      filteredCourseList.assignAll(courseList);
+    } else {
+      var lowerCaseQuery = query.toLowerCase();
+      var filteredResults = courseList.where((course) {
+        return course.courseName.toLowerCase().startsWith(lowerCaseQuery) || course.courseName.toLowerCase().contains(' $lowerCaseQuery') ||
+            course.courseCode.toLowerCase().startsWith(lowerCaseQuery) || course.courseCode.toLowerCase().contains('-$lowerCaseQuery');
+      }).toList();
+      filteredCourseList.assignAll(filteredResults);
+    }
+  }
 
   Future<void> addCourse(Course newCourse) async {
 
@@ -148,6 +176,7 @@ class CourseController extends GetxController{
 
       }, (courses) {
         courseList.assignAll(courses);
+        filteredCourseList.assignAll(courseList);
         print('Semester Courses fetched');
       });
 
@@ -171,6 +200,7 @@ class CourseController extends GetxController{
 
       }, (courses) {
         courseList.assignAll(courses);
+        filteredCourseList.assignAll(courseList);
         print('Courses fetched');
       });
 
@@ -194,6 +224,7 @@ class CourseController extends GetxController{
 
       }, (courses) {
         courseList.assignAll(courses);
+        filteredCourseList.assignAll(courseList);
         print('Courses fetched');
       });
 

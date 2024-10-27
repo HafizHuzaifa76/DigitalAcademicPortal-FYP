@@ -2,6 +2,7 @@ import 'package:digital_academic_portal/features/admin/presentation/pages/Admini
 import 'package:digital_academic_portal/features/admin/shared/courses/presentation/bindings/CourseBindings.dart';
 import 'package:digital_academic_portal/features/admin/shared/courses/presentation/pages/AllCoursesPage.dart';
 import 'package:digital_academic_portal/features/admin/shared/courses/presentation/pages/DepartmentCoursePage.dart';
+import 'package:digital_academic_portal/features/admin/shared/sections/presentation/bindings/SectionBindings.dart';
 import 'package:digital_academic_portal/features/admin/shared/student/presentation/bindings/StudentBindings.dart';
 import 'package:digital_academic_portal/features/admin/shared/student/presentation/pages/DepartmentStudentsPage.dart';
 import 'package:digital_academic_portal/features/admin/shared/student/presentation/pages/SemesterStudentsPage.dart';
@@ -19,6 +20,7 @@ import 'package:lottie/lottie.dart';
 import 'features/admin/shared/courses/presentation/pages/SemesterCoursePage.dart';
 import 'features/admin/shared/departments/presentation/bindings/DepartmentBindings.dart';
 import 'features/admin/shared/departments/presentation/pages/DepartmentPage.dart';
+import 'features/admin/shared/sections/presentation/pages/SectionListPage.dart';
 import 'features/admin/shared/student/presentation/pages/AllStudentsPage.dart';
 import 'features/auth/presentation/bindings/AuthBinding.dart';
 
@@ -69,6 +71,14 @@ class MyApp extends StatelessWidget {
           centerTitle: true,
           titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold)
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            fixedSize: const MaterialStatePropertyAll(Size(double.maxFinite, 45)),
+            textStyle: const MaterialStatePropertyAll(TextStyle(color: Colors.white)),
+            backgroundColor: const MaterialStatePropertyAll(Color(0xFF145849)),
+            shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+          )
+        )
       ),
       initialBinding: AuthBinding(),
       builder: EasyLoading.init(),
@@ -123,6 +133,11 @@ class MyApp extends StatelessWidget {
           name: '/allCourses',
           page: () => const AllCoursesPage(),
           binding: CourseBinding(),
+        ),
+        GetPage(
+          name: '/allSections',
+          page: () => MainSectionsListPage(deptName: Get.arguments['deptName'], semester: Get.arguments['semester']),
+          binding: SectionBinding(),
         ),
       ],
       home: const SplashScreen(),

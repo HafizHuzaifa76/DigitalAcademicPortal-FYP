@@ -60,7 +60,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                                 child: IconButton(
                                     padding: const EdgeInsets.all(8),
                                     onPressed: (){
-
+                                      Get.back();
                                     },
                                     icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28,)
                                 ),

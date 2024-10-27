@@ -27,7 +27,7 @@ class CourseRepositoryImpl implements CourseRepository{
   @override
   Future<Either<Fail, void>> deleteCourse(String deptName, Course course) async {
     try {
-      return Right(await courseRemoteDataSource.deleteCourse(deptName, course.courseCode));
+      return Right(await courseRemoteDataSource.deleteCourse(deptName, CourseModel.fromCourse(course)));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');

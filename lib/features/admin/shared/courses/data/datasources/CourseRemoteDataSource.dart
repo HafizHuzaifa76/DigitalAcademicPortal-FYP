@@ -6,7 +6,7 @@ import '../models/CourseModel.dart';
 abstract class CourseRemoteDataSource {
   Future<CourseModel> addCourse(String deptName, CourseModel course);
   Future<CourseModel> editCourse(String deptName, CourseModel course);
-  Future<void> deleteCourse(String deptName, String course);
+  Future<void> deleteCourse(String deptName, CourseModel course);
   Future<List<CourseModel>> deptCourses(String deptName);
   Future<List<CourseModel>> semesterCourses(String deptName, String semester);
   Future<List<CourseModel>> allCourses();
@@ -17,7 +17,11 @@ class CourseRemoteDataSourceImpl implements CourseRemoteDataSource{
 
   @override
   Future<CourseModel> addCourse(String deptName, CourseModel course) async {
-    var ref = _firestore.collection('departments').doc(deptName).collection('courses').doc(course.courseName);
+    var ref = _firestore.collection('departments').doc(deptName)
+        .collection('semesters')
+        .doc(course.courseSemester)
+        .collection('courses')
+        .doc(course.courseName);
     var snapshot = await ref.get();
 
     if (!snapshot.exists) {
@@ -30,13 +34,21 @@ class CourseRemoteDataSourceImpl implements CourseRemoteDataSource{
   }
 
   @override
-  Future<void> deleteCourse(String deptName, String courseName) async {
-    _firestore.collection('departments').doc(deptName).collection('courses').doc(courseName).delete();
+  Future<void> deleteCourse(String deptName, CourseModel course) async {
+    _firestore.collection('departments').doc(deptName)
+        .collection('semesters')
+        .doc(course.courseSemester)
+        .collection('courses')
+        .doc(course.courseName).delete();
   }
 
   @override
   Future<CourseModel> editCourse(String deptName, CourseModel course) async {
-    var ref = _firestore.collection('departments').doc(deptName).collection('courses').doc(course.courseName);
+    var ref = _firestore.collection('departments').doc(deptName)
+        .collection('semesters')
+        .doc(course.courseSemester)
+        .collection('courses')
+        .doc(course.courseName);
     var snapshot = await ref.get();
 
     if (snapshot.exists) {
@@ -50,11 +62,29 @@ class CourseRemoteDataSourceImpl implements CourseRemoteDataSource{
 
   @override
   Future<List<CourseModel>> deptCourses(String deptName) async {
-    final querySnapshot = await _firestore.collection('departments').doc(deptName).collection('courses').get();
-    return querySnapshot.docs
-        .map((doc) => CourseModel.fromMap(doc.data()))
-        .toList();
+
+    List<CourseModel> allCourses = [];
+
+    final semesterSnapshot = await _firestore.collection('departments')
+        .doc(deptName)
+        .collection('semesters')
+        .get();
+
+    for (final semesterDoc in semesterSnapshot.docs) {
+      final semesterName = semesterDoc.id; // Assuming the document ID is the semester name
+
+      final courseSnapshot = await semesterDoc.reference.collection('courses').get();
+
+      final List<CourseModel> courses = courseSnapshot.docs
+          .map((doc) => CourseModel.fromMap(doc.data()))
+          .toList();
+
+      allCourses.addAll(courses);
+    }
+
+    return allCourses;
   }
+
 
   @override
   Future<List<CourseModel>> allCourses() async {
@@ -67,13 +97,9 @@ class CourseRemoteDataSourceImpl implements CourseRemoteDataSource{
       final departmentName = departmentDoc.id;
 
       // Fetch courses for each department
-      final courseSnapshot = await _firestore
-          .collection('departments').doc(departmentName)
-          .collection('courses').get();
+      final courses = await deptCourses(departmentName);
 
-      allCourses.addAll(courseSnapshot.docs
-          .map((doc) => CourseModel.fromMap(doc.data()))
-          .toList());
+      allCourses.addAll(courses);
     }
 
     return allCourses;
@@ -82,9 +108,10 @@ class CourseRemoteDataSourceImpl implements CourseRemoteDataSource{
   @override
   Future<List<CourseModel>> semesterCourses(String deptName, String semester) async {
     final querySnapshot = await _firestore.collection('departments')
-        .doc(deptName).collection('courses')
-        .where('courseDept',  isEqualTo: deptName)
-        .where('courseSemester', isEqualTo: semester)
+        .doc(deptName)
+        .collection('semesters')
+        .doc(semester)
+        .collection('courses')
         .get();
 
     return querySnapshot.docs

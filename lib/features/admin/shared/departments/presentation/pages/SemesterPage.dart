@@ -60,7 +60,7 @@ class _SemesterPageState extends State<SemesterPage> {
                                 child: IconButton(
                                     padding: const EdgeInsets.all(8),
                                     onPressed: (){
-
+                                      Get.back();
                                     },
                                     icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28,)
                                 ),
@@ -199,8 +199,8 @@ class _SemesterPageState extends State<SemesterPage> {
                           child: Card(
                             child: Column(
                               children: [
-                                AutoSizeText('Contact', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                                AutoSizeText(dept.contactPhone, style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
+                                AutoSizeText('Sections', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
+                                AutoSizeText('0', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
                               ],
                             ),
                           ),
@@ -234,7 +234,7 @@ class _SemesterPageState extends State<SemesterPage> {
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .45, 100)),
+                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .3, 100)),
                               shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                           ),
                           onPressed: ()=> Get.toNamed('/semesterStudents', arguments: {
@@ -253,7 +253,7 @@ class _SemesterPageState extends State<SemesterPage> {
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .45, 100)),
+                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .3, 100)),
                               shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                           ),
                           onPressed: ()=> Get.toNamed('/teachers'),
@@ -265,47 +265,73 @@ class _SemesterPageState extends State<SemesterPage> {
                             ],
                           ),
                         ),
+
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
+                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .3, 100)),
+                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                          ),
+                          onPressed: ()=> Get.toNamed('/semesterCourses', arguments: {
+                            'deptName': dept.departmentName,
+                            'semester': semester
+                          }),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Icon(Icons.book, color: Theme.of(context).primaryColorLight, size: 35,),
+                              AutoSizeText(' Courses ', style: TextStyle(color: Theme.of(context).primaryColorLight, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
 
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .45, 100)),
-                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
-                          ),
-                          onPressed: ()=> Get.toNamed('/semesterCourses', arguments: {
-                            'deptName': dept.departmentName,
-                            'semester': semester
-                          }),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(Icons.book, color: Theme.of(context).primaryColorDark, size: 35,),
-                              AutoSizeText(' Courses ', style: TextStyle(color: Theme.of(context).primaryColorDark, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
-                            ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
+                                fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .3, 100)),
+                                shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                            ),
+                            onPressed: ()=> Get.toNamed('/allSections', arguments: {
+                              'deptName': dept.departmentName,
+                              'semester': semester
+                            }),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Icon(Icons.account_tree, color: Theme.of(context).primaryColorLight, size: 35,),
+                                AutoSizeText(' Sections ', style: TextStyle(color: Theme.of(context).primaryColorLight, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
+                              ],
+                            ),
                           ),
                         ),
 
-                        ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .45, 100)),
-                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
-                          ),
-                          onPressed: ()=> Get.toNamed('/semesterCourses', arguments: {
-                            'deptName': dept.departmentName,
-                            'semester': semester
-                          }),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(Icons.book, color: Theme.of(context).primaryColorDark, size: 35,),
-                              AutoSizeText(' Sections ', style: TextStyle(color: Theme.of(context).primaryColorDark, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
-                            ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
+                                fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .3, 100)),
+                                padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 2, horizontal: 2)),
+                                shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                            ),
+                            onPressed: ()=> Get.toNamed('/allSections', arguments: {
+                              'deptName': dept.departmentName,
+                              'semester': semester
+                            }),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Icon(Icons.event_note, color: Theme.of(context).primaryColorLight, size: 35,),
+                                AutoSizeText('Time Table', style: TextStyle(color: Theme.of(context).primaryColorLight, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
+                              ],
+                            ),
                           ),
                         ),
                       ],

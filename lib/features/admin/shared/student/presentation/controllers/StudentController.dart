@@ -1,24 +1,19 @@
 
-import 'package:digital_academic_portal/core/usecases/UseCase.dart';
 import 'package:digital_academic_portal/features/admin/shared/student/domain/usecases/SemesterStudentsUseCase.dart';
-import 'package:digital_academic_portal/features/admin/shared/student/presentation/pages/DepartmentStudentsPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/state_manager.dart';
+import '../../../../../../core/usecases/UseCase.dart';
 import '../../domain/usecases/AddStudentUseCase.dart';
 import '../../domain/usecases/AllStudentUseCase.dart';
 import '../../domain/usecases/DeleteStudentUseCase.dart';
 import '../../domain/usecases/DepartmentStudentsUseCase.dart';
 import '../../domain/usecases/EditStudentUseCase.dart';
-
 import '../../domain/entities/Student.dart';
 import '../../domain/usecases/SetSectionLimitUseCase.dart';
 
-class StudentController extends GetxController{
+class StudentController extends GetxController {
   final AddStudentUseCase addStudentUseCase;
   final DeleteStudentUseCase deleteStudentUseCase;
   final EditStudentUseCase editStudentUseCase;
@@ -27,7 +22,15 @@ class StudentController extends GetxController{
   final SemesterStudentsUseCase semesterStudentsUseCase;
   final SetSectionLimitUseCase setSectionLimitUseCase;
 
-  StudentController({required this.addStudentUseCase, required this.deleteStudentUseCase, required this.editStudentUseCase, required this.allStudentsUseCase, required this.departmentStudentsUseCase, required this.semesterStudentsUseCase, required this.setSectionLimitUseCase});
+  StudentController({
+    required this.addStudentUseCase,
+    required this.deleteStudentUseCase,
+    required this.editStudentUseCase,
+    required this.allStudentsUseCase,
+    required this.departmentStudentsUseCase,
+    required this.semesterStudentsUseCase,
+    required this.setSectionLimitUseCase,
+  });
 
   var studentNameController = TextEditingController();
   var fatherNameController = TextEditingController();
@@ -38,8 +41,24 @@ class StudentController extends GetxController{
   String selectedYear = '', selectedShift = '', selectedGender = '';
 
   var isLoading = false.obs;
-
   var studentList = <Student>[].obs;
+  var filteredStudentList = <Student>[].obs;
+
+  void filterStudents(String query) {
+    if (query.isEmpty) {
+      filteredStudentList.assignAll(studentList);
+    } else {
+      var lowerCaseQuery = query.toLowerCase();
+      var filteredResults = studentList.where((student) {
+        return student.studentName.toLowerCase().startsWith(lowerCaseQuery) || student.studentName.toLowerCase().contains(' $lowerCaseQuery') ||
+            student.studentRollNo.toLowerCase().startsWith(lowerCaseQuery) || student.studentRollNo.toLowerCase().contains('-$lowerCaseQuery') ||
+            student.studentCNIC.toLowerCase().startsWith(lowerCaseQuery) || student.studentSection.toLowerCase().startsWith(lowerCaseQuery) ||
+            student.studentEmail.toLowerCase().startsWith(lowerCaseQuery) || student.studentContactNo.toLowerCase().startsWith(lowerCaseQuery) ||
+            student.fatherName.toLowerCase().startsWith(lowerCaseQuery) || student.fatherName.toLowerCase().contains(' $lowerCaseQuery');
+      }).toList();
+      filteredStudentList.assignAll(filteredResults);
+    }
+  }
 
   Future<void> showDepartmentStudents(String deptName) async {
     isLoading(true);
@@ -55,10 +74,9 @@ class StudentController extends GetxController{
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
       );
-
     }, (students) {
       studentList.assignAll(students);
-      print('Department Students fetched');
+      filteredStudentList.assignAll(students); // Show all students initially
     });
 
     isLoading(false);
@@ -81,6 +99,7 @@ class StudentController extends GetxController{
 
     }, (students) {
       studentList.assignAll(students);
+      filteredStudentList.assignAll(students);
       print('Semesters Students fetched');
     });
 
@@ -90,9 +109,10 @@ class StudentController extends GetxController{
   Future<void> addStudent(String deptName, String courseCode) async {
     int studentCount = studentList.length + 1;
     String currentRoll = studentCount.toString().padLeft(4, '0');
+    String rollNo = '$currentRoll-$courseCode-$selectedYear';
 
     var newStudent = Student(
-      studentRollNo: '${studentList.length +1}',
+      studentRollNo: rollNo,
       studentName: studentNameController.text,
       fatherName: fatherNameController.text,
       studentCNIC: studentCNICController.text,
@@ -217,26 +237,27 @@ class StudentController extends GetxController{
   }
 
   Future<void> showAllStudents() async {
-      isLoading(true);
-      final result = await allStudentsUseCase.execute(null);
+    isLoading(true);
+    final result = await allStudentsUseCase.execute(null);
 
-      result.fold((left) {
-        String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+    result.fold((left) {
+      String message = left.failure.toString();
+      Get.snackbar(
+          'Error', message,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
+      );
 
-      }, (students) {
-        studentList.assignAll(students);
-        print('Students fetched');
-      });
+    }, (students) {
+      studentList.assignAll(students);
+      filteredStudentList.assignAll(students);
+      print('Students fetched');
+    });
 
-      isLoading(false);
+    isLoading(false);
   }
 
   void setControllerValues(Student student) {
@@ -246,18 +267,6 @@ class StudentController extends GetxController{
     studentContactNoController.text = student.studentContactNo;
     studentEmailController.text = student.studentEmail;
     studentAddressController.text = student.studentAddress;
-  }
-
-  void clearAllControllers() {
-    studentNameController.clear();
-    fatherNameController.clear();
-    studentCNICController.clear();
-    studentContactNoController.clear();
-    studentEmailController.clear();
-    studentAddressController.clear();
-    selectedYear = '';
-    selectedShift = '';
-    selectedGender = '';
   }
 
   Future<void> setSectionLimit(String deptName, String semester, int sectionLimit) async {
@@ -291,5 +300,17 @@ class StudentController extends GetxController{
       isLoading(false);
       Get.back();
     }
+  }
+
+  void clearAllControllers() {
+    studentNameController.clear();
+    fatherNameController.clear();
+    studentCNICController.clear();
+    studentContactNoController.clear();
+    studentEmailController.clear();
+    studentAddressController.clear();
+    selectedYear = '';
+    selectedShift = '';
+    selectedGender = '';
   }
 }

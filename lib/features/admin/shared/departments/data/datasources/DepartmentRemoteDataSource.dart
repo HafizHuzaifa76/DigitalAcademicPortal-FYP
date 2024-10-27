@@ -32,8 +32,10 @@ class DepartmentRemoteDataSourceImpl implements DepartmentRemoteDataSource{
             semesterName: semesterName,
             sectionLimit: 0,
             totalCourses: 0,
-            totalStudents: 0,
-            totalTeachers: 0
+            numOfCourses: 0,
+            numOfTeachers: 0,
+            numOfStudents: 0,
+            numOfElectiveCourses: 0,
         );
         await ref.collection('semesters').doc(semesterName).set(semester.toMap());
       }

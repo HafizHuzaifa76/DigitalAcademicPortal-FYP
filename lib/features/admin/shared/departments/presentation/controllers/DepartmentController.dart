@@ -43,7 +43,19 @@ class DepartmentController extends GetxController {
   var isLoading = false.obs;
 
   var departmentList = <Department>[].obs;
+  var filteredDepartmentList = <Department>[].obs;
   var semestersList = <Semester>[].obs;
+
+  void filterDepartments(String query) {
+    if (query.isEmpty) {
+      filteredDepartmentList.assignAll(departmentList); // Reset to full list if no query
+    } else {
+      filteredDepartmentList.assignAll(
+        departmentList.where((department) =>
+            department.departmentName.toLowerCase().contains(query.toLowerCase())).toList(),
+      );
+    }
+  }
 
   Future<void> addDepartment() async {
     EasyLoading.show(status: 'Adding...');
@@ -103,6 +115,14 @@ class DepartmentController extends GetxController {
     headOfDepartmentController.clear();
     contactPhoneController.clear();
     semesterController.clear();
+  }
+
+  void updateDepartmentDetails(Department department) {
+    departmentNameController.text = department.departmentName;
+    departmentCodeController.text = department.departmentCode;
+    headOfDepartmentController.text = department.headOfDepartment;
+    contactPhoneController.text = department.contactPhone;
+    semesterController.text = department.totalSemesters.toString();
   }
 
   Future<void> editDepartment(Department newDepartment) async {
@@ -192,6 +212,7 @@ class DepartmentController extends GetxController {
 
       }, (departments) {
         departmentList.assignAll(departments);
+        filteredDepartmentList.assignAll(departments);
         print('departments fetched');
       });
 

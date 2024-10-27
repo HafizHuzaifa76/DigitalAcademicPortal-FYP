@@ -39,8 +39,6 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                 height: screenSize.height * .25,
                 width: screenSize.width,
                 padding: EdgeInsets.only(top: 35, left: screenSize.width *0.035, right: screenSize.width *0.035, bottom: 8),
-                decoration: const BoxDecoration(
-                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -65,7 +63,7 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                                 child: IconButton(
                                     padding: const EdgeInsets.all(8),
                                     onPressed: (){
-
+                                      Get.back();
                                     },
                                     icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28,)
                                 ),
@@ -243,7 +241,7 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                               shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                               padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 12, vertical: 5))
                           ),
-                          onPressed: ()=> semestersDialog(context),
+                          onPressed: ()=> semestersBottomSheet(context),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -279,7 +277,9 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                               fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .3, 100)),
                               shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                           ),
-                          onPressed: ()=> Get.toNamed('/teachers'),
+                          onPressed: ()=> Get.toNamed('/deptTeachers', arguments: {
+                            'deptName': dept.departmentName
+                          }),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -336,12 +336,23 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                               fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .3, 100)),
                               shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                           ),
-                          onPressed: ()=> Get.toNamed('/courses'),
+                          onPressed: (){
+
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
+                              // Lottie.asset(
+                              //   'assets/animations/loading_animation4.json',
+                              //   width: 35,
+                              //   height: 35,
+                              //   fit: BoxFit.scaleDown,
+                              // ),
+
+                              //chatbot
+                              //move students to next semester
                               Icon(FontAwesomeIcons.calendarCheck, color: Theme.of(context).primaryColorDark, size: 35,),
-                              AutoSizeText(' Calendar ', style: TextStyle(color: Theme.of(context).primaryColorDark, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
+                              AutoSizeText(' TimeTable ', style: TextStyle(color: Theme.of(context).primaryColorDark, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
                             ],
                           ),
                         ),
@@ -360,24 +371,40 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
     );
   }
 
-  Future semestersDialog(BuildContext context){
-    controller.clearFields();
-    return Get.defaultDialog(
-      title: 'Add Department',
-      titleStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 24, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold),
-      content: SingleChildScrollView(
+  void semestersBottomSheet(BuildContext context){
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7.5),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: controller.semestersList
-                .map((semester) => ElevatedButton(
-              onPressed: () {
-                Get.off(SemesterPage(department: dept, semester: semester.semesterName));
-              },
-              child: Text(semester.semesterName),
-            ))
-                .toList(),
+            children: [
+              Container(
+                height: 7,
+                width: 60,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade800,
+                  borderRadius: BorderRadius.circular(50)
+                ),
+              ),
+              const SizedBox(height: 6.5),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: controller.semestersList.map((semester) => Padding(
+                  padding: const EdgeInsets.only(bottom: 6.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Get.off(SemesterPage(department: dept, semester: semester.semesterName));
+                    },
+                    child: Text(semester.semesterName, style: const TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu'))
+                  ),
+                )).toList(),
+              ),
+            ],
           ),
-      ),
+        );
+      },
     );
   }
 }
