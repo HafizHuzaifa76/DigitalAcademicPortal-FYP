@@ -3,6 +3,7 @@ import 'package:digital_academic_portal/features/admin/shared/courses/domain/use
 import 'package:digital_academic_portal/features/admin/shared/courses/domain/usecases/SemesterCoursesUseCase.dart';
 import 'package:get/get.dart';
 
+import '../../../departments/domain/usecases/UpdateSemesterCoursesUseCase.dart';
 import '../../data/datasources/CourseRemoteDataSource.dart';
 import '../../data/repositories/CourseRepositoryImpl.dart';
 import '../../domain/repositories/CourseRepository.dart';
@@ -10,6 +11,7 @@ import '../../domain/usecases/AddCourseUseCase.dart';
 import '../../domain/usecases/AllCourseUseCase.dart';
 import '../../domain/usecases/DeleteCourseUseCase.dart';
 import '../../domain/usecases/EditCourseUseCase.dart';
+import '../../domain/usecases/UpdateCourseInSemesterUseCase.dart';
 import '../controllers/CourseController.dart';
 
 class CourseBinding extends Bindings{
@@ -23,7 +25,8 @@ class CourseBinding extends Bindings{
     Get.lazyPut(() => DeleteCourseUseCase(Get.find()));
     Get.lazyPut(() => DeptCoursesUseCase(Get.find()));
     Get.lazyPut(() => SemesterCoursesUseCase(Get.find()));
-    Get.lazyPut(() => CourseController(addCourseUseCase: Get.find(), deleteCourseUseCase: Get.find(), editCourseUseCase: Get.find(), allCoursesUseCase: Get.find(), deptCoursesUseCase: Get.find(), semesterCoursesUseCase: Get.find()));
+    Get.lazyPut(() => UpdateCourseInSemesterUseCase(Get.find()));
+    Get.lazyPut(() => UpdateSemesterCourseUseCase());
+    Get.lazyPut(() => CourseController(addCourseUseCase: Get.find(), deleteCourseUseCase: Get.find(), editCourseUseCase: Get.find(), allCoursesUseCase: Get.find(), deptCoursesUseCase: Get.find(), semesterCoursesUseCase: Get.find(), updateCourseInSemesterUseCase: Get.find()));
   }
-
 }

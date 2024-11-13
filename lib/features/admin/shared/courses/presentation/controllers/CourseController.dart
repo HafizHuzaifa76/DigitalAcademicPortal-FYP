@@ -1,16 +1,19 @@
 
 import 'package:digital_academic_portal/core/usecases/UseCase.dart';
 import 'package:digital_academic_portal/features/admin/shared/courses/domain/usecases/SemesterCoursesUseCase.dart';
+import 'package:digital_academic_portal/features/admin/shared/courses/presentation/pages/DepartmentCoursePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import '../../../departments/domain/entities/Semester.dart';
 import '../../domain/usecases/AddCourseUseCase.dart';
 import '../../domain/usecases/AllCourseUseCase.dart';
 import '../../domain/usecases/DeleteCourseUseCase.dart';
 import '../../domain/usecases/DeptCoursesUseCase.dart';
 import '../../domain/usecases/EditCourseUseCase.dart';
 import '../../domain/entities/Course.dart';
+import '../../domain/usecases/UpdateCourseInSemesterUseCase.dart';
 
 class CourseController extends GetxController{
   final AddCourseUseCase addCourseUseCase;
@@ -19,8 +22,9 @@ class CourseController extends GetxController{
   final AllCoursesUseCase allCoursesUseCase;
   final DeptCoursesUseCase deptCoursesUseCase;
   final SemesterCoursesUseCase semesterCoursesUseCase;
+  final UpdateCourseInSemesterUseCase updateCourseInSemesterUseCase;
 
-  CourseController({required this.addCourseUseCase, required this.deleteCourseUseCase, required this.editCourseUseCase, required this.allCoursesUseCase, required this.deptCoursesUseCase, required this.semesterCoursesUseCase});
+  CourseController({required this.addCourseUseCase, required this.deleteCourseUseCase, required this.editCourseUseCase, required this.allCoursesUseCase, required this.deptCoursesUseCase, required this.semesterCoursesUseCase, required this.updateCourseInSemesterUseCase});
 
   TextEditingController courseCodeController = TextEditingController();
   TextEditingController courseNameController = TextEditingController();
@@ -30,6 +34,7 @@ class CourseController extends GetxController{
   var filteredCourseList = <Course>[].obs;
   var selectedTotalCourses = 5.obs;
   var selectedElectiveCourses = 0.obs;
+  List<Semester> semesterList = [];
 
   void updateTotalCourses(int value) {
     selectedTotalCourses.value = value + 1;
@@ -229,5 +234,41 @@ class CourseController extends GetxController{
       });
 
       isLoading(false);
+  }
+
+  Future<void> updateSemester(String deptName, int index, Semester semester) async {
+
+    try {
+      EasyLoading.show(status: 'Updating New Information...');
+      final result = await updateCourseInSemesterUseCase.execute(UpdateSemesterParams(deptName, semester));
+
+      result.fold((left) {
+        String message = left.failure.toString();
+        Get.snackbar(
+            'Error', message,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
+        );
+      }, (right) {
+        Get.snackbar(
+            'Success',
+            'Now you can add courses in ${semester.semesterName}',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Get.theme.primaryColor,
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            colorText: Colors.white,
+            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white)
+        );
+
+        if(index != -1){
+          semesterList[index] = semester;
+        }
+      });
+    } finally {
+      EasyLoading.dismiss();
+    }
   }
 }

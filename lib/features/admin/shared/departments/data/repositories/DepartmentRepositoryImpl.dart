@@ -84,4 +84,18 @@ class DepartmentRepositoryImpl implements DepartmentRepository{
     }
   }
 
+  @override
+  Future<Either<Fail, SemesterModel>> updateSemesterData(String deptName, Semester semester) async {
+    try {
+      return Right(await departmentRemoteDataSource.updateSemester(deptName, SemesterModel.fromSemester(semester)));
+    } catch (e) {
+      String message = e.toString();
+      int startIndex = message.indexOf(']');
+      if (startIndex != -1){
+        message = message.substring(startIndex+2);
+      }
+      return Left(Fail(message));
+    }
+  }
+
 }

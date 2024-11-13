@@ -1,4 +1,6 @@
 
+import 'package:digital_academic_portal/core/utils/Utils.dart';
+import 'package:digital_academic_portal/features/admin/shared/departments/domain/entities/Semester.dart';
 import 'package:digital_academic_portal/features/admin/shared/student/domain/usecases/SemesterStudentsUseCase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +44,7 @@ class StudentController extends GetxController {
 
   var isLoading = false.obs;
   var studentList = <Student>[].obs;
+  List<Semester> semesterList = [];
   var filteredStudentList = <Student>[].obs;
 
   void filterStudents(String query) {
@@ -276,24 +279,15 @@ class StudentController extends GetxController {
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+        Utils().showErrorSnackBar('Error', message);
+
       }, (right) {
-        Get.snackbar(
-            'Success',
-            'Limit set successfully...',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.primaryColor,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white)
-        );
+        Utils().showSuccessSnackBar('Success', 'Limit set successfully...\nNow you can add students');
+
+        if(semesterList.isNotEmpty){
+          semesterList.first.sectionLimit = sectionLimit;
+        }
+        Get.back();
       });
 
     } finally {
@@ -301,6 +295,8 @@ class StudentController extends GetxController {
       Get.back();
     }
   }
+
+
 
   void clearAllControllers() {
     studentNameController.clear();

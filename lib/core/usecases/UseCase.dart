@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../features/admin/shared/courses/domain/entities/Course.dart';
+import '../../features/admin/shared/departments/domain/entities/Semester.dart';
 import '../../features/admin/shared/sections/domain/entities/Section.dart';
 
 abstract class UseCase<Type, Params> {
@@ -19,6 +20,13 @@ class SemesterParams{
   final String semester;
 
   SemesterParams(this.deptName, this.semester);
+}
+
+class UpdateSemesterParams{
+  final String deptName;
+  final Semester semester;
+
+  UpdateSemesterParams(this.deptName, this.semester);
 }
 
 class SectionParams{

@@ -19,13 +19,16 @@ class CourseRemoteDataSourceImpl implements CourseRemoteDataSource{
   Future<CourseModel> addCourse(String deptName, CourseModel course) async {
     var ref = _firestore.collection('departments').doc(deptName)
         .collection('semesters')
-        .doc(course.courseSemester)
-        .collection('courses')
-        .doc(course.courseName);
-    var snapshot = await ref.get();
+        .doc(course.courseSemester);
+    var courseRef = ref.collection('courses').doc(course.courseName);
+
+    var snapshot = await courseRef.get();
 
     if (!snapshot.exists) {
-      await ref.set(course.toMap());
+      await courseRef.set(course.toMap());
+      await ref.update({
+        'numOfCourses': FieldValue.increment(1),
+      });
     } else {
       throw Exception('Course already exists');
     }

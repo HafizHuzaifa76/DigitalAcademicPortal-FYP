@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:digital_academic_portal/features/admin/presentation/widgets/AdministratorDrawer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -32,7 +33,7 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      height: 80,
+                      height: kIsWeb ?  screenSize.height * 0.25 * 0.3 : screenSize.height * 0.25 * 0.4,
                       child: Stack(
                         children: [
                           Positioned(
@@ -40,12 +41,11 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                               right: 100,
                               left: 100,
                               child: Text(
-                                'Administrator\nDashboard',
-                                style: Theme.of(context)
-                                    .appBarTheme
-                                    .titleTextStyle,
+                                kIsWeb ? 'Administrator Dashboard' : 'Administrator\nDashboard',
+                                style: Theme.of(context).appBarTheme.titleTextStyle,
                                 textAlign: TextAlign.center,
-                              )),
+                              )
+                          ),
 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,7 +65,8 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                                           Icons.sort,
                                           color: Colors.white,
                                           size: 28,
-                                        )),
+                                        )
+                                    ),
                                   );
                                 },
                               ),
@@ -93,7 +94,7 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                           semanticContainer: true,
                           shadowColor: Colors.black,
                           child: SizedBox(
-                            height: 70,
+                            height: screenSize.height * 0.25 * 0.34,
                             width: screenSize.width * 0.30,
                             child: Center(
                               child: Text(
@@ -112,7 +113,7 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                         Card(
                           color: const Color(0xFF128771),
                           child: SizedBox(
-                            height: 70,
+                            height: screenSize.height * 0.25 * 0.34,
                             width: screenSize.width * 0.28,
                             child: Center(
                               child: Text(
@@ -133,7 +134,7 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                           surfaceTintColor: Colors.black,
                           shadowColor: Theme.of(context).primaryColorLight,
                           child: SizedBox(
-                            height: 70,
+                            height: screenSize.height * 0.25 * 0.34,
                             width: screenSize.width * 0.28,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,

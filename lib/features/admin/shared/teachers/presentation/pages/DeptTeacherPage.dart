@@ -40,19 +40,19 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsets.only(bottom: 70),
               centerTitle: true,
-              title: const Column(
+              title: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  const Text(
                     'Teachers',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontFamily: 'Ubuntu',
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(color: Colors.white, fontSize: 16.0, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 5),
+
+                  Text('Department of ${widget.deptName}',
+                      style: const TextStyle(color: Colors.white, fontSize: 12.0, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold)
+                  ),
+                  const SizedBox(height: 2),
                 ],
               ),
               background: Container(

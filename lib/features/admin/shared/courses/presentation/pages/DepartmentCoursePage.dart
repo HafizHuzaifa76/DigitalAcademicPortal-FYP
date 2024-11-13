@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../../departments/domain/entities/Semester.dart';
@@ -27,6 +28,7 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
 
   @override
   void initState() {
+    controller.semesterList = widget.semestersList;
     controller.showDeptCourses(widget.deptName);
     super.initState();
   }
@@ -177,7 +179,7 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
     );
   }
 
-  void _showAddCourseOptions(String semester) {
+  void _showAddCourseOptions(Semester semester) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -205,9 +207,10 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
     );
   }
 
-  Future addCourseBottomSheet(BuildContext context, String semester) async {
+  Future addCourseBottomSheet(BuildContext context, Semester semester) async {
     final List<double> creditHoursOptions = [1.0, 2.0, 3.0];
     double selectedCreditHours = creditHoursOptions.last;
+    var filteredList = controller.courseList.where((element) => element.courseSemester == semester.semesterName).toList();
 
     return showModalBottomSheet(
       context: context,
@@ -234,23 +237,35 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Add Compulsory Course\n$semester',
-                  style: TextStyle(
-                    fontFamily: 'Ubuntu',
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Theme
-                        .of(context)
-                        .primaryColor,
+                Center(
+                  child: Text(
+                    'Add Compulsory Course\n${semester.semesterName}',
+                    style: TextStyle(
+                      fontFamily: 'Ubuntu',
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text('Courses Added : ${filteredList.length}', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold),),
+                            Text('Remaining : ${semester.totalCourses - filteredList.length}', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+
                         TextField(
                           controller: controller.courseCodeController,
                           decoration: InputDecoration(
@@ -259,12 +274,13 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(color: Colors.grey),
+                              borderSide: BorderSide(color: Theme.of(context).primaryColor),
                             ),
                             labelText: 'Course Code',
                           ),
                         ),
                         const SizedBox(height: 10),
+
                         TextField(
                           controller: controller.courseNameController,
                           decoration: InputDecoration(
@@ -273,12 +289,13 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(color: Colors.grey),
+                              borderSide: BorderSide(color: Theme.of(context).primaryColor),
                             ),
                             labelText: 'Course Name',
                           ),
                         ),
                         const SizedBox(height: 10),
+
                         DropdownButtonFormField<double>(
                           value: selectedCreditHours,
                           decoration: InputDecoration(
@@ -287,7 +304,7 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(color: Colors.grey),
+                              borderSide: BorderSide(color: Theme.of(context).primaryColor),
                             ),
                             labelText: 'Credit Hours',
                           ),
@@ -303,27 +320,53 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                             });
                           },
                         ),
+                        const SizedBox(height: 10),
+
+                        TextField(
+                          controller: TextEditingController(text: semester.semesterName),
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                            ),
+                            labelText: 'Course Semester',
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  style: const ButtonStyle(
-                      fixedSize:
-                      MaterialStatePropertyAll(Size(double.maxFinite, 45))),
+                  style: const ButtonStyle(fixedSize: MaterialStatePropertyAll(Size(double.maxFinite, 45))),
                   onPressed: () {
-                    var newCourse = Course(
-                      courseCode: controller.courseCodeController.text,
-                      courseName: controller.courseNameController.text,
-                      courseDept: widget.deptName,
-                      courseCreditHours: selectedCreditHours,
-                      courseSemester: semester,
-                      courseType: 'compulsory',
-                    );
+                    if (filteredList.length < semester.totalCourses) {
+                      var newCourse = Course(
+                        courseCode: controller.courseCodeController.text,
+                        courseName: controller.courseNameController.text,
+                        courseDept: widget.deptName,
+                        courseCreditHours: selectedCreditHours,
+                        courseSemester: semester.semesterName,
+                        courseType: 'compulsory',
+                      );
 
-                    controller.addCourse(newCourse);
-                    Get.back();
+                      controller.addCourse(newCourse);
+                      Get.back();
+
+                    } else {
+                      Get.snackbar(
+                          'Error', 'Limit Already Completed...',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                          icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
+                      );
+                    }
                   },
                   child: const Text(
                     'Add',
@@ -393,7 +436,7 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(color: Colors.grey),
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor),
                       ),
                       labelText: "Total Elective Courses",
                       hintText: "Enter total electives",
@@ -417,7 +460,7 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(color: Colors.grey),
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor),
                       ),
                       labelText: "Number of Selection Courses",
                       hintText: selectionDescription,
@@ -490,7 +533,7 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
 
                 Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: widget.semestersList.map((semester) =>
+                  children: controller.semesterList.map((semester) =>
                       Padding(
                         padding: const EdgeInsets.only(bottom: 6.0),
                         child: ElevatedButton(
@@ -502,16 +545,15 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                             course.courseSemester == semester.semesterName)
                                 .toList();
 
-                            if (filteredCourses.isEmpty) {
-                              selectCourseOptionsBottomSheet(context);
+                            if (semester.totalCourses == 0) {
+                              selectCourseOptionsBottomSheet(context, semester);
                             }
                             else {
                               if (semester.numOfElectiveCourses != 0) {
-                                _showAddCourseOptions(semester.semesterName);
+                                _showAddCourseOptions(semester);
                               }
                               else {
-                                addCourseBottomSheet(
-                                    context, semester.semesterName);
+                                addCourseBottomSheet(context, semester);
                               }
                             }
                           },
@@ -531,7 +573,7 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
     );
   }
 
-  Future selectCourseOptionsBottomSheet(BuildContext context) {
+  Future selectCourseOptionsBottomSheet(BuildContext context, Semester currentSemester) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -582,11 +624,10 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                 child: CupertinoPicker(
                   itemExtent: 30,
                   onSelectedItemChanged: (int value) {
-                    controller.updateTotalCourses(
-                        value); // Adjust value based on index
+                    controller.updateTotalCourses(value); // Adjust value based on index
                   },
                   scrollController: FixedExtentScrollController(
-                    initialItem: 5,
+                    initialItem: 4,
                   ),
                   children: List.generate(
                     10,
@@ -687,8 +728,16 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                       Size(double.maxFinite, 45)),
                 ),
                 onPressed: () {
-                  // Implement saving logic here
-                  Navigator.pop(context); // Close the bottom sheet
+                  Semester updatedSemester = Semester(
+                      semesterName: currentSemester.semesterName,
+                      sectionLimit: currentSemester.sectionLimit,
+                      totalCourses: controller.selectedTotalCourses.value,
+                      numOfCourses: currentSemester.numOfCourses,
+                      numOfElectiveCourses: controller.selectedElectiveCourses.value,
+                      numOfStudents: currentSemester.numOfStudents,
+                      numOfTeachers: currentSemester.numOfTeachers
+                  );
+                  showCourseSelectionDialog(context, currentSemester, updatedSemester);
                 },
                 child: const Text(
                   'Next',
@@ -702,6 +751,87 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
               const SizedBox(height: 10),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  showCourseSelectionDialog(BuildContext context, Semester currentSemester, Semester updatedSemester) {
+    int totalCourses = updatedSemester.totalCourses, compulsoryCourses = updatedSemester.totalCourses - updatedSemester.numOfElectiveCourses, electiveCourses = updatedSemester.numOfElectiveCourses;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Center(child: Text('Courses', style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Ubuntu'),)),
+          content: Container(
+            width: double.maxFinite,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 70,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Total', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 20),),
+                      Text('$totalCourses', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 18),),
+                    ],
+                  ),
+                ),
+                Container(color: Colors.black, height: 50, width: 2,),
+
+                SizedBox(
+                  width: 105,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Compulsory', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 18),),
+                      Text('$compulsoryCourses', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 18),),
+                    ],
+                  ),
+                ),
+                Container(color: Colors.black, height: 50, width: 2,),
+
+                SizedBox(
+                  width: 80,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Elective', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 20),),
+                      Text('$electiveCourses', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 18),),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Column(
+              children: [
+                OutlinedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                    side: MaterialStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2))
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel', style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold),),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    var semesterIndex = controller.semesterList.indexOf(currentSemester);
+
+                    controller.updateSemester(widget.deptName, semesterIndex, updatedSemester);
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Confirm', style: TextStyle(color: Colors.white, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold),),
+                ),
+              ],
+            ),
+          ],
         );
       },
     );
@@ -736,4 +866,3 @@ class ElectiveCourseScreen extends StatelessWidget {
     );
   }
 }
-

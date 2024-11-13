@@ -1,4 +1,5 @@
 import 'package:digital_academic_portal/features/admin/shared/departments/domain/usecases/AllSemestersUseCase.dart';
+import 'package:digital_academic_portal/features/admin/shared/departments/domain/usecases/UpdateSemesterCoursesUseCase.dart';
 import 'package:get/get.dart';
 
 import '../../data/datasources/DepartmentRemoteDataSource.dart';

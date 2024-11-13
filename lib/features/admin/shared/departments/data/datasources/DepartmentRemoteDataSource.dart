@@ -11,6 +11,7 @@ abstract class DepartmentRemoteDataSource{
   Future<void> deleteDepartment(String departmentName);
   Future<List<DepartmentModel>> allDepartments();
   Future<List<SemesterModel>> getAllSemesters(String departmentName);
+  Future<SemesterModel> updateSemester(String departmentName, SemesterModel semester);
 }
 
 class DepartmentRemoteDataSourceImpl implements DepartmentRemoteDataSource{
@@ -83,6 +84,22 @@ class DepartmentRemoteDataSourceImpl implements DepartmentRemoteDataSource{
       return snapshot.docs.map((doc) => SemesterModel.fromMap(doc.data())).toList();
     } else {
       throw Exception('No semesters found for this department');
+    }
+  }
+
+  @override
+  Future<SemesterModel> updateSemester(String departmentName, SemesterModel semester) async {
+    var ref = _firestore.collection('departments').doc(departmentName).collection('semesters').doc(semester.semesterName);
+    var snapshot = await ref.get();
+    if (snapshot.exists) {
+      print(departmentName);
+      print(semester.numOfElectiveCourses);
+      print(semester.totalCourses);
+      print(semester.semesterName);
+      await ref.set(semester.toMap());
+      return semester;
+    } else {
+      throw Exception('Department not exists');
     }
   }
 

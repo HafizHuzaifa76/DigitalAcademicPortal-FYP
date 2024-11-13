@@ -78,7 +78,13 @@ class MyApp extends StatelessWidget {
             backgroundColor: const MaterialStatePropertyAll(Color(0xFF145849)),
             shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
           )
-        )
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+            style: ButtonStyle(
+              fixedSize: const MaterialStatePropertyAll(Size(double.maxFinite, 45)),
+              side: MaterialStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2)),
+              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+            ))
       ),
       initialBinding: AuthBinding(),
       builder: EasyLoading.init(),
@@ -96,7 +102,7 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
             name: '/departmentStudents',
-            page: () => DepartmentStudentsPage(deptName: Get.arguments['deptName'], sectionLength: Get.arguments['sectionLength'], deptCode: Get.arguments['deptCode'],),
+            page: () => DepartmentStudentsPage(deptName: Get.arguments['deptName'], deptCode: Get.arguments['deptCode'], semesterList: Get.arguments['semesterList'],),
           binding: StudentBinding()
         ),
         GetPage(
@@ -149,10 +155,7 @@ class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
 
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for windows - '
-            'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
 
     switch (defaultTargetPlatform) {
@@ -201,5 +204,15 @@ class DefaultFirebaseOptions {
       messagingSenderId: '849792758725',
       projectId: 'digital-academic-portal',
       storageBucket: 'digital-academic-portal.appspot.com'
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+      apiKey: "AIzaSyBGxWAnEytzIE2JAN4wE0Nv2RZbchBTZpo",
+      authDomain: "digital-academic-portal.firebaseapp.com",
+      projectId: "digital-academic-portal",
+      storageBucket: "digital-academic-portal.firebasestorage.app",
+      messagingSenderId: "849792758725",
+      appId: "1:849792758725:web:1239caff45159a088911ac",
+      measurementId: "G-YX93SV1GFK"
   );
 }

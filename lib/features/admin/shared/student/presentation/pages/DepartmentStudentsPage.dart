@@ -1,3 +1,5 @@
+import 'package:digital_academic_portal/core/utils/Utils.dart';
+import 'package:digital_academic_portal/features/admin/shared/departments/domain/entities/Semester.dart';
 import 'package:digital_academic_portal/features/admin/shared/student/presentation/pages/StudentDetailPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +11,8 @@ import '../controllers/StudentController.dart';
 class DepartmentStudentsPage extends StatefulWidget {
   final String deptName;
   final String deptCode;
-  int sectionLength;
-  DepartmentStudentsPage({super.key, required this.deptName, required this.sectionLength, required this.deptCode});
+  List<Semester> semesterList;
+  DepartmentStudentsPage({super.key, required this.deptName, required this.deptCode, required this.semesterList});
 
   @override
   State<DepartmentStudentsPage> createState() => _DepartmentStudentsPageState();
@@ -23,6 +25,7 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
 
   @override
   void initState() {
+    controller.semesterList = widget.semesterList;
     controller.showDepartmentStudents(widget.deptName);
     super.initState();
   }
@@ -34,8 +37,13 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
 
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
-          if (widget.sectionLength != 0) {
-            addStudentBottomSheet(context);
+          var currentSemester = controller.semesterList.first;
+          if (currentSemester.sectionLimit != 0) {
+              if (currentSemester.totalCourses > currentSemester.numOfCourses) {
+                Utils().showErrorSnackBar('ERROR', 'First Add All Courses of ${currentSemester.semesterName}');
+              } else{
+                addStudentBottomSheet(context);
+              }
           } else {
             setSectionLengthBottomSheet(context);
           }
@@ -554,10 +562,7 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                   fixedSize: const MaterialStatePropertyAll(Size(double.maxFinite, 45)),
                 ),
                 onPressed: () {
-                  controller.setSectionLimit(widget.deptName, 'SEM-I', selectedLimited + 21).then((value) {
-                    widget.sectionLength = selectedLimited;
-                    Navigator.pop(context);
-                  });
+                  controller.setSectionLimit(widget.deptName, 'SEM-I', selectedLimited + 21);
                 },
                 child: const Text(
                   'Set Limit',
