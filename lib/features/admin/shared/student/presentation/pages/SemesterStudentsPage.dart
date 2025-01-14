@@ -24,7 +24,8 @@ class _SemesterStudentsPageState extends State<SemesterStudentsPage> {
 
   @override
   void initState() {
-    controller.showSemesterStudents(widget.deptName, widget.semester);
+    controller.deptName = widget.deptName;
+    controller.showSemesterStudents(widget.semester);
     super.initState();
   }
 

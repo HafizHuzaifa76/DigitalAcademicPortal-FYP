@@ -1,7 +1,12 @@
 
+import 'dart:io';
+
 import 'package:digital_academic_portal/core/utils/Utils.dart';
 import 'package:digital_academic_portal/features/admin/shared/departments/domain/entities/Semester.dart';
+import 'package:digital_academic_portal/features/admin/shared/student/domain/usecases/AddStudentListUseCase.dart';
 import 'package:digital_academic_portal/features/admin/shared/student/domain/usecases/SemesterStudentsUseCase.dart';
+import 'package:excel/excel.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -17,6 +22,7 @@ import '../../domain/usecases/SetSectionLimitUseCase.dart';
 
 class StudentController extends GetxController {
   final AddStudentUseCase addStudentUseCase;
+  final AddStudentListUseCase addStudentListUseCase;
   final DeleteStudentUseCase deleteStudentUseCase;
   final EditStudentUseCase editStudentUseCase;
   final AllStudentsUseCase allStudentsUseCase;
@@ -26,6 +32,7 @@ class StudentController extends GetxController {
 
   StudentController({
     required this.addStudentUseCase,
+    required this.addStudentListUseCase,
     required this.deleteStudentUseCase,
     required this.editStudentUseCase,
     required this.allStudentsUseCase,
@@ -46,6 +53,7 @@ class StudentController extends GetxController {
   var studentList = <Student>[].obs;
   List<Semester> semesterList = [];
   var filteredStudentList = <Student>[].obs;
+  String deptName = 'department';
 
   void filterStudents(String query) {
     if (query.isEmpty) {
@@ -63,7 +71,7 @@ class StudentController extends GetxController {
     }
   }
 
-  Future<void> showDepartmentStudents(String deptName) async {
+  Future<void> showDepartmentStudents() async {
     isLoading(true);
     final result = await departmentStudentsUseCase.execute(deptName);
 
@@ -85,7 +93,7 @@ class StudentController extends GetxController {
     isLoading(false);
   }
 
-  Future<void> showSemesterStudents(String deptName, String semester) async {
+  Future<void> showSemesterStudents(String semester) async {
     isLoading(true);
     final result = await semesterStudentsUseCase.execute(SemesterParams(deptName, semester));
 
@@ -109,7 +117,7 @@ class StudentController extends GetxController {
     isLoading(false);
   }
 
-  Future<void> addStudent(String deptName, String courseCode) async {
+  Future<void> addStudent(String courseCode) async {
     int studentCount = studentList.length + 1;
     String currentRoll = studentCount.toString().padLeft(4, '0');
     String rollNo = '$currentRoll-$courseCode-$selectedYear';
@@ -158,13 +166,113 @@ class StudentController extends GetxController {
         );
 
         clearAllControllers();
-        showDepartmentStudents(deptName);
+        showDepartmentStudents();
 
       });
 
     } finally {
       isLoading(false);
       EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> addNewStudentList(String courseCode) async {
+    int studentCount = studentList.length + 1;
+    String currentRoll = studentCount.toString().padLeft(4, '0');
+    String rollNo = '$currentRoll-$courseCode-$selectedYear';
+
+    var newStudent = Student(
+      studentRollNo: rollNo,
+      studentName: studentNameController.text,
+      fatherName: fatherNameController.text,
+      studentCNIC: studentCNICController.text,
+      studentContactNo: studentContactNoController.text,
+      studentEmail: studentEmailController.text,
+      studentGender: selectedGender,
+      studentAddress: studentAddressController.text,
+      studentDepartment: deptName,
+      studentShift: selectedShift,
+      studentAcademicYear: selectedYear,
+      studentSemester: 'SEM-I',
+      studentSection: '',
+      studentCGPA: 0,
+    );
+
+    try {
+      isLoading(true);
+      EasyLoading.show(status: 'Adding...');
+      final result = await addStudentUseCase.execute(newStudent);
+
+      result.fold((left) {
+        String message = left.failure.toString();
+        Get.snackbar(
+            'Error', message,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
+        );
+      }, (right) {
+        Get.snackbar(
+            'Success',
+            'Student added successfully...',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Get.theme.primaryColor,
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            colorText: Colors.white,
+            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white)
+        );
+
+        clearAllControllers();
+        showDepartmentStudents();
+
+      });
+
+    } finally {
+      isLoading(false);
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> addStudentList(List<Student> studentsList) async {
+    try {
+      isLoading(true);
+      EasyLoading.show(status: 'Adding Students\nIt take some time\nPlease wait...');
+
+      final result = await addStudentListUseCase.execute(studentsList);
+
+      result.fold((left) {
+        String message = left.failure.toString();
+        Get.snackbar(
+            'Error', message,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
+        );
+      }, (right) {
+        Get.snackbar(
+            'Success',
+            'Students added successfully...',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Get.theme.primaryColor,
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            colorText: Colors.white,
+            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white)
+        );
+
+        clearAllControllers();
+        showDepartmentStudents();
+        Get.back();
+
+      });
+
+    } finally {
+      isLoading(false);
+      EasyLoading.dismiss();
+      Get.back();
     }
   }
 
@@ -272,7 +380,7 @@ class StudentController extends GetxController {
     studentAddressController.text = student.studentAddress;
   }
 
-  Future<void> setSectionLimit(String deptName, String semester, int sectionLimit) async {
+  Future<void> setSectionLimit(String semester, int sectionLimit) async {
     try {
       isLoading(true);
       final result = await setSectionLimitUseCase.execute(SectionLimitParams(deptName: deptName, semester: semester, sectionLimit: sectionLimit));
@@ -296,7 +404,198 @@ class StudentController extends GetxController {
     }
   }
 
+  Future<List<Student>> fetchPreviousStudentsFromExcel() async {
+    try {
+      // Open file picker to select an Excel file
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['xlsx', 'xls'],
+      );
 
+      if (result == null) {
+        throw Exception("No file selected");
+      }
+
+      File file = File(result.files.single.path!);
+      final bytes = file.readAsBytesSync();
+      final excel = Excel.decodeBytes(bytes);
+
+      // Get the first sheet
+      Sheet? sheet = excel.sheets.values.first;
+
+      if (sheet == null) {
+        throw Exception("No sheets found in Excel file");
+      }
+
+      List<Student> students = [];
+
+      // Get the headers (assuming the first row contains the headers)
+      final headers = sheet.rows.first;
+      Map<String, int> headerIndexMap = {};
+
+      // Map headers to their column indices
+      for (int i = 0; i < headers.length; i++) {
+        final headerValue = headers[i]?.value?.toString() ?? '';
+        headerIndexMap[headerValue.trim()] = i;
+      }
+
+      // Expected headers
+      const requiredHeaders = [
+        "Roll No",
+        "Name",
+        "Father Name",
+        "CNIC",
+        "Contact No",
+        "Email",
+        "Gender",
+        "Address",
+        "Department",
+        "Semester",
+        "Shift",
+        "Academic Year",
+        "Section",
+        "CGPA",
+      ];
+
+      // Ensure all required headers are present
+      for (var header in requiredHeaders) {
+        if (!headerIndexMap.containsKey(header)) {
+          throw Exception("Missing required header: $header");
+        }
+      }
+
+      // Iterate through rows (skip header row)
+      for (int i = 1; i < sheet.rows.length; i++) {
+        final row = sheet.rows[i];
+
+        students.add(Student(
+          studentRollNo: row[headerIndexMap["Roll No"]!]?.value.toString() ?? "",
+          studentName: row[headerIndexMap["Name"]!]?.value.toString() ?? "",
+          fatherName: row[headerIndexMap["Father Name"]!]?.value.toString() ?? "",
+          studentCNIC: row[headerIndexMap["CNIC"]!]?.value.toString() ?? "",
+          studentContactNo:
+          row[headerIndexMap["Contact No"]!]?.value.toString() ?? "",
+          studentEmail: row[headerIndexMap["Email"]!]?.value.toString() ?? "",
+          studentGender: row[headerIndexMap["Gender"]!]?.value.toString() ?? "",
+          studentAddress: row[headerIndexMap["Address"]!]?.value.toString() ?? "",
+          studentDepartment:
+          row[headerIndexMap["Department"]!]?.value.toString() ?? "",
+          studentSemester: row[headerIndexMap["Semester"]!]?.value.toString() ?? "",
+          studentShift: row[headerIndexMap["Shift"]!]?.value.toString() ?? "",
+          studentAcademicYear:
+          row[headerIndexMap["Academic Year"]!]?.value.toString() ?? "",
+          studentSection: row[headerIndexMap["Section"]!]?.value.toString() ?? "",
+          studentCGPA: double.tryParse(
+              row[headerIndexMap["CGPA"]!]?.value.toString() ?? "0") ??
+              0.0,
+        ));
+      }
+
+      return students;
+    } catch (e) {
+      Utils().showErrorSnackBar('Error reading Excel file', '$e');
+      return [];
+    }
+  }
+
+  Future<List<Student>> fetchNewStudentsFromExcel(String courseCode) async {
+    try {
+      // Open file picker to select an Excel file
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['xlsx', 'xls'],
+      );
+
+      if (result == null) {
+        throw Exception("No file selected");
+      }
+
+      File file = File(result.files.single.path!);
+      final bytes = file.readAsBytesSync();
+      final excel = Excel.decodeBytes(bytes);
+
+      // Get the first sheet
+      Sheet? sheet = excel.sheets.values.first;
+
+      if (sheet == null) {
+        throw Exception("No sheets found in Excel file");
+      }
+
+      List<Student> students = [];
+
+      // Get the headers (assuming the first row contains the headers)
+      final headers = sheet.rows.first;
+      Map<String, int> headerIndexMap = {};
+
+      // Map headers to their column indices
+      for (int i = 0; i < headers.length; i++) {
+        final headerValue = headers[i]?.value?.toString() ?? '';
+        headerIndexMap[headerValue.trim()] = i;
+      }
+
+      // Expected headers
+      const requiredHeaders = [
+        "Name",
+        "Father Name",
+        "CNIC",
+        "Contact No",
+        "Email",
+        "Gender",
+        "Address",
+        "Shift",
+      ];
+
+      // Ensure all required headers are present
+      for (var header in requiredHeaders) {
+        if (!headerIndexMap.containsKey(header)) {
+          throw Exception("Missing required header: $header");
+        }
+      }
+
+      int morningIndex = 1, eveningIndex = 201;
+      List<Student> morningStudentsList = studentList.where((student) => student.studentShift.toLowerCase() == 'morning').toList();
+      List<Student> eveningStudentsList = studentList.where((student) => student.studentShift.toLowerCase() == 'evening').toList();
+
+      // Iterate through rows (skip header row)
+      for (int i = 1; i < sheet.rows.length; i++) {
+        final row = sheet.rows[i];
+
+        String currentRoll;
+        headerIndexMap["Shift"].toString().toLowerCase() == 'morning' ? {
+          currentRoll = (morningStudentsList.length + morningIndex).toString().padLeft(4, '0'),
+          morningIndex++
+        } : {
+          currentRoll = (eveningStudentsList.length + eveningIndex).toString().padLeft(4, '0'),
+          eveningIndex++
+        };
+
+        String rollNo = '$currentRoll-$courseCode-${DateTime.now().year}';
+        print(rollNo);
+
+        students.add(Student(
+          studentRollNo: rollNo,
+          studentName: row[headerIndexMap["Name"]!]?.value.toString() ?? "",
+          fatherName: row[headerIndexMap["Father Name"]!]?.value.toString() ?? "",
+          studentCNIC: row[headerIndexMap["CNIC"]!]?.value.toString() ?? "",
+          studentContactNo: row[headerIndexMap["Contact No"]!]?.value.toString() ?? "",
+          studentEmail: row[headerIndexMap["Email"]!]?.value.toString() ?? "",
+          studentGender: row[headerIndexMap["Gender"]!]?.value.toString() ?? "",
+          studentAddress: row[headerIndexMap["Address"]!]?.value.toString() ?? "",
+          studentShift: row[headerIndexMap["Shift"]!]?.value.toString() ?? "",
+          studentDepartment: deptName,
+          studentSemester: 'SEM-I',
+          studentAcademicYear: "${DateTime.now().year} - ${DateTime.now().year + 4}",
+          studentSection: "",
+          studentCGPA: 0.0,
+        ));
+      }
+
+      return students;
+    } catch (e) {
+      Utils().showErrorSnackBar('Error reading Excel file', '$e');
+      return [];
+    }
+  }
 
   void clearAllControllers() {
     studentNameController.clear();

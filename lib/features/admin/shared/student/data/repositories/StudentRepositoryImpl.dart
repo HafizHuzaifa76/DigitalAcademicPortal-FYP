@@ -26,6 +26,20 @@ class StudentRepositoryImpl implements StudentRepository{
   }
 
   @override
+  Future<Either<Fail, void>> addStudentList(List<Student> morningStudents, List<Student> eveningStudents) async {
+    try {
+      return Right(await studentRemoteDataSource.addStudentsList(morningStudents, eveningStudents));
+    } catch (e) {
+      String message = e.toString();
+      int startIndex = message.indexOf(']');
+      if (startIndex != -1){
+        message = message.substring(startIndex+1);
+      }
+      return Left(Fail(message));
+    }
+  }
+
+  @override
   Future<Either<Fail, void>> deleteStudent(Student student) async {
     try {
       return Right(await studentRemoteDataSource.deleteStudent(student.studentRollNo));

@@ -127,7 +127,7 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/deptCourses',
-          page: () => DepartmentCoursePage(deptName: Get.arguments['deptName'], semestersList: Get.arguments['semesterList']),
+          page: () => DepartmentCoursePage(deptName: Get.arguments['deptName'], deptCode: Get.arguments['deptCode'], semestersList: Get.arguments['semesterList']),
           binding: CourseBinding(),
         ),
         GetPage(

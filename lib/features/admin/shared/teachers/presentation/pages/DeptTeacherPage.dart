@@ -15,10 +15,12 @@ class DeptTeacherPage extends StatefulWidget {
 class _DeptTeacherPageState extends State<DeptTeacherPage> {
   final TeacherController controller = Get.find();
   final addTeacherKey = GlobalKey<FormState>();
+  var themeColor = Colors.black;
 
   @override
   void initState() {
     controller.showDeptTeachers(widget.deptName);
+    themeColor = Theme.of(context).primaryColor;
     super.initState();
   }
 
@@ -26,7 +28,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: themeColor,
         onPressed: () {
           addTeacherBottomSheet(context);
         },
@@ -59,7 +61,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Theme.of(context).primaryColor,
+                      themeColor,
                       const Color(0xFF1B7660),
                     ],
                     begin: Alignment.topCenter,
@@ -127,7 +129,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                               teacher.teacherName,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
+                                color: themeColor,
                               ),
                             ),
                             subtitle: const Text(''),
@@ -176,7 +178,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                     fontFamily: 'Ubuntu',
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor,
+                    color: themeColor,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -260,6 +262,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                                 },
                               ),
                               const SizedBox(height: 10),
+
                               TextFormField(
                                 controller: controller.teacherContactController,
                                 keyboardType: TextInputType.phone,
@@ -317,12 +320,12 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                                         ElevatedButton(
                                           style: ButtonStyle(
                                               backgroundColor: MaterialStatePropertyAll(controller.selectedGender.value.toString() == 'Male'
-                                                  ? Theme.of(context).primaryColor
+                                                  ? themeColor
                                                   : Colors.white
                                               ),
                                               fixedSize: const MaterialStatePropertyAll(Size(120, 45)),
                                             shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                                            side: MaterialStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2))
+                                            side: MaterialStatePropertyAll(BorderSide(color: themeColor, width: 2))
                                           ),
                                           onPressed: () {
                                             controller.selectedGender.value = 'Male';
@@ -332,7 +335,9 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                                             style: TextStyle(
                                               color: controller.selectedGender.value.toString() == 'Male'
                                                   ? Colors.white
-                                                  : Colors.black,
+                                                  : themeColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18
                                             ),
                                           ),
                                         ),
@@ -341,12 +346,12 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                                         ElevatedButton(
                                           style: ButtonStyle(
                                               backgroundColor: MaterialStatePropertyAll(controller.selectedGender.value.toString() == 'Female'
-                                                  ? Theme.of(context).primaryColor
-                                                  : Colors.white
+                                                  ? themeColor
+                                                  : Colors.white,
                                               ),
                                               fixedSize: const MaterialStatePropertyAll(Size(120, 45)),
                                               shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                                              side: MaterialStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2))
+                                              side: MaterialStatePropertyAll(BorderSide(color: themeColor, width: 2))
                                           ),
                                           onPressed: () {
                                             controller.selectedGender.value = 'Female';
@@ -356,7 +361,75 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                                             style: TextStyle(
                                               color: controller.selectedGender.value.toString() == 'Female'
                                                   ? Colors.white
-                                                  : Colors.black,
+                                                  : themeColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              }),
+                              const SizedBox(height: 10),
+
+                              Obx((){
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    const Text(' Teacher Type:', style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold, )),
+
+                                    Row(
+                                      children: [
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor: MaterialStatePropertyAll(controller.selectedType.value.toString() == 'Dept'
+                                                  ? themeColor
+                                                  : Colors.white
+                                              ),
+                                              fixedSize: const MaterialStatePropertyAll(Size(120, 45)),
+                                            shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                                            side: MaterialStatePropertyAll(BorderSide(color: themeColor, width: 2))
+                                          ),
+                                          onPressed: () {
+                                            controller.selectedType.value = 'Dept';
+                                          },
+                                          child: Text(
+                                            'Dept',
+                                            style: TextStyle(
+                                              color: controller.selectedType.value.toString() == 'Dept'
+                                                  ? Colors.white
+                                                  : themeColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor: MaterialStatePropertyAll(controller.selectedType.value.toString() == 'Visitor'
+                                                  ? themeColor
+                                                  : Colors.white,
+                                              ),
+                                              fixedSize: const MaterialStatePropertyAll(Size(120, 45)),
+                                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                                              side: MaterialStatePropertyAll(BorderSide(color: themeColor, width: 2))
+                                          ),
+                                          onPressed: () {
+                                            controller.selectedType.value = 'Visitor';
+                                          },
+                                          child: Text(
+                                            'Visitor',
+                                            style: TextStyle(
+                                              color: controller.selectedType.value.toString() == 'Visitor'
+                                                  ? Colors.white
+                                                  : themeColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18
                                             ),
                                           ),
                                         ),
@@ -391,5 +464,4 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
       },
     );
   }
-
 }

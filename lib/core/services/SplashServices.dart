@@ -6,15 +6,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SplashServices{
+class SplashServices {
 
-  void isLogin(BuildContext context){
+  void isLogin(BuildContext context) {
 
     final auth = FirebaseAuth.instance;
     final user = auth.currentUser;
 
     if(user != null){
-      Timer(const Duration(seconds: 3), () async {
+      Timer(const Duration(seconds: 4), () async {
         Get.offNamed('/admin');
         // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
       });
@@ -28,4 +28,5 @@ class SplashServices{
     }
 
   }
+
 }

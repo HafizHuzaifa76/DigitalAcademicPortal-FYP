@@ -46,6 +46,8 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   flutter_easyloading: ^3.0.5
   lottie: ^3.1.2
+  file_picker: ^8.0.5
+  excel: ^4.0.6
 
 dev_dependencies:
   flutter_test:

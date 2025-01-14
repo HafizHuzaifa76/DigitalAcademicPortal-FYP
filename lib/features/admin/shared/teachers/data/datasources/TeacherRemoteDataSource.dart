@@ -18,16 +18,40 @@ class TeacherRemoteDataSourceImpl implements TeacherRemoteDataSource{
 
   @override
   Future<TeacherModel> addTeacher(TeacherModel teacher) async {
-    var ref = _firestore.collection('teachers').doc(teacher.teacherEmail);
-    var snapshot = await ref.get();
+    try {
 
-    if (!snapshot.exists) {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('teachers')
+          .where('teacherEmail', isEqualTo: teacher.teacherEmail)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        throw Exception('Teacher with this email already exists');
+      }
+
+      querySnapshot = await _firestore
+          .collection('teachers')
+          .where('teacherCNIC', isEqualTo: teacher.teacherCNIC)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        throw Exception('Teacher with this CNIC already exists');
+      }
+
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: teacher.teacherEmail,
+        password: teacher.teacherCNIC,
+      );
+
+      String uid = userCredential.user!.uid;
+
+      var ref = _firestore.collection('teachers').doc(uid);
       await ref.set(teacher.toMap());
-    } else {
-      throw Exception('Teacher already exists');
-    }
 
-    return teacher;
+      return teacher;
+    } catch (e) {
+      throw Exception('Error adding teacher: $e');
+    }
   }
 
   @override

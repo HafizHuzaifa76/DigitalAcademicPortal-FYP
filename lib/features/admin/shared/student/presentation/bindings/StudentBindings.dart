@@ -1,4 +1,5 @@
 
+import 'package:digital_academic_portal/features/admin/shared/student/domain/usecases/AddStudentListUseCase.dart';
 import 'package:digital_academic_portal/features/admin/shared/student/domain/usecases/DepartmentStudentsUseCase.dart';
 import 'package:digital_academic_portal/features/admin/shared/student/domain/usecases/SemesterStudentsUseCase.dart';
 import 'package:digital_academic_portal/features/admin/shared/student/domain/usecases/SetSectionLimitUseCase.dart';
@@ -21,13 +22,14 @@ class StudentBinding extends Bindings{
     Get.lazyPut<StudentRepository>(() => StudentRepositoryImpl(studentRemoteDataSource: Get.find()));
     Get.lazyPut(() => AllStudentsUseCase(Get.find()));
     Get.lazyPut(() => AddStudentUseCase(Get.find()));
+    Get.lazyPut(() => AddStudentListUseCase(Get.find()));
     Get.lazyPut(() => EditStudentUseCase(Get.find()));
     Get.lazyPut(() => DeleteStudentUseCase(Get.find()));
     Get.lazyPut(() => DepartmentStudentsUseCase(Get.find()));
     Get.lazyPut(() => DepartmentStudentsUseCase(Get.find()));
     Get.lazyPut(() => SemesterStudentsUseCase(Get.find()));
     Get.lazyPut(() => SetSectionLimitUseCase(Get.find()));
-    Get.lazyPut(() => StudentController(addStudentUseCase: Get.find(), deleteStudentUseCase: Get.find(), editStudentUseCase: Get.find(), allStudentsUseCase: Get.find(), departmentStudentsUseCase: Get.find(), semesterStudentsUseCase: Get.find(), setSectionLimitUseCase: Get.find()));
+    Get.lazyPut(() => StudentController(addStudentUseCase: Get.find(), addStudentListUseCase: Get.find(), deleteStudentUseCase: Get.find(), editStudentUseCase: Get.find(), allStudentsUseCase: Get.find(), departmentStudentsUseCase: Get.find(), semesterStudentsUseCase: Get.find(), setSectionLimitUseCase: Get.find()));
   }
 
 }

@@ -116,8 +116,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
                 );
               } else {
                 return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
+                  delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
                       final department = controller.filteredDepartmentList[index]; // Filtered list of departments
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),

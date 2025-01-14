@@ -35,6 +35,11 @@ class CourseController extends GetxController{
   var selectedTotalCourses = 5.obs;
   var selectedElectiveCourses = 0.obs;
   List<Semester> semesterList = [];
+  var titlePadding = 70.0.obs;
+
+  void updatePadding(double offset) {
+    titlePadding.value = offset > 100 ? 15 : offset >  60 ? 30 : 70.0;
+  }
 
   void updateTotalCourses(int value) {
     selectedTotalCourses.value = value + 1;
@@ -58,11 +63,11 @@ class CourseController extends GetxController{
             course.courseCode.toLowerCase().startsWith(lowerCaseQuery) || course.courseCode.toLowerCase().contains('-$lowerCaseQuery');
       }).toList();
       filteredCourseList.assignAll(filteredResults);
+      print(' list: ${filteredCourseList.length}');
     }
   }
 
   Future<void> addCourse(Course newCourse) async {
-
     try {
       EasyLoading.show(status: 'Adding...');
       final result = await addCourseUseCase.execute(CourseParams(newCourse.courseDept, newCourse));
@@ -87,7 +92,8 @@ class CourseController extends GetxController{
             colorText: Colors.white,
             icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white)
         );
-        // Get.to(HomeScreen());
+
+        clearTextControllers();
       });
 
     } finally {
@@ -122,6 +128,8 @@ class CourseController extends GetxController{
             colorText: Colors.white,
             icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
         );
+
+        clearTextControllers();
         // Get.to(HomeScreen());
       });
 
@@ -270,5 +278,10 @@ class CourseController extends GetxController{
     } finally {
       EasyLoading.dismiss();
     }
+  }
+
+  void clearTextControllers() {
+    courseCodeController.clear();
+    courseNameController.clear();
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../../departments/domain/entities/Semester.dart';
@@ -10,11 +9,13 @@ import 'CourseDetailPage.dart';
 
 class DepartmentCoursePage extends StatefulWidget {
   final String deptName;
+  final String deptCode;
   final List<Semester> semestersList;
 
   const DepartmentCoursePage({
     super.key,
     required this.deptName,
+    required this.deptCode,
     required this.semestersList,
   });
 
@@ -35,6 +36,12 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
 
   @override
   Widget build(BuildContext context) {
+    ScrollController scrollController = ScrollController();
+
+    scrollController.addListener(() {
+      controller.updatePadding(scrollController.offset);
+    });
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme
@@ -44,12 +51,14 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
         child: const Icon(Icons.add, color: Colors.white),
       ),
       body: CustomScrollView(
+        controller: scrollController,
         slivers: [
-          SliverAppBar(
+         Obx(()=> SliverAppBar(
             expandedHeight: 150.0,
-            floating: true,
+            floating: false,
+            pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.only(bottom: 70),
+              titlePadding: EdgeInsets.only(bottom: controller.titlePadding.value),
               centerTitle: true,
               title: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -64,6 +73,7 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                     ),
                   ),
                   const SizedBox(height: 5),
+
                   Text(
                     'Department of ${widget.deptName}',
                     style: const TextStyle(
@@ -79,9 +89,7 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Theme
-                          .of(context)
-                          .primaryColor,
+                      Theme.of(context).primaryColor,
                       const Color(0xFF1B7660),
                     ],
                     begin: Alignment.topCenter,
@@ -115,8 +123,10 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                 ),
               ),
             ),
-          ),
+          )),
+
           Obx(() {
+            print(controller.filteredCourseList.length);
             if (controller.isLoading.value) {
               return SliverFillRemaining(
                 child: Center(
@@ -129,49 +139,105 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                 ),
               );
             } else {
-              if (controller.filteredCourseList.isEmpty) {
-                return const SliverFillRemaining(
-                  child: Center(child: Text("No Courses available")),
-                );
-              } else {
                 return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      final course = controller.filteredCourseList[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 5.0),
-                        child: Card(
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: ListTile(
-                            title: Text(
-                              course.courseName,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor,
-                              ),
+                  delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+
+                      final semester = controller.semesterList[index];
+                      final semesterCourses = controller.filteredCourseList
+                          .where((course) => course.courseSemester == semester.semesterName)
+                          .toList();
+
+                      // Build the list of courses for this semester
+                      List<Widget> courseWidgets = semesterCourses.map((course) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Card(
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
                             ),
-                            subtitle: Text('Code: ${course.courseCode}'),
-                            trailing: const Icon(Icons.arrow_forward_ios),
-                            onTap: () {
-                              Get.to(() =>
-                                  CourseDetailPage(
-                                      deptName: widget.deptName,
-                                      course: course));
-                            },
+                            child: ListTile(
+                              title: Text(
+                                course.courseName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColor,
+                                  fontFamily: 'Ubuntu',
+                                ),
+                              ),
+                              subtitle: Text('Code: ${course.courseCode}, Subject: ${course.courseType}'),
+                              trailing: const Icon(Icons.arrow_forward_ios),
+                              onTap: () {
+                                Get.to(() => CourseDetailPage(
+                                    deptName: widget.deptName, course: course));
+                              },
+                            ),
                           ),
+                        );
+                      }).toList();
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  semester.semesterName.replaceFirst('SEM', 'SEMESTER'),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                    fontFamily: 'Ubuntu',
+                                  ),
+                                ),
+
+                                Text(
+                                  'Remaining: ${semester.totalCourses - semesterCourses.length}',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    color: Theme.of(context).primaryColor,
+                                    fontFamily: 'Ubuntu',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 2),
+
+                            if (semesterCourses.isNotEmpty)
+                              ...courseWidgets
+                            else
+                              Container(
+                                width: double.infinity,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColorDark,
+                                  borderRadius: BorderRadius.circular(20),
+
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'No Courses Exist',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Theme.of(context).primaryColor,
+                                      fontFamily: 'Ubuntu',
+                                      fontSize: 17
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       );
                     },
-                    childCount: controller.filteredCourseList.length,
+                    childCount: controller.semesterList.length,
                   ),
                 );
-              }
+
             }
           }),
         ],
@@ -346,7 +412,7 @@ class _DepartmentCoursePageState extends State<DepartmentCoursePage> {
                   onPressed: () {
                     if (filteredList.length < semester.totalCourses) {
                       var newCourse = Course(
-                        courseCode: controller.courseCodeController.text,
+                        courseCode: '${widget.deptCode}-${controller.courseCodeController.text}',
                         courseName: controller.courseNameController.text,
                         courseDept: widget.deptName,
                         courseCreditHours: selectedCreditHours,

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:digital_academic_portal/core/utils/Utils.dart';
 import 'package:digital_academic_portal/features/admin/shared/departments/domain/entities/Semester.dart';
 import 'package:digital_academic_portal/features/admin/shared/student/presentation/pages/StudentDetailPage.dart';
@@ -26,7 +28,8 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
   @override
   void initState() {
     controller.semesterList = widget.semesterList;
-    controller.showDepartmentStudents(widget.deptName);
+    controller.deptName = widget.deptName;
+    controller.showDepartmentStudents();
     super.initState();
   }
 
@@ -34,15 +37,15 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
           var currentSemester = controller.semesterList.first;
           if (currentSemester.sectionLimit != 0) {
-              if (currentSemester.totalCourses > currentSemester.numOfCourses) {
+              if (currentSemester.totalCourses > currentSemester.numOfCourses || currentSemester.totalCourses == 0) {
                 Utils().showErrorSnackBar('ERROR', 'First Add All Courses of ${currentSemester.semesterName}');
-              } else{
-                addStudentBottomSheet(context);
+              } else {
+                addStudentOptionsBottomSheet(context);
+                // addStudentBottomSheet(context);
               }
           } else {
             setSectionLengthBottomSheet(context);
@@ -462,7 +465,7 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                   style: const ButtonStyle(fixedSize: MaterialStatePropertyAll(Size(double.maxFinite, 45))),
                   onPressed: () {
                     if (addStudentKey.currentState!.validate()) {
-                      controller.addStudent(widget.deptName, 'BS${widget.deptCode}');
+                      controller.addStudent('BS${widget.deptCode}');
                       Get.back(); // Closes the bottom sheet after saving
                     }
                   },
@@ -474,6 +477,208 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
           ),
         );
       },
+    );
+  }
+
+  Future showExcelBottomSheet(BuildContext context, String buttonType, List<String> columns) {
+    return showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(buttonType, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu'),),
+              const SizedBox(height: 10),
+
+              const Text(
+                'Your Excel sheet should contain these columns:',
+                style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Ubuntu'),
+              ),
+              const SizedBox(height: 10),
+              // List the columns
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 20.0, // Horizontal spacing
+                runSpacing: 10.0, // Vertical spacing
+                children: columns.map((col) => SizedBox(
+                  width: (MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width / 3) - 30,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(3)
+                    ),
+                    child: Text(
+                      col,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Ubuntu'),
+                    ),
+                  ),
+                ))
+                    .toList(),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Important',
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red, fontSize: 18, fontFamily: 'Ubuntu'),
+              ),
+              const Text(
+                'Email and CNIC should be unique',
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontFamily: 'Ubuntu'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  if (buttonType.contains('Add Previous Students')) {
+                    controller.fetchPreviousStudentsFromExcel().then((futureList) {
+                      if (futureList.isNotEmpty) {
+                        controller.addStudentList(futureList);
+                      }
+                    });
+                  }
+                  else if (buttonType.contains('Add New Students')) {
+                    controller.fetchNewStudentsFromExcel('BS${widget.deptCode}').then((futureList) {
+                      if (futureList.isNotEmpty) {
+                        Get.to(ListWidget(items: futureList));
+                      }
+                    });
+                  }
+                },
+                child: const Text('Select File', style: TextStyle(color: Colors.white, fontFamily: 'Ubuntu', fontSize: 18)),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future addStudentOptionsBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Choose an Option',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the bottom sheet
+                  addStudentBottomSheet(context);
+                },
+                child: const Text('Add Student Manually', style: TextStyle(color: Colors.white, fontFamily: 'Ubuntu', fontSize: 18)),
+              ),
+
+              ElevatedButton(
+                onPressed: () {
+                  showExcelBottomSheet(
+                    context,
+                    'Add New Students',
+                    [
+                      'Name',
+                      'Father Name',
+                      'CNIC',
+                      'Contact No',
+                      'Email',
+                      'Gender',
+                      'Address',
+                      'Shift',
+                    ],
+                  );
+                  // Navigator.pop(context);
+                },
+                child: const Text('Add New Students via Excel File', style: TextStyle(color: Colors.white, fontFamily: 'Ubuntu', fontSize: 18)),
+              ),
+
+              ElevatedButton(
+                onPressed: () {
+                  semestersBottomSheet(context);
+                },
+                child: const Text('Add Previous Students via Excel File', style: TextStyle(color: Colors.white, fontFamily: 'Ubuntu', fontSize: 18)),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void semestersBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7.5),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 7,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade800,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
+                const SizedBox(height: 6.5),
+
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: controller.semesterList.sublist(1).map((semester) =>
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (semester.totalCourses > semester.numOfCourses || semester.totalCourses == 0) {
+                              Utils().showErrorSnackBar('ERROR', 'First Add All Courses of ${semester.semesterName}');
+                            } else {
+                              showExcelBottomSheet(
+                                context,
+                                'Add Previous Students',
+                                [
+                                  'Name',
+                                  'Father Name',
+                                  'Roll No.',
+                                  'CNIC',
+                                  'Contact No',
+                                  'Email',
+                                  'Gender',
+                                  'Address',
+                                  'Semester',
+                                  'Shift',
+                                  'Section',
+                                  'CGPA',
+                                  'Academic Year (20xx-20xx)',
+                                ],
+                              );
+                            }
+                          },
+                          child: Text(
+                            semester.semesterName,
+                            style: const TextStyle(color: Colors.white,
+                                fontSize: 20,
+                                fontFamily: 'Ubuntu'),
+                          ),
+                        ),
+                      )).toList(),
+                ),
+              ],
+            ),
+          );
+        }
     );
   }
 
@@ -562,7 +767,7 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                   fixedSize: const MaterialStatePropertyAll(Size(double.maxFinite, 45)),
                 ),
                 onPressed: () {
-                  controller.setSectionLimit(widget.deptName, 'SEM-I', selectedLimited + 21);
+                  controller.setSectionLimit('SEM-I', selectedLimited + 21);
                 },
                 child: const Text(
                   'Set Limit',
@@ -893,3 +1098,32 @@ class _SliverSearchBarDelegate extends SliverPersistentHeaderDelegate {
     return true;
   }
 }
+
+class ListWidget extends StatelessWidget {
+  final List<Student> items;
+  final StudentController controller = Get.find();
+
+  ListWidget({required this.items});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            controller.addStudentList(items);
+          },
+          child: Icon(Icons.done_outline, size: 30, color: Colors.white),
+      ),
+      body: ListView.builder(
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text('${items[index].studentName}, ${items[index].studentCNIC}, ${items[index].studentRollNo}, '),
+            subtitle: Text('${items[index].studentEmail}, ${items[index].studentContactNo}, ${items[index].studentShift}, ${items[index].studentAcademicYear}, '),
+          );
+        },
+      ),
+    );
+  }
+}
+

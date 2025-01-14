@@ -302,6 +302,7 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                           ),
                           onPressed: ()=> Get.toNamed('/deptCourses', arguments: {
                             'deptName': dept.departmentName,
+                            'deptCode': dept.departmentCode,
                             'semesterList': controller.semestersList
                           }),
                           child: Column(

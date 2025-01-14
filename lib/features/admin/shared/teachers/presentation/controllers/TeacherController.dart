@@ -17,8 +17,6 @@ class TeacherController extends GetxController{
   final AllTeachersUseCase allTeachersUseCase;
   final DeptTeachersUseCase deptTeachersUseCase;
 
-  var selectedGender = ''.obs;
-
   TeacherController({required this.addTeacherUseCase, required this.deleteTeacherUseCase, required this.editTeacherUseCase, required this.allTeachersUseCase, required this.deptTeachersUseCase});
 
   var teacherNameController = TextEditingController();
@@ -26,10 +24,10 @@ class TeacherController extends GetxController{
   var teacherCNICController = TextEditingController();
   var teacherContactController = TextEditingController();
   var teacherAddressController = TextEditingController();
-  var teacherTypeController = TextEditingController();
-  var teacherGenderController = TextEditingController();
-  var isLoading = false.obs;
+  var selectedGender = ''.obs;
+  var selectedType = ''.obs;
 
+  var isLoading = false.obs;
   var teacherList = <Teacher>[].obs;
   var filteredTeacherList = <Teacher>[].obs;
 
@@ -54,8 +52,8 @@ class TeacherController extends GetxController{
       teacherCNIC: teacherCNICController.text,
       teacherContact: teacherContactController.text,
       teacherAddress: teacherAddressController.text,
-      teacherType: teacherTypeController.text,
-      teacherGender: teacherGenderController.text,
+      teacherType: selectedType.value,
+      teacherGender: selectedGender.value,
     );
 
     try {
@@ -82,6 +80,8 @@ class TeacherController extends GetxController{
             colorText: Colors.white,
             icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
         );
+
+        clearAllControllers();
         // Get.to(HomeScreen());
       });
 
@@ -101,8 +101,8 @@ class TeacherController extends GetxController{
       teacherCNIC: teacherCNICController.text,
       teacherContact: teacherContactController.text,
       teacherAddress: teacherAddressController.text,
-      teacherType: teacherTypeController.text,
-      teacherGender: teacherGenderController.text,
+      teacherType: selectedType.value,
+      teacherGender: selectedGender.value,
     );
 
     try {
@@ -129,6 +129,8 @@ class TeacherController extends GetxController{
             colorText: Colors.white,
             icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
         );
+
+        clearAllControllers();
         // Get.to(HomeScreen());
       });
 
@@ -221,4 +223,13 @@ class TeacherController extends GetxController{
       isLoading(false);
   }
 
+  void clearAllControllers() {
+    teacherNameController.clear();
+    teacherEmailController.clear();
+    teacherCNICController.clear();
+    teacherContactController.clear();
+    teacherAddressController.clear();
+    selectedGender.value = '';
+    selectedType.value = '';
+  }
 }
