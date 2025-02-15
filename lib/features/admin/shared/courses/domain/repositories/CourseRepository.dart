@@ -1,14 +1,16 @@
 
 import 'package:dartz/dartz.dart';
-import '../entities/Course.dart';
+import 'package:digital_academic_portal/features/admin/shared/courses/domain/entities/DepartmentCourse.dart';
+import '../entities/SemesterCourse.dart';
 
 abstract class CourseRepository{
 
-  Future<Either<Fail, Course>> addCourse(String deptName, Course course);
-  Future<Either<Fail, Course>> editCourse(String deptName, Course course);
-  Future<Either<Fail, void>> deleteCourse(String deptName, Course course);
-  Future<Either<Fail, List<Course>>> showDeptCourses(String deptName);
-  Future<Either<Fail, List<Course>>> showSemesterCourses(String deptName, String semester);
-  Future<Either<Fail, List<Course>>> showAllCourses();
+  Future<Either<Fail, DepartmentCourse>> addCourse(String deptName, DepartmentCourse course);
+  Future<Either<Fail, void>> addCourseList(List<DepartmentCourse> courses);
+  Future<Either<Fail, DepartmentCourse>> editCourse(String deptName, DepartmentCourse course);
+  Future<Either<Fail, void>> deleteCourse(String deptName, DepartmentCourse course);
+  Future<Either<Fail, List<DepartmentCourse>>> showDeptCourses(String deptName);
+  Future<Either<Fail, List<SemesterCourse>>> showSemesterCourses(String deptName, String semester);
+  Future<Either<Fail, List<SemesterCourse>>> showAllCourses();
 
 }

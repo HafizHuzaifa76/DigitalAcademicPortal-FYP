@@ -25,7 +25,7 @@ class SectionModel extends Section{
 
   factory SectionModel.fromMap(Map<String, dynamic> map) {
     return SectionModel(
-      sectionID: map['sectionID'] as String,
+      sectionID: map['sectionID'] ?? map['sectionName'] as String,
       sectionName: map['sectionName'] as String,
       shift: map['shift'] as String,
       totalStudents: map['totalStudents'] as int,

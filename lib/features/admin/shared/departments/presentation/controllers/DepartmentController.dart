@@ -59,6 +59,7 @@ class DepartmentController extends GetxController {
 
   Future<void> addDepartment() async {
     EasyLoading.show(status: 'Adding...');
+
     var newDepartment = Department(
       departmentID: departmentList.length,
       totalSemesters: int.parse(semesterController.text),

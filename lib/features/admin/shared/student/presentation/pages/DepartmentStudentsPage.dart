@@ -462,7 +462,7 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
 
                 // Save button
                 ElevatedButton(
-                  style: const ButtonStyle(fixedSize: MaterialStatePropertyAll(Size(double.maxFinite, 45))),
+                  style: const ButtonStyle(fixedSize: WidgetStatePropertyAll(Size(double.maxFinite, 45))),
                   onPressed: () {
                     if (addStudentKey.currentState!.validate()) {
                       controller.addStudent('BS${widget.deptCode}');
@@ -503,10 +503,10 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
               // List the columns
               Wrap(
                 alignment: WrapAlignment.center,
-                spacing: 20.0, // Horizontal spacing
-                runSpacing: 10.0, // Vertical spacing
+                spacing: 20.0,
+                runSpacing: 10.0,
                 children: columns.map((col) => SizedBox(
-                  width: (MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width / 3) - 30,
+                  width: (MediaQueryData.fromView(WidgetsBinding.instance.window).size.width / 3) - 30,
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(),
@@ -756,15 +756,15 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
               // 'Set' button
               ElevatedButton(
                 style: ButtonStyle(
-                  shape: MaterialStatePropertyAll(
+                  shape: WidgetStatePropertyAll(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  backgroundColor: MaterialStatePropertyAll(
+                  backgroundColor: WidgetStatePropertyAll(
                     Theme.of(context).primaryColor,
                   ),
-                  fixedSize: const MaterialStatePropertyAll(Size(double.maxFinite, 45)),
+                  fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
                 ),
                 onPressed: () {
                   controller.setSectionLimit('SEM-I', selectedLimited + 21);
@@ -1036,7 +1036,7 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
 
                 // Save Button
                 ElevatedButton(
-                  style: const ButtonStyle(fixedSize: MaterialStatePropertyAll(Size(double.maxFinite, 45))),
+                  style: const ButtonStyle(fixedSize: WidgetStatePropertyAll(Size(double.maxFinite, 45))),
                   onPressed: () {
                     if (addStudentKey.currentState!.validate()) {
                       var updatedStudent = Student(

@@ -14,30 +14,31 @@ class AdministratorDrawer extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Get.theme.primaryColor,
             ),
             child: Column(
               children: [
                 SizedBox(
                     height: 90,
-                    child: Image.asset('assets/images/DAP logo.png')),
+                    child: Image.asset('assets/images/DAP_logo_light.png')),
                 const SizedBox(height: 7),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+
                   children: [
                     Text(
                       'Digital',
                       style: TextStyle(
                           fontFamily: 'Belanosima',
-                          color: Theme.of(context).primaryColor,
+                          color: Get.theme.primaryColorLight,
                           fontSize: 23,
                           fontWeight: FontWeight.bold),
                     ),
-                    const Text(
+                    Text(
                       ' Academic ',
                       style: TextStyle(
                           fontFamily: 'Belanosima',
-                          color: Colors.black,
+                          color: Get.theme.primaryColorLight,
                           fontSize: 23,
                           fontWeight: FontWeight.bold),
                     ),
@@ -45,7 +46,7 @@ class AdministratorDrawer extends StatelessWidget {
                       'Portal',
                       style: TextStyle(
                           fontFamily: 'Belanosima',
-                          color: Theme.of(context).primaryColor,
+                          color: Get.theme.primaryColorLight,
                           fontSize: 23,
                           fontWeight: FontWeight.bold),
                     ),
@@ -54,6 +55,7 @@ class AdministratorDrawer extends StatelessWidget {
               ],
             ),
           ),
+
           ListTile(
             leading: Image.asset('assets/images/department_icon.png', height: 30, width: 30),
             title: Text('Departments', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
@@ -61,6 +63,8 @@ class AdministratorDrawer extends StatelessWidget {
               Get.toNamed('/departments');
             },
           ),
+          const Divider(),
+
           ListTile(
             leading: Image.asset('assets/images/students_icon.png', height: 30, width: 30),
             title: Text('Students', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
@@ -68,6 +72,8 @@ class AdministratorDrawer extends StatelessWidget {
               Get.toNamed('/allStudents');
             },
           ),
+          const Divider(),
+
           ListTile(
             leading: Image.asset('assets/images/th1.png', height: 30, width: 30),
             title: Text('Teachers', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
@@ -75,6 +81,8 @@ class AdministratorDrawer extends StatelessWidget {
               Get.toNamed('/allTeachers');
             },
           ),
+          const Divider(),
+
           ListTile(
             leading: Image.asset('assets/images/course_icon.png', height: 30, width: 30),
             title: Text('Courses', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
@@ -82,6 +90,8 @@ class AdministratorDrawer extends StatelessWidget {
               Get.toNamed('/allCourses');
             },
           ),
+          const Divider(),
+
           ListTile(
             leading: Image.asset('assets/images/noticeboard_icon.png', height: 30, width: 30),
             title: Text('Notice Board', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
@@ -89,6 +99,8 @@ class AdministratorDrawer extends StatelessWidget {
               Get.toNamed('/');
             },
           ),
+          const Divider(),
+
           ListTile(
             leading: Image.asset('assets/images/calendar_icon.png', height: 30, width: 30),
             title: Text('Calendar', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
@@ -96,6 +108,8 @@ class AdministratorDrawer extends StatelessWidget {
               Get.toNamed('/');
             },
           ),
+          const Divider(),
+
           ListTile(
             leading: Image.asset('assets/images/chatbot_icon.png', height: 30, width: 30),
             title: Text('ChatBot', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
@@ -103,6 +117,8 @@ class AdministratorDrawer extends StatelessWidget {
               Get.toNamed('/');
             },
           ),
+          const Divider(),
+
           ListTile(
             leading: Image.asset('assets/images/bugreport_icon.png', height: 30, width: 30),
             title: Text('Reports', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),

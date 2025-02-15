@@ -1,15 +1,16 @@
 import 'package:dartz/dartz.dart';
 import 'package:digital_academic_portal/core/usecases/UseCase.dart';
-import '../entities/Course.dart';
+import 'package:digital_academic_portal/features/admin/shared/courses/domain/entities/DepartmentCourse.dart';
+import '../entities/SemesterCourse.dart';
 import '../repositories/CourseRepository.dart';
 
-class DeptCoursesUseCase implements UseCase<List<Course>, String>{
+class DeptCoursesUseCase implements UseCase<List<DepartmentCourse>, String>{
   final CourseRepository repository;
 
   DeptCoursesUseCase(this.repository);
 
   @override
-  Future<Either<Fail, List<Course>>> execute(String deptName) async {
+  Future<Either<Fail, List<DepartmentCourse>>> execute(String deptName) async {
     return await repository.showDeptCourses(deptName);
   }
 }

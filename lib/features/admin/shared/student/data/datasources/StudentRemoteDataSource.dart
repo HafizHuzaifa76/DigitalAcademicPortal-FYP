@@ -486,7 +486,6 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
     print('All students have been successfully assigned to sections.');
   }
 
-
   Future<void> addStudentsBatch(List<StudentModel> students) async {
     WriteBatch batch = _firestore.batch();
     Map<String, Map<String, dynamic>> localSectionDataMap = {}; // Local cache for sections

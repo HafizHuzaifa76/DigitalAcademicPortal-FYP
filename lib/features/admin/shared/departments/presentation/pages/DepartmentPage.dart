@@ -317,7 +317,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
               // Add button
               ElevatedButton(
                 style: const ButtonStyle(
-                  fixedSize: MaterialStatePropertyAll(Size(double.maxFinite, 45)),
+                  fixedSize: WidgetStatePropertyAll(Size(double.maxFinite, 45)),
                 ),
                 onPressed: () {
                   if (addDeptKey.currentState!.validate()) {
@@ -467,7 +467,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
               // Save button
               ElevatedButton(
                 style: const ButtonStyle(
-                  fixedSize: MaterialStatePropertyAll(Size(double.maxFinite, 45)),
+                  fixedSize: WidgetStatePropertyAll(Size(double.maxFinite, 45)),
                 ),
                 onPressed: () {
                   if (editDeptKey.currentState!.validate()) {

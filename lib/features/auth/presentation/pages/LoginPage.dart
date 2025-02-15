@@ -16,7 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final AuthController controller = Get.find();
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Get.theme.scaffoldBackgroundColor,
       body: Center(
         child: SingleChildScrollView(
           child: Container(

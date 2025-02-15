@@ -6,7 +6,6 @@ import '../controllers/StudentController.dart';
 import 'StudentDetailPage.dart';
 
 class AllStudentsPage extends StatefulWidget {
-
   const AllStudentsPage({super.key});
 
   @override
@@ -26,70 +25,85 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
+        controller: controller.scrollController,
         slivers: [
-          SliverAppBar(
-            expandedHeight: 150.0,
-            floating: true,
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.only(bottom: 70),
-              centerTitle: true,
-              title: const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Students',
-                    style: TextStyle(color: Colors.white, fontSize: 16.0, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 5),
-
-                  Text('All Departments',
-                      style: TextStyle(color: Colors.white, fontSize: 12.0, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold)
-                  ),
-                  SizedBox(height: 2),
-                ],
-              ),
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).primaryColor,
-                      const Color(0xFF1B7660)
+          Obx(() {
+            return SliverAppBar(
+              expandedHeight: 150.0,
+              floating: true,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                titlePadding: EdgeInsets.only(
+                    bottom: controller.titlePadding.value),
+                centerTitle: true,
+                title: const SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min, // Keeps the column compact
+                    children: [
+                      Text(
+                        'Students',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                          fontFamily: 'Ubuntu',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'All Departments',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.0,
+                          fontFamily: 'Ubuntu',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
                   ),
                 ),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: 55,
-                      child: TextField(
-                        onChanged: (query) {
-                          controller.filterStudents(query);
-                        },
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(2),
-                          hintText: 'Search Students...',
-                          prefixIcon: const Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50.0),
+                background: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Theme
+                            .of(context)
+                            .primaryColor,
+                        const Color(0xFF1B7660),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        height: 55,
+                        child: TextField(
+                          onChanged: (query) {
+                            controller.filterStudents(query);
+                          },
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(2),
+                            hintText: 'Search Students...',
+                            prefixIcon: const Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
                           ),
-                          filled: true,
-                          fillColor: Colors.white,
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          }),
 
-          // Adding the search bar as a persistent header
-
-          // Main content list
           Obx(() {
             if (controller.isLoading.value) {
               return SliverFillRemaining(
@@ -103,7 +117,7 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                 ),
               );
             } else {
-              if ( controller.filteredStudentList.isEmpty) {
+              if (controller.filteredStudentList.isEmpty) {
                 return const SliverFillRemaining(
                   child: Center(child: Text("No Students available")),
                 );
@@ -111,9 +125,10 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
-                      final student =  controller.filteredStudentList[index];
+                      final student = controller.filteredStudentList[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0,
+                            vertical: 5.0),
                         child: Card(
                           elevation: 4,
                           shape: RoundedRectangleBorder(
@@ -121,9 +136,12 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                           ),
                           child: ListTile(
                             leading: CircleAvatar(
-                              backgroundColor: Theme.of(context).primaryColor,
+                              backgroundColor: Theme
+                                  .of(context)
+                                  .primaryColor,
                               child: Text(
-                                student.studentName[0], // Show initial of student's name
+                                student.studentName[0],
+                                // Show initial of student's name
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -132,10 +150,14 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                             ),
                             title: Text(
                               student.studentRollNo,
-                              style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, color: Theme
+                                  .of(context)
+                                  .primaryColor),
                             ),
                             subtitle: Text(
-                              'Name: ${student.studentName}\nFather: ${student.fatherName}',
+                              'Name: ${student.studentName}\nFather: ${student
+                                  .fatherName}',
                             ),
                             trailing: const Icon(Icons.arrow_forward_ios),
                             onTap: () {
@@ -145,7 +167,7 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                         ),
                       );
                     },
-                    childCount:  controller.filteredStudentList.length,
+                    childCount: controller.filteredStudentList.length,
                   ),
                 );
               }

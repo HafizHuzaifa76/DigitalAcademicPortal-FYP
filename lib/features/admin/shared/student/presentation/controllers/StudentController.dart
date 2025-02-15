@@ -8,6 +8,7 @@ import 'package:digital_academic_portal/features/admin/shared/student/domain/use
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -49,11 +50,35 @@ class StudentController extends GetxController {
   var studentAddressController = TextEditingController();
   String selectedYear = '', selectedShift = '', selectedGender = '';
 
+  final ScrollController scrollController = ScrollController();
+  RxDouble titlePadding = 70.0.obs;
+
   var isLoading = false.obs;
   var studentList = <Student>[].obs;
   List<Semester> semesterList = [];
   var filteredStudentList = <Student>[].obs;
   String deptName = 'department';
+
+  @override
+  void onInit() {
+    super.onInit();
+    scrollController.addListener(_adjustTitlePadding);
+  }
+
+  @override
+  void onClose() {
+    scrollController.removeListener(_adjustTitlePadding);
+    scrollController.dispose();
+    super.onClose();
+  }
+
+  void _adjustTitlePadding() {
+    if (scrollController.offset > 50) {
+      titlePadding.value = 20.0;
+    } else {
+      titlePadding.value = 70.0;
+    }
+  }
 
   void filterStudents(String query) {
     if (query.isEmpty) {
@@ -517,10 +542,6 @@ class StudentController extends GetxController {
       // Get the first sheet
       Sheet? sheet = excel.sheets.values.first;
 
-      if (sheet == null) {
-        throw Exception("No sheets found in Excel file");
-      }
-
       List<Student> students = [];
 
       // Get the headers (assuming the first row contains the headers)
@@ -561,7 +582,7 @@ class StudentController extends GetxController {
         final row = sheet.rows[i];
 
         String currentRoll;
-        headerIndexMap["Shift"].toString().toLowerCase() == 'morning' ? {
+        row[headerIndexMap["Shift"]!]?.value.toString().toLowerCase() == 'morning' ? {
           currentRoll = (morningStudentsList.length + morningIndex).toString().padLeft(4, '0'),
           morningIndex++
         } : {
@@ -570,7 +591,9 @@ class StudentController extends GetxController {
         };
 
         String rollNo = '$currentRoll-$courseCode-${DateTime.now().year}';
-        print(rollNo);
+        if (kDebugMode) {
+          print(rollNo);
+        }
 
         students.add(Student(
           studentRollNo: rollNo,

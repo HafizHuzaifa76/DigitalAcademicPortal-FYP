@@ -233,9 +233,9 @@ class _SemesterPageState extends State<SemesterPage> {
                       children: [
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .3, 100)),
-                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                           ),
                           onPressed: ()=> Get.toNamed('/semesterStudents', arguments: {
                             'deptName': dept.departmentName,
@@ -252,9 +252,9 @@ class _SemesterPageState extends State<SemesterPage> {
 
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .3, 100)),
-                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                           ),
                           onPressed: ()=> Get.toNamed('/teachers'),
                           child: Column(
@@ -268,9 +268,9 @@ class _SemesterPageState extends State<SemesterPage> {
 
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .3, 100)),
-                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                           ),
                           onPressed: ()=> Get.toNamed('/semesterCourses', arguments: {
                             'deptName': dept.departmentName,
@@ -294,9 +294,9 @@ class _SemesterPageState extends State<SemesterPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: ElevatedButton(
                             style: ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                                fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .3, 100)),
-                                shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                                backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                                fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
+                                shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                             ),
                             onPressed: ()=> Get.toNamed('/allSections', arguments: {
                               'deptName': dept.departmentName,
@@ -316,10 +316,10 @@ class _SemesterPageState extends State<SemesterPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: ElevatedButton(
                             style: ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                                fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .3, 100)),
-                                padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 2, horizontal: 2)),
-                                shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                                backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                                fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
+                                padding: WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 2, horizontal: 2)),
+                                shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                             ),
                             onPressed: ()=> Get.toNamed('/allSections', arguments: {
                               'deptName': dept.departmentName,

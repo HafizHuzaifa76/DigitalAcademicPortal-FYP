@@ -39,11 +39,10 @@ class ForegetPasswordScreen_State extends State<ForegetPasswordScreen> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
+      // backgroundColor: Theme.of(context).backgroundColor,
       body: Center(
         child: SingleChildScrollView(
           child: Container(

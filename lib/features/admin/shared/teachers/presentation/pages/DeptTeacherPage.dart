@@ -15,12 +15,11 @@ class DeptTeacherPage extends StatefulWidget {
 class _DeptTeacherPageState extends State<DeptTeacherPage> {
   final TeacherController controller = Get.find();
   final addTeacherKey = GlobalKey<FormState>();
-  var themeColor = Colors.black;
+  late var themeColor;
 
   @override
   void initState() {
     controller.showDeptTeachers(widget.deptName);
-    themeColor = Theme.of(context).primaryColor;
     super.initState();
   }
 
@@ -28,7 +27,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: themeColor,
+        backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
           addTeacherBottomSheet(context);
         },
@@ -61,7 +60,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      themeColor,
+                      Theme.of(context).primaryColor,
                       const Color(0xFF1B7660),
                     ],
                     begin: Alignment.topCenter,
@@ -129,7 +128,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                               teacher.teacherName,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: themeColor,
+                                color: Theme.of(context).primaryColor,
                               ),
                             ),
                             subtitle: const Text(''),
@@ -178,7 +177,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                     fontFamily: 'Ubuntu',
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: themeColor,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -319,13 +318,13 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                                       children: [
                                         ElevatedButton(
                                           style: ButtonStyle(
-                                              backgroundColor: MaterialStatePropertyAll(controller.selectedGender.value.toString() == 'Male'
-                                                  ? themeColor
+                                              backgroundColor: WidgetStatePropertyAll(controller.selectedGender.value.toString() == 'Male'
+                                                  ? Theme.of(context).primaryColor
                                                   : Colors.white
                                               ),
-                                              fixedSize: const MaterialStatePropertyAll(Size(120, 45)),
-                                            shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                                            side: MaterialStatePropertyAll(BorderSide(color: themeColor, width: 2))
+                                              fixedSize: const WidgetStatePropertyAll(Size(120, 45)),
+                                            shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                                            side: WidgetStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2))
                                           ),
                                           onPressed: () {
                                             controller.selectedGender.value = 'Male';
@@ -335,7 +334,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                                             style: TextStyle(
                                               color: controller.selectedGender.value.toString() == 'Male'
                                                   ? Colors.white
-                                                  : themeColor,
+                                                  : Theme.of(context).primaryColor,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18
                                             ),
@@ -345,13 +344,13 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
 
                                         ElevatedButton(
                                           style: ButtonStyle(
-                                              backgroundColor: MaterialStatePropertyAll(controller.selectedGender.value.toString() == 'Female'
-                                                  ? themeColor
+                                              backgroundColor: WidgetStatePropertyAll(controller.selectedGender.value.toString() == 'Female'
+                                                  ? Theme.of(context).primaryColor
                                                   : Colors.white,
                                               ),
-                                              fixedSize: const MaterialStatePropertyAll(Size(120, 45)),
-                                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                                              side: MaterialStatePropertyAll(BorderSide(color: themeColor, width: 2))
+                                              fixedSize: const WidgetStatePropertyAll(Size(120, 45)),
+                                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                                              side: WidgetStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2))
                                           ),
                                           onPressed: () {
                                             controller.selectedGender.value = 'Female';
@@ -361,7 +360,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                                             style: TextStyle(
                                               color: controller.selectedGender.value.toString() == 'Female'
                                                   ? Colors.white
-                                                  : themeColor,
+                                                  : Theme.of(context).primaryColor,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 18
                                             ),
@@ -385,13 +384,13 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                                       children: [
                                         ElevatedButton(
                                           style: ButtonStyle(
-                                              backgroundColor: MaterialStatePropertyAll(controller.selectedType.value.toString() == 'Dept'
-                                                  ? themeColor
+                                              backgroundColor: WidgetStatePropertyAll(controller.selectedType.value.toString() == 'Dept'
+                                                  ? Theme.of(context).primaryColor
                                                   : Colors.white
                                               ),
-                                              fixedSize: const MaterialStatePropertyAll(Size(120, 45)),
-                                            shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                                            side: MaterialStatePropertyAll(BorderSide(color: themeColor, width: 2))
+                                              fixedSize: const WidgetStatePropertyAll(Size(120, 45)),
+                                            shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                                            side: WidgetStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2))
                                           ),
                                           onPressed: () {
                                             controller.selectedType.value = 'Dept';
@@ -401,7 +400,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                                             style: TextStyle(
                                               color: controller.selectedType.value.toString() == 'Dept'
                                                   ? Colors.white
-                                                  : themeColor,
+                                                  : Theme.of(context).primaryColor,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18
                                             ),
@@ -411,13 +410,13 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
 
                                         ElevatedButton(
                                           style: ButtonStyle(
-                                              backgroundColor: MaterialStatePropertyAll(controller.selectedType.value.toString() == 'Visitor'
-                                                  ? themeColor
+                                              backgroundColor: WidgetStatePropertyAll(controller.selectedType.value.toString() == 'Visitor'
+                                                  ? Theme.of(context).primaryColor
                                                   : Colors.white,
                                               ),
-                                              fixedSize: const MaterialStatePropertyAll(Size(120, 45)),
-                                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                                              side: MaterialStatePropertyAll(BorderSide(color: themeColor, width: 2))
+                                              fixedSize: const WidgetStatePropertyAll(Size(120, 45)),
+                                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                                              side: WidgetStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2))
                                           ),
                                           onPressed: () {
                                             controller.selectedType.value = 'Visitor';
@@ -427,7 +426,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                                             style: TextStyle(
                                               color: controller.selectedType.value.toString() == 'Visitor'
                                                   ? Colors.white
-                                                  : themeColor,
+                                                  : Theme.of(context).primaryColor,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 18
                                             ),

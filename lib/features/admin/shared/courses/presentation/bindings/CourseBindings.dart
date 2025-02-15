@@ -26,12 +26,13 @@ class CourseBinding extends Bindings{
     Get.lazyPut<DepartmentRemoteDataSource>(() => DepartmentRemoteDataSourceImpl());
     Get.lazyPut(() => AllCoursesUseCase(Get.find()));
     Get.lazyPut(() => AddCourseUseCase(Get.find()));
+    Get.lazyPut(() => AddCourseListUseCase(Get.find()));
     Get.lazyPut(() => EditCourseUseCase(Get.find()));
     Get.lazyPut(() => DeleteCourseUseCase(Get.find()));
     Get.lazyPut(() => DeptCoursesUseCase(Get.find()));
     Get.lazyPut(() => SemesterCoursesUseCase(Get.find()));
     Get.lazyPut(() => UpdateCourseInSemesterUseCase(Get.find()));
     Get.lazyPut(() => UpdateSemesterCourseUseCase());
-    Get.lazyPut(() => CourseController(addCourseUseCase: Get.find(), deleteCourseUseCase: Get.find(), editCourseUseCase: Get.find(), allCoursesUseCase: Get.find(), deptCoursesUseCase: Get.find(), semesterCoursesUseCase: Get.find(), updateCourseInSemesterUseCase: Get.find()));
+    Get.lazyPut(() => CourseController(addCourseUseCase: Get.find(), deleteCourseUseCase: Get.find(), editCourseUseCase: Get.find(), allCoursesUseCase: Get.find(), deptCoursesUseCase: Get.find(), semesterCoursesUseCase: Get.find(), updateCourseInSemesterUseCase: Get.find(), addCourseListUseCase: Get.find()));
   }
 }

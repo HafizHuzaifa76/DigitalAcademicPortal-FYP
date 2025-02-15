@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:digital_academic_portal/core/usecases/UseCase.dart';
-import '../entities/Course.dart';
 import '../repositories/CourseRepository.dart';
 
 class DeleteCourseUseCase implements UseCase<void, CourseParams>{

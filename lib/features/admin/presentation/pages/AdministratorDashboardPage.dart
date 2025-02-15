@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:digital_academic_portal/features/admin/presentation/widgets/AdministratorDrawer.dart';
+import 'package:digital_academic_portal/features/admin/shared/CalendarPage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -217,10 +218,10 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                       children: [
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .3, 100)),
-                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                              padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 12, vertical: 5))),
+                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                              padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 12, vertical: 5))),
                           onPressed: () => Get.toNamed('/departments'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -245,14 +246,14 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
 
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(
+                              backgroundColor: WidgetStatePropertyAll(
                                   Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(
+                              fixedSize: WidgetStatePropertyAll(
                                   Size(screenSize.width * .3, 100)),
-                              shape: MaterialStatePropertyAll(
+                              shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10))),
-                              padding: const MaterialStatePropertyAll(
+                              padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
                           onPressed: () => Get.toNamed('/allStudents'),
@@ -278,14 +279,14 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
 
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(
+                              backgroundColor: WidgetStatePropertyAll(
                                   Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(
+                              fixedSize: WidgetStatePropertyAll(
                                   Size(screenSize.width * .3, 100)),
-                              shape: MaterialStatePropertyAll(
+                              shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10))),
-                              padding: const MaterialStatePropertyAll(
+                              padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
                           onPressed: () => Get.toNamed('/allTeachers'),
@@ -314,14 +315,14 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                       children: [
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(
+                              backgroundColor: WidgetStatePropertyAll(
                                   Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(
+                              fixedSize: WidgetStatePropertyAll(
                                   Size(screenSize.width * .3, 100)),
-                              shape: MaterialStatePropertyAll(
+                              shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10))),
-                              padding: const MaterialStatePropertyAll(
+                              padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
                           onPressed: () => Get.toNamed('/allCourses'),
@@ -346,17 +347,17 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
 
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(
+                              backgroundColor: WidgetStatePropertyAll(
                                   Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(
+                              fixedSize: WidgetStatePropertyAll(
                                   Size(screenSize.width * .3, 100)),
-                              shape: MaterialStatePropertyAll(
+                              shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10))),
-                              padding: const MaterialStatePropertyAll(
+                              padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/'),
+                          onPressed: () => Get.toNamed('/mainNoticeBoard'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -380,17 +381,18 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
 
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(
+                              backgroundColor: WidgetStatePropertyAll(
                                   Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(
+                              fixedSize: WidgetStatePropertyAll(
                                   Size(screenSize.width * .3, 100)),
-                              shape: MaterialStatePropertyAll(
+                              shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10))),
-                              padding: const MaterialStatePropertyAll(
+                              padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/'),
+                          // onPressed: () => Get.to(const TableEventsExample()),
+                          onPressed: () => Get.toNamed('/calendarPage'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -419,15 +421,15 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: ElevatedButton(
                             style: ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(
+                                backgroundColor: WidgetStatePropertyAll(
                                     Theme.of(context).primaryColor),
-                                fixedSize: MaterialStatePropertyAll(
+                                fixedSize: WidgetStatePropertyAll(
                                     Size(screenSize.width * .3, 100)),
-                                shape: MaterialStatePropertyAll(
+                                shape: WidgetStatePropertyAll(
                                     RoundedRectangleBorder(
                                         borderRadius:
                                         BorderRadius.circular(10))),
-                                padding: const MaterialStatePropertyAll(
+                                padding: const WidgetStatePropertyAll(
                                     EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 5))),
                             onPressed: () => Get.toNamed('/'),
@@ -454,15 +456,15 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: ElevatedButton(
                             style: ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(
+                                backgroundColor: WidgetStatePropertyAll(
                                     Theme.of(context).primaryColor),
-                                fixedSize: MaterialStatePropertyAll(
+                                fixedSize: WidgetStatePropertyAll(
                                     Size(screenSize.width * .3, 100)),
-                                shape: MaterialStatePropertyAll(
+                                shape: WidgetStatePropertyAll(
                                     RoundedRectangleBorder(
                                         borderRadius:
                                         BorderRadius.circular(10))),
-                                padding: const MaterialStatePropertyAll(
+                                padding: const WidgetStatePropertyAll(
                                     EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 5))),
                             onPressed: () => Get.toNamed('/'),

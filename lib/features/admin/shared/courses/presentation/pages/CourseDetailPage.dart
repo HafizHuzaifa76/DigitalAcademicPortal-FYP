@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
-import '../../domain/entities/Course.dart';
+import '../../domain/entities/SemesterCourse.dart';
 
 class CourseDetailPage extends StatefulWidget {
   final String deptName;
-  final Course course;
+  final SemesterCourse course;
   const CourseDetailPage({super.key, required this.deptName, required this.course});
 
   @override
@@ -234,9 +234,9 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                       children: [
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .45, 100)),
-                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .45, 100)),
+                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                           ),
                           onPressed: ()=> Get.toNamed('/semesterStudents', arguments: {
                             'deptName': dept,
@@ -253,9 +253,9 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
 
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .45, 100)),
-                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .45, 100)),
+                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                           ),
                           onPressed: ()=> Get.toNamed('/teachers'),
                           child: Column(
@@ -273,9 +273,9 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                       children: [
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .45, 100)),
-                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .45, 100)),
+                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                           ),
                           onPressed: () {
 
@@ -291,9 +291,9 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
 
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: MaterialStatePropertyAll(Size(screenSize.width * .45, 100)),
-                              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .45, 100)),
+                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                           ),
                           onPressed: () {},
                           child: Column(

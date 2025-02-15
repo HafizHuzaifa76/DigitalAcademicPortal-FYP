@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:digital_academic_portal/features/admin/shared/courses/domain/entities/DepartmentCourse.dart';
 
-import '../../features/admin/shared/courses/domain/entities/Course.dart';
+import '../../features/admin/shared/courses/domain/entities/SemesterCourse.dart';
 import '../../features/admin/shared/departments/domain/entities/Semester.dart';
 import '../../features/admin/shared/sections/domain/entities/Section.dart';
 
@@ -10,7 +11,7 @@ abstract class UseCase<Type, Params> {
 
 class CourseParams {
   final String deptName;
-  final Course course;
+  final DepartmentCourse course;
 
   CourseParams(this.deptName, this.course);
 }

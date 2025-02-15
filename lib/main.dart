@@ -1,7 +1,9 @@
 import 'package:digital_academic_portal/features/admin/presentation/pages/AdministratorDashboardPage.dart';
+import 'package:digital_academic_portal/features/admin/shared/calendar_events/presentation/bindings/CalendarEventBindings.dart';
+import 'package:digital_academic_portal/features/admin/shared/calendar_events/presentation/pages/CalendarEventPage.dart';
 import 'package:digital_academic_portal/features/admin/shared/courses/presentation/bindings/CourseBindings.dart';
 import 'package:digital_academic_portal/features/admin/shared/courses/presentation/pages/AllCoursesPage.dart';
-import 'package:digital_academic_portal/features/admin/shared/courses/presentation/pages/DepartmentCoursePage.dart';
+import 'package:digital_academic_portal/features/admin/shared/noticeboard/presentation/pages/NoticeBoardPage.dart';
 import 'package:digital_academic_portal/features/admin/shared/sections/presentation/bindings/SectionBindings.dart';
 import 'package:digital_academic_portal/features/admin/shared/student/presentation/bindings/StudentBindings.dart';
 import 'package:digital_academic_portal/features/admin/shared/student/presentation/pages/DepartmentStudentsPage.dart';
@@ -15,11 +17,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 
+import 'features/admin/shared/courses/presentation/pages/DepartmentCoursePage.dart';
 import 'features/admin/shared/courses/presentation/pages/SemesterCoursePage.dart';
 import 'features/admin/shared/departments/presentation/bindings/DepartmentBindings.dart';
 import 'features/admin/shared/departments/presentation/pages/DepartmentPage.dart';
+import 'features/admin/shared/noticeboard/presentation/bindings/NoticeBoardBindings.dart';
 import 'features/admin/shared/sections/presentation/pages/SectionListPage.dart';
 import 'features/admin/shared/student/presentation/pages/AllStudentsPage.dart';
 import 'features/auth/presentation/bindings/AuthBinding.dart';
@@ -56,6 +59,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Digital Academic Portal',
       theme: ThemeData(
+        fontFamily: 'Ubuntu',
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF145849)),
         primaryColor: const Color(0xFF145849),
         primaryColorLight: const Color(0xFFF2E8AD),
@@ -73,17 +77,17 @@ class MyApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
-            fixedSize: const MaterialStatePropertyAll(Size(double.maxFinite, 45)),
-            textStyle: const MaterialStatePropertyAll(TextStyle(color: Colors.white)),
-            backgroundColor: const MaterialStatePropertyAll(Color(0xFF145849)),
-            shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+            fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
+            textStyle: const WidgetStatePropertyAll(TextStyle(color: Colors.white)),
+            backgroundColor: const WidgetStatePropertyAll(Color(0xFF145849)),
+            shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
           )
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
             style: ButtonStyle(
-              fixedSize: const MaterialStatePropertyAll(Size(double.maxFinite, 45)),
-              side: MaterialStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2)),
-              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+              fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
+              side: WidgetStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2)),
+              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
             ))
       ),
       initialBinding: AuthBinding(),
@@ -144,6 +148,16 @@ class MyApp extends StatelessWidget {
           name: '/allSections',
           page: () => MainSectionsListPage(deptName: Get.arguments['deptName'], semester: Get.arguments['semester']),
           binding: SectionBinding(),
+        ),
+        GetPage(
+          name: '/mainNoticeBoard',
+          page: () => const MainNoticeBoardPage(),
+          binding: NoticeBoardBinding(),
+        ),
+        GetPage(
+          name: '/calendarPage',
+          page: () => CalendarEventPage(),
+          binding: CalendarEventBinding(),
         ),
       ],
       home: const SplashScreen(),
