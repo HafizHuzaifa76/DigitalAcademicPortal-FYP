@@ -1,12 +1,11 @@
 import '../../domain/entities/Teacher.dart';
 
 class TeacherModel extends Teacher{
-  TeacherModel({required super.teacherID, required super.teacherName, required super.teacherDept, required super.teacherEmail, required super.teacherCNIC, required super.teacherContact, required super.teacherAddress, required super.teacherType, required super.teacherGender});
+  TeacherModel({required super.teacherName, required super.teacherDept, required super.teacherEmail, required super.teacherCNIC, required super.teacherContact, required super.teacherAddress, required super.teacherType, required super.teacherGender});
 
 
   Map<String, dynamic> toMap() {
     return {
-      'teacherID': teacherID,
       'teacherName': teacherName,
       'teacherDept': teacherDept,
       'teacherEmail': teacherEmail,
@@ -20,7 +19,6 @@ class TeacherModel extends Teacher{
 
   factory TeacherModel.fromTeacher(Teacher teacher){
     return TeacherModel(
-        teacherID: teacher.teacherID,
         teacherName: teacher.teacherName,
         teacherDept: teacher.teacherDept,
         teacherEmail: teacher.teacherEmail,
@@ -33,7 +31,6 @@ class TeacherModel extends Teacher{
   }
   factory TeacherModel.fromMap(Map<String, dynamic> map) {
     return TeacherModel(
-      teacherID: map['teacherID'] as String,
       teacherName: map['teacherName'] as String,
       teacherDept: map['teacherDept'] as String,
       teacherEmail: map['teacherEmail'] as String,

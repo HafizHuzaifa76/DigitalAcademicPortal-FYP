@@ -18,7 +18,7 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
 
   @override
   void initState() {
-    controller.showAllCourses();
+    // controller.showAllCourses();
     super.initState();
   }
 
@@ -39,13 +39,13 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
             );
           }
           else {
-            if (controller.courseList.isEmpty) {
+            if (controller.semesterCourseList.isEmpty) {
               return const Center(child: Text("No Courses available"));
             } else {
               return ListView.builder(
-                itemCount: controller.courseList.length,
+                itemCount: controller.semesterCourseList.length,
                 itemBuilder: (context, index) {
-                  final course = controller.courseList[index];
+                  final course = controller.semesterCourseList[index];
                   return ListTile(
                     title: Text(course.courseName),
                     subtitle: Text(

@@ -8,7 +8,8 @@ import '../models/StudentModel.dart';
 
 abstract class StudentRemoteDataSource{
   Future<StudentModel> addStudent(StudentModel student);
-  Future<void> addStudentsList(List<Student> morningStudents, List<Student> eveningStudents);
+  Future<void> addNewStudentsList(List<Student> morningStudents, List<Student> eveningStudents);
+  Future<void> addPreviousStudentsList(List<Student> morningStudents, List<Student> eveningStudents);
   Future<StudentModel> editStudent(StudentModel student);
   Future<void> deleteStudent(String studentID);
   Future<List<StudentModel>> allStudents();
@@ -343,7 +344,7 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
   // }
 
   @override
-  Future<void> addStudentsList(List<Student> morningStudents, List<Student> eveningStudents) async {
+  Future<void> addNewStudentsList(List<Student> morningStudents, List<Student> eveningStudents) async {
     int sectionLimit = 30; // Maximum students per section
     WriteBatch batch = _firestore.batch();
 
@@ -484,6 +485,120 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
     await batch.commit();
 
     print('All students have been successfully assigned to sections.');
+  }
+
+  @override
+  Future<void> addPreviousStudentsList(List<Student> morningStudents, List<Student> eveningStudents) async {
+    WriteBatch batch = _firestore.batch();
+
+    // Function to assign previous students to their existing sections
+    Future<void> assignShiftStudents(List<Student> students, String shift) async {
+      debugPrint('students: ${students.length}');
+      if (students.isEmpty) return;
+
+      var firstStudent = students.first;
+      var sectionRef = _firestore
+          .collection('departments')
+          .doc(firstStudent.studentDepartment)
+          .collection('semesters')
+          .doc(firstStudent.studentSemester)
+          .collection('sections');
+
+      // Fetch existing sections for the shift
+      var sectionQuery = await sectionRef.where('shift', isEqualTo: shift).get();
+      Map<String, Map<String, dynamic>> sections = {
+        for (var doc in sectionQuery.docs) doc.id: doc.data(),
+      };
+
+      var coursesRef = _firestore
+          .collection('departments')
+          .doc(firstStudent.studentDepartment)
+          .collection('semesters')
+          .doc(firstStudent.studentSemester)
+          .collection('courses');
+
+      var compulsoryCoursesQuery = await coursesRef.where('courseType', isEqualTo: 'compulsory').get();
+
+      // Prepare parallel tasks for Firebase Auth user creation
+      List<Future> authFutures = [];
+
+      // Assign students to their existing sections
+      for (var currentStudent in students) {
+        var student = StudentModel.fromStudent(currentStudent);
+
+        // Check if the student already exists
+        var studentRef = _firestore.collection('students').doc(student.studentRollNo);
+        var studentSnapshot = await studentRef.get();
+        if (studentSnapshot.exists) {
+          throw Exception('Student with roll number ${student.studentRollNo} already exists');
+        }
+
+        // Add Firebase Auth user creation task
+        authFutures.add(
+          _auth.createUserWithEmailAndPassword(
+            email: student.studentEmail,
+            password: student.studentCNIC,
+          ),
+        );
+
+        String sectionName = '$shift ${student.studentSection}';
+        if (!sections.containsKey(sectionName)) {
+          sections[sectionName] = {
+            'sectionName': sectionName,
+            'shift': shift,
+            'totalStudents': 1,
+            'studentList': []
+          };
+        }
+
+        // Update section with new student
+        sections[sectionName]!['totalStudents'] = (sections[sectionName]!['totalStudents'] ?? 0) + 1;
+        List<dynamic> studentList = sections[sectionName]!['studentList'] ?? [];
+        studentList.add(student.studentRollNo);
+        sections[sectionName]!['studentList'] = studentList;
+
+        // Add student document to Firestore
+        print(sectionName);
+        batch.set(studentRef, student.toMap());
+      }
+
+      // Wait for all Firebase Auth user creation tasks to complete
+      // await Future.wait(authFutures);
+
+      // Update all sections in Firestore
+      for (var section in sections.entries) {
+        print(section.key);
+        batch.set(
+          sectionRef.doc(section.key),
+          section.value,
+          SetOptions(merge: true),
+        );
+      }
+
+      // Update students in compulsory courses
+      for (var courseDoc in compulsoryCoursesQuery.docs) {
+        var courseId = courseDoc.id;
+        var courseSectionRef = coursesRef.doc(courseId).collection('sections');
+
+        for (var section in sections.entries) {
+          batch.set(
+            courseSectionRef.doc(section.key),
+            section.value,
+            SetOptions(merge: true),
+          );
+        }
+      }
+    }
+
+    print('adding previous students');
+    // Assign morning and evening students to their sections
+    await assignShiftStudents(morningStudents, 'Morning');
+    await assignShiftStudents(eveningStudents, 'Evening');
+
+    // Commit the batch operation
+    await batch.commit();
+
+    print('All previous students have been successfully added to their sections.');
   }
 
   Future<void> addStudentsBatch(List<StudentModel> students) async {
@@ -630,7 +745,6 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
 
     print('All students added successfully in an optimized manner.');
   }
-
 
   // Future<StudentModel> addStudent(StudentModel student) async {
   //   var ref = _firestore.collection('students').doc(student.studentRollNo);

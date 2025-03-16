@@ -23,22 +23,24 @@ import '../../domain/usecases/UpdateCourseInSemesterUseCase.dart';
 class CourseController extends GetxController{
   final AddCourseUseCase addCourseUseCase;
   final AddCourseListUseCase addCourseListUseCase;
+  final AddSemesterCoursesUseCase addSemesterCoursesUseCase;
   final DeleteCourseUseCase deleteCourseUseCase;
   final EditCourseUseCase editCourseUseCase;
-  final AllCoursesUseCase allCoursesUseCase;
   final DeptCoursesUseCase deptCoursesUseCase;
   final SemesterCoursesUseCase semesterCoursesUseCase;
+  final AllSemesterCoursesUseCase allSemesterCoursesUseCase;
   final UpdateCourseInSemesterUseCase updateCourseInSemesterUseCase;
 
-  CourseController({required this.addCourseUseCase, required this.deleteCourseUseCase, required this.editCourseUseCase, required this.allCoursesUseCase, required this.addCourseListUseCase, required this.deptCoursesUseCase, required this.semesterCoursesUseCase, required this.updateCourseInSemesterUseCase});
+  CourseController({required this.addCourseUseCase, required this.deleteCourseUseCase, required this.editCourseUseCase, required this.addCourseListUseCase, required this.deptCoursesUseCase, required this.semesterCoursesUseCase, required this.addSemesterCoursesUseCase, required this.allSemesterCoursesUseCase, required this.updateCourseInSemesterUseCase});
 
   TextEditingController courseCodeController = TextEditingController();
   TextEditingController courseNameController = TextEditingController();
   var isLoading = false.obs;
 
-  var courseList = <SemesterCourse>[].obs;
+  var semesterCourseList = <SemesterCourse>[].obs;
   var allCoursesList = <DepartmentCourse>[].obs;
-  var filteredCourseList = <SemesterCourse>[].obs;
+  var filteredAllCourseList = <DepartmentCourse>[].obs;
+  var filteredSemesterCourseList = <SemesterCourse>[].obs;
   var selectedTotalCourses = 5.obs;
   var selectedElectiveCourses = 0.obs;
   List<Semester> semesterList = [];
@@ -67,15 +69,24 @@ class CourseController extends GetxController{
 
   void filterCourses(String query) {
     if (query.isEmpty) {
-      filteredCourseList.assignAll(courseList);
+      filteredSemesterCourseList.assignAll(semesterCourseList);
+      filteredAllCourseList.assignAll(allCoursesList);
     } else {
       var lowerCaseQuery = query.toLowerCase();
-      var filteredResults = courseList.where((course) {
+      var semesterCoursesFilteredResults = semesterCourseList.where((course) {
         return course.courseName.toLowerCase().startsWith(lowerCaseQuery) || course.courseName.toLowerCase().contains(' $lowerCaseQuery') ||
             course.courseCode.toLowerCase().startsWith(lowerCaseQuery) || course.courseCode.toLowerCase().contains('-$lowerCaseQuery');
       }).toList();
-      filteredCourseList.assignAll(filteredResults);
-      print(' list: ${filteredCourseList.length}');
+
+      var allCoursesFilteredResults = allCoursesList.where((course) {
+        return course.courseName.toLowerCase().startsWith(lowerCaseQuery) || course.courseName.toLowerCase().contains(' $lowerCaseQuery') ||
+            course.courseCode.toLowerCase().startsWith(lowerCaseQuery) || course.courseCode.toLowerCase().contains('-$lowerCaseQuery');
+      }).toList();
+
+      filteredSemesterCourseList.assignAll(semesterCoursesFilteredResults);
+      filteredAllCourseList.assignAll(allCoursesFilteredResults);
+      print(' list1: ${filteredSemesterCourseList.length}');
+      print(' list2: ${filteredAllCourseList.length}');
     }
   }
 
@@ -86,31 +97,16 @@ class CourseController extends GetxController{
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+        Utils().showErrorSnackBar('Error', message);
       }, (right) {
-        Get.snackbar(
-            'Success',
-            'Course added successfully...',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.primaryColor,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white)
-        );
+        Utils().showSuccessSnackBar('Success', 'Course added successfully...');
 
         clearTextControllers();
       });
 
     } finally {
       EasyLoading.dismiss();
-      showDeptCourses(newCourse.courseDept);
+      showDeptCourses(newCourse.courseDept).then((_) => isLoading(false));
     }
   }
 
@@ -129,7 +125,28 @@ class CourseController extends GetxController{
 
     } finally {
       EasyLoading.dismiss();
-      showDeptCourses(courses.first.courseDept);
+      showDeptCourses(courses.first.courseDept).then((_) => isLoading(false));
+    }
+  }
+
+  Future<void> addSemesterCourseList(List<SemesterCourse> courses) async {
+    try {
+      EasyLoading.show(status: 'Adding...');
+      final result = await addSemesterCoursesUseCase.execute(courses);
+
+      result.fold((left) {
+        String message = left.failure.toString();
+        Utils().showErrorSnackBar('Error', message);
+
+      }, (right) {
+        Utils().showSuccessSnackBar('Success', 'Course added successfully...');
+        var sem = semesterList.firstWhere((index) => index.semesterName == courses.first.courseSemester);
+        sem.addMultipleCourses(courses.length);
+        showAllSemesterCourses(courses.first.courseDept);
+      });
+
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
@@ -141,25 +158,9 @@ class CourseController extends GetxController{
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+        Utils().showErrorSnackBar('Error', message);
       }, (right) {
-        Get.snackbar(
-            'Success',
-            'Course updated successfully...',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.primaryColor,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
-        );
-
+        Utils().showSuccessSnackBar('Success', 'Course updated successfully...');
         clearTextControllers();
         // Get.to(HomeScreen());
       });
@@ -177,24 +178,9 @@ class CourseController extends GetxController{
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+        Utils().showErrorSnackBar('Error', message);
       }, (right) {
-        Get.snackbar(
-            'Success',
-            'Course deleted successfully...',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.primaryColor,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
-        );
+        Utils().showSuccessSnackBar('Success', 'Course deleted successfully...');
         // Get.to(HomeScreen());
       });
 
@@ -209,18 +195,11 @@ class CourseController extends GetxController{
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+        Utils().showErrorSnackBar('Error', message);
 
       }, (courses) {
-        courseList.assignAll(courses);
-        filteredCourseList.assignAll(courseList);
+        semesterCourseList.assignAll(courses);
+        filteredSemesterCourseList.assignAll(semesterCourseList);
         print('Semester Courses fetched');
       });
 
@@ -233,42 +212,27 @@ class CourseController extends GetxController{
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+        Utils().showErrorSnackBar('Error', message);
 
       }, (courses) {
         allCoursesList.assignAll(courses);
-        filteredCourseList.assignAll(courseList);
+        filteredAllCourseList.assignAll(allCoursesList);
         print('Courses fetched');
       });
 
-      isLoading(false);
   }
 
-  Future<void> showAllCourses() async {
+  Future<void> showAllSemesterCourses(String deptName) async {
       isLoading(true);
-      final result = await allCoursesUseCase.execute(null);
+      final result = await allSemesterCoursesUseCase.execute(deptName);
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+        Utils().showErrorSnackBar('Error', message);
 
       }, (courses) {
-        courseList.assignAll(courses);
-        filteredCourseList.assignAll(courseList);
+        semesterCourseList.assignAll(courses);
+        filteredSemesterCourseList.assignAll(semesterCourseList);
         print('Courses fetched');
       });
 
@@ -283,24 +247,9 @@ class CourseController extends GetxController{
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+        Utils().showErrorSnackBar('Error', message);
       }, (right) {
-        Get.snackbar(
-            'Success',
-            'Now you can add courses in ${semester.semesterName}',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.primaryColor,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white)
-        );
+        Utils().showSuccessSnackBar('Success', 'Now you can add courses in ${semester.semesterName}');
 
         if(index != -1){
           semesterList[index] = semester;
@@ -365,8 +314,8 @@ class CourseController extends GetxController{
         if (row[headerIndexMap["Course Title"]!]?.value != null) {
           courses.add(
             DepartmentCourse(
-                courseCode: row[headerIndexMap["Course Title"]!]?.value.toString() ?? "",
-                courseName: row[headerIndexMap["Course Code"]!]?.value.toString() ?? "",
+                courseName: row[headerIndexMap["Course Title"]!]?.value.toString() ?? "",
+                courseCode: row[headerIndexMap["Course Code"]!]?.value.toString() ?? "",
                 courseDept: deptName,
                 courseCreditHours: int.parse(row[headerIndexMap["Credit Hours"]!]?.value.toString() ?? '0')
             )

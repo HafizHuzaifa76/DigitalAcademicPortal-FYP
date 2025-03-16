@@ -1,6 +1,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:digital_academic_portal/features/admin/shared/teachers/domain/entities/Teacher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/SectionModel.dart';
 
@@ -10,6 +12,10 @@ abstract class SectionRemoteDataSource{
   Future<void> deleteSection(String deptName, String semester, String sectionName);
   Future<void> enrollStudentListInSection(String deptName, String semester, String sectionName, List<String> studentList);
   Future<List<SectionModel>> allSections(String deptName, String semester);
+  Future<void> assignTeacherToCourses(String deptName, String semester, String section, Map<String, dynamic> coursesTeachersMap);
+  Future<Map<String, String?>> fetchAssignedTeachers(String deptName, String semester, String section);
+  Future<void> editAssignedTeacher(String deptName, String semester, String section, String courseName, Teacher newTeacher);
+
 }
 
 class SectionRemoteDataSourceImpl implements SectionRemoteDataSource{
@@ -59,6 +65,122 @@ class SectionRemoteDataSourceImpl implements SectionRemoteDataSource{
     return querySnapshot.docs
         .map((doc) => SectionModel.fromMap(doc.data()))
         .toList();
+  }
+
+  @override
+  Future assignTeacherToCourses(String deptName, String semester, String section, Map<String, dynamic> coursesTeachersMap) async {
+    try {
+      var departmentRef = _firestore.collection('departments').doc(deptName);
+      var semesterRef = departmentRef.collection('semesters').doc(semester);
+      var allCourses = coursesTeachersMap.keys;
+      print('allCourses.length ${allCourses.length}');
+
+      for (var course in allCourses){
+        if (coursesTeachersMap[course] is Teacher) {
+          print('Course: $course, teacher: ${coursesTeachersMap[course].teacherName}');
+
+          var courseRef = semesterRef.collection('courses').doc(course);
+          var courseSnapshot = await courseRef.get();
+          
+          if (courseSnapshot.exists) {
+            print('courseSnapshot exists');
+            var teacherRef = departmentRef.collection('teachers').doc(coursesTeachersMap[course]!.teacherCNIC)
+                .collection('courses').doc(course);
+          
+            var ref = courseRef.collection('sections').doc(section);
+            ref.set({
+              'teacherName': coursesTeachersMap[course]!.teacherName,
+              'teacherID': coursesTeachersMap[course]!.teacherCNIC,
+            }, SetOptions(merge: true)).then((onValue)=>
+                print('teacher assigned to section'));
+
+            await teacherRef.set(courseSnapshot.data()!, SetOptions(merge: true));
+            print('section added to teacher');
+
+          }
+        } else {
+          if (kDebugMode) {
+            print('It is not Teacher');
+          }
+        }
+      }
+    } catch (e) {
+      throw Exception('Error adding teacher: $e');
+    }
+  }
+
+  @override
+  Future<Map<String, String?>> fetchAssignedTeachers(String deptName, String semester, String section) async {
+    Map<String, String?> assignedTeachers = {};
+
+    try {
+      var departmentRef = _firestore.collection('departments').doc(deptName);
+      var semesterRef = departmentRef.collection('semesters').doc(semester);
+      var coursesSnapshot = await semesterRef.collection('courses').get();
+
+      for (var courseDoc in coursesSnapshot.docs) {
+        var courseName = courseDoc.id;
+        var sectionRef = courseDoc.reference.collection('sections').doc(section);
+        var sectionSnapshot = await sectionRef.get();
+
+        if (sectionSnapshot.exists && sectionSnapshot.data() != null) {
+          var data = sectionSnapshot.data()!;
+          if (data.containsKey('teacherID')) {
+            assignedTeachers[courseName] = data['teacherID'];
+          } else {
+            assignedTeachers[courseName] = null;
+          }
+        } else {
+          assignedTeachers[courseName] = null;
+        }
+      }
+    } catch (e) {
+      print('Error fetching assigned teachers: $e');
+      throw Exception('Failed to fetch assigned teachers');
+    }
+
+    return assignedTeachers;
+  }
+
+  @override
+  Future<void> editAssignedTeacher(String deptName, String semester, String section, String courseName, Teacher newTeacher) async {
+    try {
+      var departmentRef = _firestore.collection('departments').doc(deptName);
+      var semesterRef = departmentRef.collection('semesters').doc(semester);
+      var courseRef = semesterRef.collection('courses').doc(courseName);
+      var sectionRef = courseRef.collection('sections').doc(section);
+
+      // Check if the course exists
+      var courseSnapshot = await courseRef.get();
+      var sectionSnapshot = await sectionRef.get();
+      if (!courseSnapshot.exists) {
+        throw Exception("Course not found!");
+      }
+      if (!sectionSnapshot.exists) {
+        throw Exception("Course not found!");
+      }
+
+      var oldTeacherID = sectionSnapshot['teacherID'];
+
+      // Update the assigned teacher in the section document
+      await sectionRef.set({
+        'teacherName': newTeacher.teacherName,
+        'teacherID': newTeacher.teacherCNIC,
+      }, SetOptions(merge: true));
+      print("Teacher updated successfully!");
+
+      // Update teacher's courses collection (remove old and add new if needed)
+      var oldTeacherRef = departmentRef.collection('teachers').doc(oldTeacherID).collection('courses').doc(courseName);
+      await oldTeacherRef.delete();
+
+      var newTeacherRef = departmentRef.collection('teachers').doc(newTeacher.teacherCNIC).collection('courses').doc(courseName);
+      await newTeacherRef.set(courseSnapshot.data()!, SetOptions(merge: true));
+
+      print("Updated teacher's assigned courses!");
+    } catch (e) {
+      print("Error updating assigned teacher: $e");
+      throw Exception("Failed to update teacher");
+    }
   }
 
   @override

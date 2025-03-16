@@ -1,7 +1,13 @@
 
+import 'dart:io';
+
+import 'package:excel/excel.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import '../../../../../../core/utils/Utils.dart';
 import '../../domain/usecases/AddTeacherUseCase.dart';
 import '../../domain/usecases/AllTeacherUseCase.dart';
 import '../../domain/usecases/DeleteTeacherUseCase.dart';
@@ -12,12 +18,13 @@ import '../../domain/entities/Teacher.dart';
 
 class TeacherController extends GetxController{
   final AddTeacherUseCase addTeacherUseCase;
+  final AddTeacherListUseCase addTeacherListUseCase;
   final DeleteTeacherUseCase deleteTeacherUseCase;
   final EditTeacherUseCase editTeacherUseCase;
   final AllTeachersUseCase allTeachersUseCase;
   final DeptTeachersUseCase deptTeachersUseCase;
 
-  TeacherController({required this.addTeacherUseCase, required this.deleteTeacherUseCase, required this.editTeacherUseCase, required this.allTeachersUseCase, required this.deptTeachersUseCase});
+  TeacherController({required this.addTeacherUseCase, required this.addTeacherListUseCase, required this.deleteTeacherUseCase, required this.editTeacherUseCase, required this.allTeachersUseCase, required this.deptTeachersUseCase});
 
   var teacherNameController = TextEditingController();
   var teacherEmailController = TextEditingController();
@@ -45,7 +52,6 @@ class TeacherController extends GetxController{
   Future<void> addTeacher(String deptName) async {
 
     var newTeacher = Teacher(
-      teacherID: DateTime.now().toString(),
       teacherName: teacherNameController.text,
       teacherDept: deptName,
       teacherEmail: teacherEmailController.text,
@@ -62,23 +68,11 @@ class TeacherController extends GetxController{
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+        Utils().showSuccessSnackBar('Error', message);
       }, (right) {
-        Get.snackbar(
+        Utils().showSuccessSnackBar(
             'Success',
             'Teacher added successfully...',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.primaryColor,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
         );
 
         clearAllControllers();
@@ -91,10 +85,31 @@ class TeacherController extends GetxController{
     }
   }
 
+  Future<void> addTeacherList(List<Teacher> teacherList) async {
+
+    try {
+      isLoading(true);
+      EasyLoading.show(status: 'Adding Teachers...');
+      final result = await addTeacherListUseCase.execute(teacherList);
+
+      result.fold((left) {
+        String message = left.failure.toString();
+        Utils().showSuccessSnackBar('Error', message);
+      }, (right) {
+        Utils().showSuccessSnackBar('Success', right);
+        // Get.to(HomeScreen());
+      });
+
+    } finally {
+      showDeptTeachers(teacherList.first.teacherDept);
+      EasyLoading.dismiss();
+      isLoading(false);
+    }
+  }
+
   Future<void> editTeacher(String teacherID) async {
 
     var newTeacher = Teacher(
-      teacherID: teacherID,
       teacherName: teacherNameController.text,
       teacherDept: 'dept',
       teacherEmail: teacherEmailController.text,
@@ -111,23 +126,11 @@ class TeacherController extends GetxController{
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+        Utils().showSuccessSnackBar('Error', message);
       }, (right) {
-        Get.snackbar(
+        Utils().showSuccessSnackBar(
             'Success',
             'Teacher updated successfully...',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.primaryColor,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
         );
 
         clearAllControllers();
@@ -148,23 +151,11 @@ class TeacherController extends GetxController{
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+        Utils().showSuccessSnackBar('Error', message);
       }, (right) {
-        Get.snackbar(
+        Utils().showSuccessSnackBar(
             'Success',
             'Teacher deleted successfully...',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.primaryColor,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
         );
         // Get.to(HomeScreen());
       });
@@ -181,19 +172,12 @@ class TeacherController extends GetxController{
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+        Utils().showSuccessSnackBar('Error', message);
 
       }, (teacher) {
         teacherList.assignAll(teacher);
         filteredTeacherList.assignAll(teacher);
-        print('Teachers fetched');
+        debugPrint('Teachers fetched');
       });
 
       isLoading(false);
@@ -205,22 +189,90 @@ class TeacherController extends GetxController{
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+        Utils().showSuccessSnackBar('Error', message);
 
       }, (teacher) {
         teacherList.assignAll(teacher);
         filteredTeacherList.assignAll(teacher);
-        print('Teachers fetched');
+        debugPrint('Teachers fetched');
       });
 
       isLoading(false);
+  }
+  Future<List<Teacher>> fetchTeachersFromExcel(String deptName) async {
+    try {
+      // Open file picker to select an Excel file
+      debugPrint('Pick file for teachers');
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['xlsx', 'xls'],
+      );
+
+      if (result == null) {
+        throw Exception("No file selected");
+      }
+
+      File file = File(result.files.single.path!);
+      final bytes = file.readAsBytesSync();
+      final excel = Excel.decodeBytes(bytes);
+
+      // Get the first sheet
+      Sheet? sheet = excel.sheets.values.first;
+      if (sheet == null) {
+        throw Exception("No sheets found in Excel file");
+      }
+
+      List<Teacher> teachers = [];
+
+      // Get the headers (assuming the first row contains the headers)
+      final headers = sheet.rows.first;
+      Map<String, int> headerIndexMap = {};
+
+      // Map headers to their column indices
+      for (int i = 0; i < headers.length; i++) {
+        final headerValue = headers[i]?.value?.toString() ?? '';
+        headerIndexMap[headerValue.trim()] = i;
+      }
+
+      // Expected headers
+      const requiredHeaders = [
+        "Teacher Name",
+        "Email",
+        "CNIC",
+        "Contact No",
+        "Address",
+        "Type",
+        "Gender",
+      ];
+
+      // Ensure all required headers are present
+      for (var header in requiredHeaders) {
+        if (!headerIndexMap.containsKey(header)) {
+          throw Exception("Missing required header: $header");
+        }
+      }
+
+      // Iterate through rows (skip header row)
+      for (int i = 1; i < sheet.rows.length; i++) {
+        final row = sheet.rows[i];
+
+        teachers.add(Teacher(
+          teacherName: row[headerIndexMap["Teacher Name"]!]?.value.toString() ?? "",
+          teacherDept: deptName,
+          teacherEmail: row[headerIndexMap["Email"]!]?.value.toString() ?? "",
+          teacherCNIC: row[headerIndexMap["CNIC"]!]?.value.toString() ?? "",
+          teacherContact: row[headerIndexMap["Contact No"]!]?.value.toString() ?? "",
+          teacherAddress: row[headerIndexMap["Address"]!]?.value.toString() ?? "",
+          teacherType: row[headerIndexMap["Type"]!]?.value.toString() ?? "",
+          teacherGender: row[headerIndexMap["Gender"]!]?.value.toString() ?? "",
+        ));
+      }
+
+      return teachers;
+    } catch (e) {
+      Utils().showErrorSnackBar('Error reading Excel file', '$e');
+      return [];
+    }
   }
 
   void clearAllControllers() {

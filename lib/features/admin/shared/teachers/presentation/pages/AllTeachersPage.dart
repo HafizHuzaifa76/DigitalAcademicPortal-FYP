@@ -47,7 +47,7 @@ class _AllTeachersPageState extends State<AllTeachersPage> {
                 itemBuilder: (context, index) {
                   final teacher = controller.teacherList[index];
                   return ListTile(
-                    title: Text(teacher.teacherID),
+                    title: Text(teacher.teacherCNIC),
                     subtitle: Text(
                         'Name: ${teacher.teacherName}, Dept: ${teacher.teacherDept}'),
                     onTap: () {

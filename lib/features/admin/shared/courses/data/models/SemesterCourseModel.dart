@@ -32,7 +32,7 @@ class SemesterCourseModel extends SemesterCourse{
       courseDept: map['courseDept'] as String,
       courseType: map['courseType'] as String,
       courseSemester: map['courseSemester'] as String,
-      courseCreditHours: map['courseCreditHours'].toDouble(),
+      courseCreditHours: map['courseCreditHours'].toInt(),
     );
   }
 

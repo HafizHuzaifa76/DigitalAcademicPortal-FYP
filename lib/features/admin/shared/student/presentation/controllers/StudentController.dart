@@ -260,12 +260,12 @@ class StudentController extends GetxController {
     }
   }
 
-  Future<void> addStudentList(List<Student> studentsList) async {
+  Future<void> addStudentList(List<Student> studentsList, bool isNewStudent) async {
     try {
       isLoading(true);
       EasyLoading.show(status: 'Adding Students\nIt take some time\nPlease wait...');
 
-      final result = await addStudentListUseCase.execute(studentsList);
+      final result = await addStudentListUseCase.execute(StudentListParams(studentsList, isNewStudent));
 
       result.fold((left) {
         String message = left.failure.toString();
@@ -429,9 +429,10 @@ class StudentController extends GetxController {
     }
   }
 
-  Future<List<Student>> fetchPreviousStudentsFromExcel() async {
+  Future<List<Student>> fetchPreviousStudentsFromExcel(String semester) async {
     try {
       // Open file picker to select an Excel file
+      print('pick file');
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['xlsx', 'xls'],
@@ -474,10 +475,7 @@ class StudentController extends GetxController {
         "Email",
         "Gender",
         "Address",
-        "Department",
-        "Semester",
         "Shift",
-        "Academic Year",
         "Section",
         "CGPA",
       ];
@@ -493,26 +491,23 @@ class StudentController extends GetxController {
       for (int i = 1; i < sheet.rows.length; i++) {
         final row = sheet.rows[i];
 
+        var rollNo = row[headerIndexMap["Roll No"]!]?.value.toString() ?? "";
+        var year = rollNo.split('-').last;
         students.add(Student(
-          studentRollNo: row[headerIndexMap["Roll No"]!]?.value.toString() ?? "",
+          studentRollNo: rollNo,
           studentName: row[headerIndexMap["Name"]!]?.value.toString() ?? "",
           fatherName: row[headerIndexMap["Father Name"]!]?.value.toString() ?? "",
           studentCNIC: row[headerIndexMap["CNIC"]!]?.value.toString() ?? "",
-          studentContactNo:
-          row[headerIndexMap["Contact No"]!]?.value.toString() ?? "",
+          studentContactNo: row[headerIndexMap["Contact No"]!]?.value.toString() ?? "",
           studentEmail: row[headerIndexMap["Email"]!]?.value.toString() ?? "",
           studentGender: row[headerIndexMap["Gender"]!]?.value.toString() ?? "",
           studentAddress: row[headerIndexMap["Address"]!]?.value.toString() ?? "",
-          studentDepartment:
-          row[headerIndexMap["Department"]!]?.value.toString() ?? "",
-          studentSemester: row[headerIndexMap["Semester"]!]?.value.toString() ?? "",
+          studentDepartment: deptName,
+          studentSemester: semester,
           studentShift: row[headerIndexMap["Shift"]!]?.value.toString() ?? "",
-          studentAcademicYear:
-          row[headerIndexMap["Academic Year"]!]?.value.toString() ?? "",
+          studentAcademicYear: '$year - ${int.parse(year) + 4}',
           studentSection: row[headerIndexMap["Section"]!]?.value.toString() ?? "",
-          studentCGPA: double.tryParse(
-              row[headerIndexMap["CGPA"]!]?.value.toString() ?? "0") ??
-              0.0,
+          studentCGPA: double.tryParse(row[headerIndexMap["CGPA"]!]?.value.toString() ?? "0") ?? 0.0,
         ));
       }
 

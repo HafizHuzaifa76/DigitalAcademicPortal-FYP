@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digital_academic_portal/features/admin/shared/courses/data/models/DeptCourseModel.dart';
 import 'package:digital_academic_portal/features/admin/shared/courses/domain/entities/DepartmentCourse.dart';
+import 'package:digital_academic_portal/features/admin/shared/courses/domain/entities/SemesterCourse.dart';
 import 'package:flutter/material.dart';
 
 import '../models/SemesterCourseModel.dart';
@@ -9,11 +10,13 @@ import '../models/SemesterCourseModel.dart';
 abstract class CourseRemoteDataSource {
   Future<DeptCourseModel> addCourse(String deptName, DeptCourseModel course);
   Future<void> addCoursesList(String deptName, List<DepartmentCourse> courses);
+  Future<SemesterCourseModel> addSemesterCourse(SemesterCourseModel course, int length, bool firstIndex) ;
+  Future<List<SemesterCourse>> addSemesterCoursesList(List<SemesterCourse> coursesList);
   Future<DeptCourseModel> editCourse(String deptName, DeptCourseModel course);
   Future<void> deleteCourse(String deptName, DeptCourseModel course);
-  Future<List<DeptCourseModel>> deptCourses(String deptName);
+  Future<List<SemesterCourseModel>> deptSemesterCourses(String deptName);
   Future<List<SemesterCourseModel>> semesterCourses(String deptName, String semester);
-  Future<List<SemesterCourseModel>> allCourses();
+  Future<List<DeptCourseModel>> allCourses(String deptName);
 }
 
 class CourseRemoteDataSourceImpl implements CourseRemoteDataSource{
@@ -79,27 +82,40 @@ class CourseRemoteDataSourceImpl implements CourseRemoteDataSource{
     }
     return course;
   }
-  //
-  // @override
-  // Future<DeptCourseModel> addCourse(String deptName, DeptCourseModel course) async {
-  //   var ref = _firestore.collection('departments').doc(deptName)
-  //       .collection('semesters')
-  //       .doc(course.courseSemester);
-  //   var courseRef = ref.collection('courses').doc(course.courseName);
-  //
-  //   var snapshot = await courseRef.get();
-  //
-  //   if (!snapshot.exists) {
-  //     await courseRef.set(course.toMap());
-  //     await ref.update({
-  //       'numOfCourses': FieldValue.increment(1),
-  //     });
-  //   } else {
-  //     throw Exception('Course already exists');
-  //   }
-  //
-  //   return course;
-  // }
+
+  @override
+  Future<SemesterCourseModel> addSemesterCourse(SemesterCourseModel course, int length, bool firstIndex) async {
+    var ref = _firestore.collection('departments').doc(course.courseDept)
+        .collection('semesters')
+        .doc(course.courseSemester);
+    var courseRef = ref.collection('courses').doc(course.courseName);
+
+    var snapshot = await courseRef.get();
+
+    if (!snapshot.exists) {
+      await courseRef.set(course.toMap());
+      if (firstIndex) {
+        await ref.update({
+          'numOfCourses': FieldValue.increment(length),
+        });
+      }
+    } else {
+      throw Exception('Course already exists');
+    }
+
+    return course;
+  }
+
+  @override
+  Future<List<SemesterCourse>> addSemesterCoursesList(List<SemesterCourse> coursesList) async {
+    bool firstIndex = true;
+    for (var course in coursesList) {
+      addSemesterCourse(SemesterCourseModel.fromCourse(course), coursesList.length, firstIndex);
+      firstIndex = false;
+    }
+
+    return coursesList;
+  }
   //
   // @override
   // Future<void> deleteCourse(String deptName, DeptCourseModel course) async {
@@ -129,9 +145,9 @@ class CourseRemoteDataSourceImpl implements CourseRemoteDataSource{
   // }
 
   @override
-  Future<List<DeptCourseModel>> deptCourses(String deptName) async {
+  Future<List<SemesterCourseModel>> deptSemesterCourses(String deptName) async {
 
-    List<DeptCourseModel> allCourses = [];
+    List<SemesterCourseModel> allCourses = [];
 
     final semesterSnapshot = await _firestore.collection('departments')
         .doc(deptName)
@@ -143,8 +159,8 @@ class CourseRemoteDataSourceImpl implements CourseRemoteDataSource{
 
       final courseSnapshot = await semesterDoc.reference.collection('courses').get();
 
-      final List<DeptCourseModel> courses = courseSnapshot.docs
-          .map((doc) => DeptCourseModel.fromMap(doc.data()))
+      final List<SemesterCourseModel> courses = courseSnapshot.docs
+          .map((doc) => SemesterCourseModel.fromMap(doc.data()))
           .toList();
 
       allCourses.addAll(courses);
@@ -152,7 +168,7 @@ class CourseRemoteDataSourceImpl implements CourseRemoteDataSource{
 
     return allCourses;
   }
-  //
+
   // @override
   // Future<List<DeptCourseModel>> deptCourses(String deptName) async {
   //
@@ -178,24 +194,13 @@ class CourseRemoteDataSourceImpl implements CourseRemoteDataSource{
   //   return allCourses;
   // }
 
-
   @override
-  Future<List<SemesterCourseModel>> allCourses() async {
-    List<SemesterCourseModel> allCourses = [];
+  Future<List<DeptCourseModel>> allCourses(String deptName) async {
 
-    // Fetch all departments
-    final departmentSnapshot = await _firestore.collection('departments').get();
+    final coarseSnapshot = await _firestore.collection('departments').doc(deptName).collection('courses').get();
 
-    for (var departmentDoc in departmentSnapshot.docs) {
-      final departmentName = departmentDoc.id;
-
-      // Fetch courses for each department
-      final courses = await deptCourses(departmentName);
-
-      // allCourses.addAll(courses);
-    }
-
-    return allCourses;
+    return coarseSnapshot.docs.map((doc) => DeptCourseModel.fromMap(doc.data()))
+        .toList();
   }
 
   @override

@@ -480,7 +480,7 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
     );
   }
 
-  Future showExcelBottomSheet(BuildContext context, String buttonType, List<String> columns) {
+  Future showExcelBottomSheet(BuildContext context,String buttonType, String semester, List<String> columns) {
     return showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -534,9 +534,9 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
               ElevatedButton(
                 onPressed: () {
                   if (buttonType.contains('Add Previous Students')) {
-                    controller.fetchPreviousStudentsFromExcel().then((futureList) {
+                    controller.fetchPreviousStudentsFromExcel(semester).then((futureList) {
                       if (futureList.isNotEmpty) {
-                        controller.addStudentList(futureList);
+                        controller.addStudentList(futureList, false);
                       }
                     });
                   }
@@ -587,6 +587,7 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                   showExcelBottomSheet(
                     context,
                     'Add New Students',
+                    'SEM-I',
                     [
                       'Name',
                       'Father Name',
@@ -648,20 +649,19 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                               showExcelBottomSheet(
                                 context,
                                 'Add Previous Students',
+                                semester.semesterName,
                                 [
+                                  'Roll No',
                                   'Name',
                                   'Father Name',
-                                  'Roll No.',
                                   'CNIC',
                                   'Contact No',
                                   'Email',
                                   'Gender',
                                   'Address',
-                                  'Semester',
                                   'Shift',
                                   'Section',
                                   'CGPA',
-                                  'Academic Year (20xx-20xx)',
                                 ],
                               );
                             }
@@ -1110,7 +1110,7 @@ class ListWidget extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
           onPressed: (){
-            controller.addStudentList(items);
+            controller.addStudentList(items, true);
           },
           child: Icon(Icons.done_outline, size: 30, color: Colors.white),
       ),

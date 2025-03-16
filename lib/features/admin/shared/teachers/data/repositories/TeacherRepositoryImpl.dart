@@ -27,7 +27,7 @@ class TeacherRepositoryImpl implements TeacherRepository{
   @override
   Future<Either<Fail, void>> deleteTeacher(Teacher teacher) async {
     try {
-      return Right(await teacherRemoteDataSource.deleteTeacher(teacher.teacherEmail));
+      return Right(await teacherRemoteDataSource.deleteTeacher(TeacherModel.fromTeacher(teacher)));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');
@@ -75,6 +75,20 @@ class TeacherRepositoryImpl implements TeacherRepository{
     int startIndex = message.indexOf(']');
     if (startIndex != -1){
       message = message.substring(startIndex+2);
+    }
+    return Left(Fail(message));
+    }
+  }
+
+  @override
+  Future<Either<Fail, String>> addTeacherList(List<Teacher> teacherList) async {
+    try {
+      return Right(await teacherRemoteDataSource.addTeachersList(teacherList));
+    } catch (e) {
+    String message = e.toString();
+    int startIndex = message.indexOf(']');
+    if (startIndex != -1){
+    message = message.substring(startIndex+1);
     }
     return Left(Fail(message));
     }

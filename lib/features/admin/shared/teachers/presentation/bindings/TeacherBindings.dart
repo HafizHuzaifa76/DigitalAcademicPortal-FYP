@@ -12,15 +12,17 @@ import '../../domain/usecases/EditTeacherUseCase.dart';
 import '../controllers/TeacherController.dart';
 
 class TeacherBinding extends Bindings{
+
   @override
   void dependencies() {
     Get.lazyPut<TeacherRemoteDataSource>(() => TeacherRemoteDataSourceImpl());
     Get.lazyPut<TeacherRepository>(() => TeacherRepositoryImpl(teacherRemoteDataSource: Get.find()));
     Get.lazyPut(() => AllTeachersUseCase(Get.find()));
     Get.lazyPut(() => AddTeacherUseCase(Get.find()));
+    Get.lazyPut(() => AddTeacherListUseCase(Get.find()));
     Get.lazyPut(() => EditTeacherUseCase(Get.find()));
     Get.lazyPut(() => DeleteTeacherUseCase(Get.find()));
     Get.lazyPut(() => DeptTeachersUseCase(Get.find()));
-    Get.lazyPut(() => TeacherController(addTeacherUseCase: Get.find(), deleteTeacherUseCase: Get.find(), editTeacherUseCase: Get.find(), allTeachersUseCase: Get.find(), deptTeachersUseCase: Get.find()));
+    Get.lazyPut(() => TeacherController(addTeacherUseCase: Get.find(), addTeacherListUseCase: Get.find(), deleteTeacherUseCase: Get.find(), editTeacherUseCase: Get.find(), allTeachersUseCase: Get.find(), deptTeachersUseCase: Get.find()));
   }
 }

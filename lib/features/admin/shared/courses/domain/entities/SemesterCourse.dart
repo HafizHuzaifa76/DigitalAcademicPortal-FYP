@@ -7,7 +7,7 @@ class SemesterCourse extends DepartmentCourse{
 
   SemesterCourse({required super.courseCode, required super.courseName, required super.courseDept, required this.courseSemester, required this.courseType, required super.courseCreditHours});
 
-  SemesterCourse fromDeptCourse(DepartmentCourse deptCourse, String semester, String courseType){
+  factory SemesterCourse.fromDeptCourse(DepartmentCourse deptCourse, String semester, String courseType){
     return SemesterCourse(
         courseCode: deptCourse.courseCode,
         courseName: deptCourse.courseName,

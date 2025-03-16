@@ -10,7 +10,11 @@ class Semester{
 
   Semester({required this.semesterName, required this.sectionLimit, required this.totalCourses, required this.numOfCourses, required this.numOfElectiveCourses, required this.numOfStudents, required this.numOfTeachers});
 
-  addCourse(){
+  addSingleCourse(){
     numOfCourses++;
+  }
+
+  addMultipleCourses(int number){
+    numOfCourses += number;
   }
 }

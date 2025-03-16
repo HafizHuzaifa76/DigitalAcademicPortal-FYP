@@ -41,6 +41,20 @@ class CourseRepositoryImpl implements CourseRepository{
   }
 
   @override
+  Future<Either<Fail, List<SemesterCourse>>> addSemesterCoursesList(List<SemesterCourse> courses) async {
+    try {
+      return Right(await courseRemoteDataSource.addSemesterCoursesList(courses));
+    } catch (e) {
+      String message = e.toString();
+      int startIndex = message.indexOf(']');
+      if (startIndex != -1){
+        message = message.substring(startIndex+1);
+      }
+      return Left(Fail(message));
+    }
+  }
+
+  @override
   Future<Either<Fail, void>> deleteCourse(String deptName, DepartmentCourse course) async {
     try {
       return Right(await courseRemoteDataSource.deleteCourse(deptName, DeptCourseModel.fromCourse(course)));
@@ -71,7 +85,7 @@ class CourseRepositoryImpl implements CourseRepository{
   @override
   Future<Either<Fail, List<DepartmentCourse>>> showDeptCourses(String deptName) async {
     try {
-      return Right(await courseRemoteDataSource.deptCourses(deptName));
+      return Right(await courseRemoteDataSource.allCourses(deptName));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');
@@ -83,9 +97,9 @@ class CourseRepositoryImpl implements CourseRepository{
   }
 
   @override
-  Future<Either<Fail, List<SemesterCourse>>> showAllCourses() async {
+  Future<Either<Fail, List<SemesterCourse>>> showAllSemesterCourses(String deptName) async {
     try {
-      return Right(await courseRemoteDataSource.allCourses());
+      return Right(await courseRemoteDataSource.deptSemesterCourses(deptName));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');
