@@ -5,7 +5,7 @@ import '../entities/Student.dart';
 abstract class StudentRepository{
 
   Future<Either<Fail, Student>> addStudent(Student student);
-  Future<Either<Fail, void>> addStudentList(List<Student> morningStudents, List<Student> eveningStudents);
+  Future<Either<Fail, void>> addStudentList(List<Student> morningStudents, List<Student> eveningStudents, bool isNewStudent);
   Future<Either<Fail, Student>> editStudent(Student student);
   Future<Either<Fail, void>> deleteStudent(Student student);
   Future<Either<Fail, List<Student>>> showAllStudents();

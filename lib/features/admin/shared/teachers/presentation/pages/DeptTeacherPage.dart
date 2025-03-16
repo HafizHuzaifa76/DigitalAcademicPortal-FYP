@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../controllers/TeacherController.dart';
@@ -15,7 +18,6 @@ class DeptTeacherPage extends StatefulWidget {
 class _DeptTeacherPageState extends State<DeptTeacherPage> {
   final TeacherController controller = Get.find();
   final addTeacherKey = GlobalKey<FormState>();
-  late var themeColor;
 
   @override
   void initState() {
@@ -26,12 +28,43 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () {
-          addTeacherBottomSheet(context);
-        },
-        child: const Icon(Icons.add, color: Colors.white),
+      floatingActionButtonLocation: ExpandableFab.location,
+      floatingActionButton: ExpandableFab(
+
+        openButtonBuilder: RotateFloatingActionButtonBuilder(
+          child: const Icon(Icons.chevron_right, size: 30),
+          fabSize: ExpandableFabSize.regular,
+          foregroundColor: Colors.white,
+          backgroundColor: Get.theme.primaryColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        ),
+        closeButtonBuilder: FloatingActionButtonBuilder(
+          size: 56,
+          builder: (BuildContext context, void Function()? onPressed,
+              Animation<double> progress) {
+            return IconButton(
+              onPressed: onPressed,
+              icon: const Icon(
+                Icons.check_circle_outline,
+                size: 40,
+              ),
+            );
+          },
+        ),
+          children: [
+            IconButton(
+                onPressed: (){
+                  showExcelBottomSheet(context);
+                },
+                icon: const Icon(FontAwesomeIcons.fileExcel, )
+            ),
+            IconButton(
+                onPressed: (){
+                  addTeacherBottomSheet(context);
+                },
+                icon: const Icon(CupertinoIcons.add, )
+            ),
+          ],
       ),
       body: CustomScrollView(
         slivers: [
@@ -463,4 +496,82 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
       },
     );
   }
+
+  Future showExcelBottomSheet(BuildContext context) {
+    List<String> columns = [
+      "Teacher Name",
+      "Email",
+      "CNIC",
+      "Contact No",
+      "Address",
+      "Type",
+      "Gender",
+    ];
+    return showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Add Teachers', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu'),),
+              const SizedBox(height: 10),
+
+              const Text(
+                'Your Excel sheet should contain these columns:',
+                style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Ubuntu'),
+              ),
+              const SizedBox(height: 10),
+              // List the columns
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 20.0,
+                runSpacing: 10.0,
+                children: columns.map((col) => SizedBox(
+                  width: (MediaQueryData.fromView(WidgetsBinding.instance.window).size.width / 3) - 30,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(3)
+                    ),
+                    child: Text(
+                      col,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Ubuntu'),
+                    ),
+                  ),
+                ))
+                    .toList(),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Important',
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red, fontSize: 18, fontFamily: 'Ubuntu'),
+              ),
+              const Text(
+                'Email and CNIC should be unique',
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontFamily: 'Ubuntu'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  controller.fetchTeachersFromExcel(widget.deptName).then((futureList) {
+                    if (futureList.isNotEmpty) {
+                      controller.addTeacherList(futureList);
+                    }
+                  });
+                },
+                child: const Text('Select File', style: TextStyle(color: Colors.white, fontFamily: 'Ubuntu', fontSize: 18)),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 }

@@ -10,7 +10,6 @@ class StudentRepositoryImpl implements StudentRepository{
 
   StudentRepositoryImpl({required this.studentRemoteDataSource});
 
-
   @override
   Future<Either<Fail, Student>> addStudent(Student student) async {
     try {
@@ -26,9 +25,12 @@ class StudentRepositoryImpl implements StudentRepository{
   }
 
   @override
-  Future<Either<Fail, void>> addStudentList(List<Student> morningStudents, List<Student> eveningStudents) async {
+  Future<Either<Fail, void>> addStudentList(List<Student> morningStudents, List<Student> eveningStudents, bool newStudents) async {
     try {
-      return Right(await studentRemoteDataSource.addStudentsList(morningStudents, eveningStudents));
+      return Right(
+         newStudents ? await studentRemoteDataSource.addNewStudentsList(morningStudents, eveningStudents)
+             : await studentRemoteDataSource.addPreviousStudentsList(morningStudents, eveningStudents)
+      );
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');

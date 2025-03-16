@@ -110,7 +110,7 @@ class _AllCoursesScreenState extends State<AllCoursesScreen> {
                   child: CircularProgressIndicator(),
                 ),
               );
-            } else if (controller.filteredCourseList.isEmpty) {
+            } else if (controller.filteredAllCourseList.isEmpty) {
               return const SliverFillRemaining(
                 child: Center(
                   child: Text(
@@ -123,7 +123,7 @@ class _AllCoursesScreenState extends State<AllCoursesScreen> {
               return SliverList(
                 delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
-                    final course = controller.filteredCourseList[index];
+                    final course = controller.filteredAllCourseList[index];
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
@@ -141,19 +141,19 @@ class _AllCoursesScreenState extends State<AllCoursesScreen> {
                               fontFamily: 'Ubuntu',
                             ),
                           ),
-                          subtitle: Text('Code: ${course.courseCode}, Subject: ${course.courseType}'),
+                          subtitle: Text('Code: ${course.courseCode}, Credit Hours: ${course.courseCreditHours}'),
                           trailing: const Icon(Icons.arrow_forward_ios),
                           onTap: () {
-                            Get.to(() => CourseDetailPage(
-                              deptName: widget.deptName,
-                              course: course,
-                            ));
+                            // Get.to(() => CourseDetailPage(
+                            //   deptName: widget.deptName,
+                            //   course: course,
+                            // ));
                           },
                         ),
                       ),
                     );
                   },
-                  childCount: controller.filteredCourseList.length,
+                  childCount: controller.filteredAllCourseList.length,
                 ),
               );
             }

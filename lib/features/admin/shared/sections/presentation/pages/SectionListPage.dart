@@ -1,3 +1,4 @@
+import 'package:digital_academic_portal/features/admin/shared/sections/presentation/pages/SectionDetailScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -18,7 +19,9 @@ class _MainSectionsListPageState extends State<MainSectionsListPage> {
   @override
   void initState() {
     super.initState();
-    controller.showAllSections(widget.deptName, widget.semester);
+    Future.delayed(Duration.zero, () {
+      controller.showAllSections(widget.deptName, widget.semester);
+    });
   }
 
   @override
@@ -114,6 +117,7 @@ class _MainSectionsListPageState extends State<MainSectionsListPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
                           ),
+
                           child: ListTile(
                             title: Text(
                               'Section: ${section.sectionID}, Shift: ${section.shift}',
@@ -121,9 +125,7 @@ class _MainSectionsListPageState extends State<MainSectionsListPage> {
                             ),
                             subtitle: Text('Total Students: ${section.totalStudents}'),
                             trailing: const Icon(Icons.arrow_forward_ios),
-                            onTap: () {
-                              // Handle tap, e.g., navigate to Section details or edit
-                            },
+                            onTap: () => Get.to(()=> SectionDetailPage(deptName: widget.deptName, semester: widget.semester, section: section)),
                           ),
                         ),
                       );

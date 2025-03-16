@@ -1,0 +1,16 @@
+import 'package:dartz/dartz.dart';
+import 'package:digital_academic_portal/core/usecases/UseCase.dart';
+
+import '../../../teachers/domain/entities/Teacher.dart';
+import '../../../teachers/domain/usecases/DeptTeacherUseCase.dart';
+
+class GetTeachersUseCase implements UseCase<List<Teacher>, String>{
+  final DeptTeachersUseCase useCase;
+
+  GetTeachersUseCase(this.useCase);
+
+  @override
+  Future<Either<Fail, List<Teacher>>> execute(String deptName) async {
+    return await useCase.execute(deptName);
+  }
+}
