@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:digital_academic_portal/features/admin/shared/courses/domain/entities/DepartmentCourse.dart';
-import 'package:digital_academic_portal/features/admin/shared/teachers/domain/entities/Teacher.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/courses/domain/entities/DepartmentCourse.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/domain/entities/Teacher.dart';
 
-import '../../features/admin/shared/courses/domain/entities/SemesterCourse.dart';
-import '../../features/admin/shared/departments/domain/entities/Semester.dart';
-import '../../features/admin/shared/sections/domain/entities/Section.dart';
-import '../../features/admin/shared/student/domain/entities/Student.dart';
+import '../../features/administrator_panel/shared/courses/domain/entities/SemesterCourse.dart';
+import '../../features/administrator_panel/shared/departments/domain/entities/Semester.dart';
+import '../../features/administrator_panel/shared/sections/domain/entities/Section.dart';
+import '../../features/administrator_panel/shared/student/domain/entities/Student.dart';
 
 abstract class UseCase<Type, Params> {
   Future<Either<Fail, Type>> execute(Params params);
