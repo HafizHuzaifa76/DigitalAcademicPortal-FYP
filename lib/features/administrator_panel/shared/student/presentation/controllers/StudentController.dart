@@ -113,6 +113,7 @@ class StudentController extends GetxController {
     }, (students) {
       studentList.assignAll(students);
       filteredStudentList.assignAll(students); // Show all students initially
+      print('Department Students fetched ${students.length}');
     });
 
     isLoading(false);
@@ -390,7 +391,7 @@ class StudentController extends GetxController {
     }, (students) {
       studentList.assignAll(students);
       filteredStudentList.assignAll(students);
-      print('Students fetched');
+      print('All Students fetched ${students.length}');
     });
 
     isLoading(false);
