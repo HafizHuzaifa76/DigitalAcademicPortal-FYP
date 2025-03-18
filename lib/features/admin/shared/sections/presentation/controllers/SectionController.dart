@@ -160,8 +160,8 @@ class SectionController extends GetxController{
   }
 
   void changeCourseTeacher(String courseCode, Teacher teacher) {
-    selectedTeachers[courseCode] = teacher;
-    selectedTeachers.value;
+    selectedTeachers.value[courseCode] = teacher;
+    print(selectedTeachers);
   }
 
   Future<void> assignTeacherToCourse(String deptName, String semester, String section) async {

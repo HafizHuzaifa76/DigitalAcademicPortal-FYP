@@ -200,13 +200,15 @@ class _AssignTeachersPageState extends State<AssignTeachersPage> {
                                                       );
                                                     }).toList(),
                                                     onChanged: (selectedTeacher) {
+                                                      if(selectedTeacher == controller.selectedTeachers[course.courseName]) return ;
+
                                                       if (controller.isEdit.value == false) {
                                                         controller.changeCourseTeacher(course.courseName, selectedTeacher!);
                                                         state.didChange(selectedTeacher);
                                                       }
                                                       else {
-                                                        print(selectedTeacher);
                                                         showConfirmationBottomSheet(context, dept, semester, section.sectionName, course.courseName, selectedTeacher!);
+                                                        state.didChange(selectedTeacher);
                                                       }
                                                       _formKey.currentState!.validate();
                                                     },
