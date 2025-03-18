@@ -75,7 +75,6 @@ class MyApp extends StatelessWidget {
           centerTitle: true,
           titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold)
         ),
-        scaffoldBackgroundColor: Colors.grey.shade800,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
             fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
