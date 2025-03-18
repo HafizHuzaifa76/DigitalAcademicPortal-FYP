@@ -15,7 +15,7 @@ class SplashServices {
 
     if(user != null){
       Timer(const Duration(seconds: 4), () async {
-        Get.offNamed('/administrator_panel');
+        Get.offNamed('/admin');
         // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
       });
     }
