@@ -74,7 +74,7 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
 
                               IconButton(
                                 icon: Image.asset(
-                                  'assets/images/administrator_panel.png',
+                                  'assets/images/admin.png',
                                   height: 35,
                                   width: 35,
                                 ),
@@ -328,7 +328,7 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Image.asset(
-                                  'assets/images/administrator_panel.png',
+                                  'assets/images/admin.png',
                                   height: 55, width: 60
                               ),
                               const SizedBox(height: 3),

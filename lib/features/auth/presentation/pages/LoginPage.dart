@@ -1,10 +1,13 @@
 // lib/features/auth/presentation/pages/login_page.dart
+import 'package:digital_academic_portal/features/student_panel/presentation/pages/StudentPanelDashboardPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/AuthController.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -19,11 +22,11 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Get.theme.scaffoldBackgroundColor,
       body: Center(
         child: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
-                Container(
+                SizedBox(
                   height: 100,
                   child: Stack(
                     children: [
@@ -32,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
                         left: -30,
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundColor: Color(0xFF145849).withOpacity(0.9),
+                          backgroundColor: const Color(0xFF145849).withOpacity(0.9),
                         ),
                       ),
                       Positioned(
@@ -40,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
                         left: 30,
                         child: CircleAvatar(
                           radius: 40,
-                          backgroundColor: Color(0xFF145849).withOpacity(0.85),
+                          backgroundColor: const Color(0xFF145849).withOpacity(0.85),
                         ),
                       ),
                     ],
@@ -50,22 +53,22 @@ class _LoginPageState extends State<LoginPage> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
+                    SizedBox(
                         height: 120,
                         child: Image.asset('assets/images/DAP logo.png')
                     ),
-                    SizedBox(height: 7),
+                    const SizedBox(height: 7),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text('Digital', style: TextStyle(fontFamily: 'Belanosima', color: Theme.of(context).primaryColor, fontSize: 23, fontWeight: FontWeight.bold),),
-                        Text(' Academic ', style: TextStyle(fontFamily: 'Belanosima', color: Colors.black, fontSize: 23, fontWeight: FontWeight.bold),),
+                        const Text(' Academic ', style: TextStyle(fontFamily: 'Belanosima', color: Colors.black, fontSize: 23, fontWeight: FontWeight.bold),),
                         Text('Portal', style: TextStyle(fontFamily: 'Belanosima', color: Theme.of(context).primaryColor, fontSize: 23, fontWeight: FontWeight.bold),),
                       ],
                     ),
-                    SizedBox(height: 50),
+                    const SizedBox(height: 50),
 
-                    Container(
+                    SizedBox(
                       width: 315,
                       child: Wrap(children: [Text("Hey Welcome!\nSign-in to your account", style: TextStyle(color: Theme.of(context).primaryColor ,fontFamily: 'Ubuntu', fontSize: 28, fontWeight: FontWeight.bold))]),
                     ),
@@ -163,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: (){
 
                         },
-                        child: Text('Forget Password', style: TextStyle(fontFamily: 'Ubuntu', fontSize: 16),)
+                        child: const Text('Forget Password', style: TextStyle(fontFamily: 'Ubuntu', fontSize: 16),)
                     ),
                     const SizedBox(height: 6.0),
 
@@ -199,7 +202,6 @@ class _LoginPageState extends State<LoginPage> {
                             //   print('error: $error');
                             //   Utils().toastErrorMessage(error.toString(), context);
                             // });
-
                           }
                         },
                         style: ButtonStyle(
@@ -217,10 +219,19 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 15.0),
 
+                    OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                            fixedSize: const Size(200, 0)
+                        ),
+                        onPressed: (){
+                          Get.off(()=> const StudentPortalDashboardPage());
+                        },
+                        child: const Text('Student Portal', style: TextStyle(fontWeight: FontWeight.bold),)
+                    ),
                   ],
                 ),
 
-                SizedBox()
+                const SizedBox()
               ],
             ),
           ),
@@ -229,22 +240,22 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      appBar: AppBar(title: const Text('Login')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Obx(() {
               if (controller.isLoading.value) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
 
               return ElevatedButton(
                 onPressed: () {
                   controller.login();
                 },
-                child: Text('Login'),
+                child: const Text('Login'),
               );
             }),
           ],
