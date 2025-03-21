@@ -321,7 +321,7 @@ class _SemesterPageState extends State<SemesterPage> {
                                 padding: WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 2, horizontal: 2)),
                                 shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                             ),
-                            onPressed: ()=> Get.toNamed('/allSections', arguments: {
+                            onPressed: ()=> Get.toNamed('/timeTable', arguments: {
                               'deptName': dept.departmentName,
                               'semester': semester
                             }),

@@ -23,10 +23,10 @@ class SectionController extends GetxController{
   final DeleteSectionUseCase deleteSectionUseCase;
   final EditSectionUseCase editSectionUseCase;
   final AllSectionsUseCase allSectionsUseCase;
-  final GetCoursesUseCase getCoursesUseCase;
   final AssignTeachersUseCase assignTeachersUseCase;
-  final FetchAssignedTeachersUseCase fetchAssignedTeachersUseCase;
   final EditAssignTeachersUseCase editAssignTeachersUseCase;
+  final FetchAssignedTeachersUseCase fetchAssignedTeachersUseCase;
+  final GetCoursesUseCase getCoursesUseCase;
   final GetTeachersUseCase getTeachersUseCase;
 
   SectionController({required this.addSectionUseCase, required this.deleteSectionUseCase, required this.getCoursesUseCase, required this.getTeachersUseCase, required this.editSectionUseCase, required this.allSectionsUseCase, required this.assignTeachersUseCase, required this.editAssignTeachersUseCase, required this.fetchAssignedTeachersUseCase});

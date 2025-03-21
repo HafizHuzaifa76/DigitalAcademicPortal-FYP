@@ -4,11 +4,16 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../../../shared/presentation/widgets/ImageView.dart';
+import '../../../sections/domain/entities/Section.dart';
+import '../../../teachers/domain/entities/Teacher.dart';
 import '../../domain/entities/TimeTable.dart';
 import '../controllers/TimeTableController.dart';
 
 class TimeTablePage extends StatefulWidget {
-  const TimeTablePage({super.key});
+  final String deptName;
+  final String semester;
+
+  const TimeTablePage({super.key, required this.deptName, required this.semester});
 
   @override
   State<TimeTablePage> createState() => _TimeTablePageState();
@@ -18,6 +23,12 @@ class _TimeTablePageState extends State<TimeTablePage> {
   final TimeTableController controller = Get.find();
   final addTimeTableKey = GlobalKey<FormState>();
   final editTimeTableKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    controller.init(widget.deptName, widget.semester);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +102,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Image.asset(
-                    'assets/images/TimeTableboard_icon.png',
+                    'assets/images/noticeboard_icon.png',
                     height: 40,
                     width: 40,
                   ),
@@ -112,66 +123,105 @@ class _TimeTablePageState extends State<TimeTablePage> {
                 ),
               );
             } else {
-              if (controller.filteredTimeTableList.isEmpty) {
+              if (controller.sectionList.isEmpty) {
                 return const SliverFillRemaining(
                   child: Center(child: Text("No TimeTables available")),
                 );
               } else {
                 return SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
-                    final timeTable = controller.filteredTimeTableList[index];
+                    var section = controller.sectionList[index];
+                    controller.fetchAssignedTeacher(widget.deptName, widget.semester, section.sectionName);
+
+                    List<Widget> courseWidgets = controller.coursesList.map((course) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              course.courseName,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(controller.selectedTeachers[course.courseName] ?? 'Not selected'),
+                            ),
+                          ],
+                        )
+                    )).toList();
+                    // final timeTable = controller.filteredTimeTableList[index];
                     return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 5.0),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          side: BorderSide(color: Get.theme.primaryColor),
-                        ),
-                        child: ListTile(
-                          title: Row(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(timeTable.title,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Get.theme.primaryColor,
-                                      fontFamily: 'Ubuntu',
-                                      fontSize: 21)),
-                              const Spacer(),
-                              IconButton(
-                                onPressed: () =>
-                                    editTimeTableBottomSheet(context, timeTable),
-                                icon: const Icon(Icons.edit, size: 25),
+                              Text(
+                                section.sectionName,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColor,
+                                  fontFamily: 'Ubuntu',
+                                ),
                               ),
+
+                              // Text(
+                              //   'Remaining: ${semester.totalCourses - semesterCourses.length}',
+                              //   style: TextStyle(
+                              //     fontSize: 15,
+                              //     fontWeight: FontWeight.w500,
+                              //     color: Theme.of(context).primaryColor,
+                              //     fontFamily: 'Ubuntu',
+                              //   ),
+                              // ),
                               IconButton(
-                                onPressed: () =>
-                                    controller.deleteTimeTable(timeTable),
-                                icon: const Icon(Icons.delete, size: 25),
-                              ),
-                            ],
-                          ),
-                          subtitle: Column(
-                            children: [
-                              GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => const ImageView(
-                                        image: AssetImage(
-                                            'assets/images/demo_TimeTable.jpg')));
+                                  onPressed: (){
+                                    // if (semester.totalCourses == 0) {
+                                    //   selectCourseOptionsBottomSheet(context, semester);
+                                    // }
+                                    // else if(semester.totalCourses <= semester.numOfCourses) {
+                                    //   Utils().showErrorSnackBar(
+                                    //     'Error', 'Limit Already Completed...',
+                                    //   );
+                                    // }
+                                    // else {
+                                    //   if (semester.numOfElectiveCourses != 0) {
+                                    //     _showAddCourseOptions(semester);
+                                    //   }
+                                    //   else {
+                                    //     // addCourseBottomSheet(context, semester);
+                                    //     showCourseSelectionBottomSheet(context, semester.totalCourses, semester.semesterName, 'compulsory');
+                                    //   }
+                                    // }
                                   },
-                                  child: Image.asset(
-                                      'assets/images/demo_TimeTable.jpg')),
-                              const SizedBox(height: 20),
-                              Text(timeTable.description,
-                                  style: const TextStyle(fontFamily: 'Ubuntu')),
+                                  icon: Icon(CupertinoIcons.plus, color: Get.theme.primaryColor,)
+                              )
                             ],
                           ),
-                          onTap: () {
-                            // Additional functionality if needed
-                          },
-                        ),
+                          const SizedBox(height: 2),
+
+                          if(!controller.isLoading.value)
+                            ... courseWidgets
+                          // if (semesterCourses.isNotEmpty)
+                          //   ...courseWidgets
+                        ],
                       ),
                     );
-                  }, childCount: controller.filteredTimeTableList.length),
+                  }, childCount: controller.sectionList.length),
                 );
               }
             }
