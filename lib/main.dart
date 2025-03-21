@@ -11,6 +11,8 @@ import 'package:digital_academic_portal/features/administrator_panel/shared/stud
 import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/presentation/bindings/TeacherBindings.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/presentation/pages/AllTeachersPage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/presentation/pages/DeptTeacherPage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/bindings/TimeTableBindings.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/TimeTablePage.dart';
 import 'package:digital_academic_portal/shared/presentation/pages/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -158,6 +160,11 @@ class MyApp extends StatelessWidget {
           name: '/calendarPage',
           page: () => CalendarEventPage(),
           binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/timeTable',
+          page: () => TimeTablePage(deptName: Get.arguments['deptName'], semester: Get.arguments['semester']),
+          binding: TimeTableBinding(),
         ),
       ],
       home: const SplashScreen(),
