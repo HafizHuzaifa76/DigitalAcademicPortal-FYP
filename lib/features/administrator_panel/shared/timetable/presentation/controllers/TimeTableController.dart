@@ -91,7 +91,7 @@ class TimeTableController extends GetxController {
 
       // await fetchAssignedTeacher(deptName, semester, section);
     } finally {
-      isLoading(false);
+      // isLoading(false);
     }
   }
 
@@ -224,33 +224,38 @@ class TimeTableController extends GetxController {
     result.fold((left) {
       String message = left.failure.toString();
       Utils().showErrorSnackBar('Error', message);
-
     }, (sections) {
       sectionList.assignAll(sections);
       if (kDebugMode) {
         print('sections fetched');
+      }
+
+      // Fetch assigned teachers for each section after sections are fetched
+      for (var section in sections) {
+        fetchAssignedTeacher(deptName, semester, section.sectionName);
       }
     });
 
     isLoading(false);
   }
 
+
   Future<void> fetchAssignedTeacher(String deptName, String semester, String section) async {
     try {
-      print('assignedTeachersMap');
       isLoading(true);
       final result = await fetchAssignedTeachersUseCase.execute(FetchAssignedTeachersParams(deptName: deptName, semester: semester, section: section));
-
       result.fold((left) {
         String message = left.failure.toString();
-        print('message');
-        print(message);
         Utils().showErrorSnackBar('Error', message);
       }, (assignedTeachersMap) {
         print('assignedTeachersMap: $assignedTeachersMap');
 
         for (var item in assignedTeachersMap.entries) {
-          selectedTeachers[item.key] = teachersIDMap[item.value];
+          if(item.value != null) {
+            selectedTeachers[item.key] = teachersIDMap[item.value];
+          } else {
+            selectedTeachers[item.key] = 'Not Selected';
+          }
         }
 
         Utils().showSuccessSnackBar(
@@ -260,9 +265,11 @@ class TimeTableController extends GetxController {
         // Get.to(HomeScreen());
       });
 
-    } finally {
-      EasyLoading.dismiss(animation: true);
-      isLoading(false);
+    } catch(e) {
+      Utils().showErrorSnackBar('Error', '$e');
+      if (kDebugMode) {
+        print('error: $e');
+      }
     }
   }
 
