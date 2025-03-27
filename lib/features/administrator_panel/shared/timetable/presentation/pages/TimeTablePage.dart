@@ -129,11 +129,10 @@ class _TimeTablePageState extends State<TimeTablePage> {
                 );
               } else {
                 return SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    var section = controller.sectionList[index];
-                    controller.fetchAssignedTeacher(widget.deptName, widget.semester, section.sectionName);
-
-                    List<Widget> courseWidgets = controller.coursesList.map((course) => Padding(
+                  delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                      var section = controller.sectionList[index];
+                      List<Widget> courseWidgets = controller.coursesList.map((course) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -145,7 +144,6 @@ class _TimeTablePageState extends State<TimeTablePage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
                               decoration: BoxDecoration(
@@ -158,70 +156,42 @@ class _TimeTablePageState extends State<TimeTablePage> {
                               child: Text(controller.selectedTeachers[course.courseName] ?? 'Not selected'),
                             ),
                           ],
-                        )
-                    )).toList();
-                    // final timeTable = controller.filteredTimeTableList[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                section.sectionName,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).primaryColor,
-                                  fontFamily: 'Ubuntu',
+                        ),
+                      )).toList();
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  section.sectionName,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                    fontFamily: 'Ubuntu',
+                                  ),
                                 ),
-                              ),
-
-                              // Text(
-                              //   'Remaining: ${semester.totalCourses - semesterCourses.length}',
-                              //   style: TextStyle(
-                              //     fontSize: 15,
-                              //     fontWeight: FontWeight.w500,
-                              //     color: Theme.of(context).primaryColor,
-                              //     fontFamily: 'Ubuntu',
-                              //   ),
-                              // ),
-                              IconButton(
-                                  onPressed: (){
-                                    // if (semester.totalCourses == 0) {
-                                    //   selectCourseOptionsBottomSheet(context, semester);
-                                    // }
-                                    // else if(semester.totalCourses <= semester.numOfCourses) {
-                                    //   Utils().showErrorSnackBar(
-                                    //     'Error', 'Limit Already Completed...',
-                                    //   );
-                                    // }
-                                    // else {
-                                    //   if (semester.numOfElectiveCourses != 0) {
-                                    //     _showAddCourseOptions(semester);
-                                    //   }
-                                    //   else {
-                                    //     // addCourseBottomSheet(context, semester);
-                                    //     showCourseSelectionBottomSheet(context, semester.totalCourses, semester.semesterName, 'compulsory');
-                                    //   }
-                                    // }
+                                IconButton(
+                                  onPressed: () {
+                                    // Handle section-specific actions
                                   },
-                                  icon: Icon(CupertinoIcons.plus, color: Get.theme.primaryColor,)
-                              )
-                            ],
-                          ),
-                          const SizedBox(height: 2),
-
-                          if(!controller.isLoading.value)
-                            ... courseWidgets
-                          // if (semesterCourses.isNotEmpty)
-                          //   ...courseWidgets
-                        ],
-                      ),
-                    );
-                  }, childCount: controller.sectionList.length),
+                                  icon: Icon(CupertinoIcons.plus, color: Get.theme.primaryColor),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 2),
+                            if (!controller.isLoading.value) ...courseWidgets,
+                          ],
+                        ),
+                      );
+                    },
+                    childCount: controller.sectionList.length,
+                  ),
                 );
               }
             }
