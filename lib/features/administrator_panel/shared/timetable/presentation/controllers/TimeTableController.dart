@@ -218,31 +218,38 @@ class TimeTableController extends GetxController {
   }
 
   Future<void> showAllSections(String deptName, String semester) async {
+
     isLoading(true);
     final result = await getSectionsUseCase.execute(SemesterParams(deptName, semester));
 
     result.fold((left) {
       String message = left.failure.toString();
       Utils().showErrorSnackBar('Error', message);
-    }, (sections) {
+    }, (sections) async {
       sectionList.assignAll(sections);
+
       if (kDebugMode) {
         print('sections fetched');
       }
 
       // Fetch assigned teachers for each section after sections are fetched
       for (var section in sections) {
-        fetchAssignedTeacher(deptName, semester, section.sectionName);
+        await fetchAssignedTeacher(deptName, semester, section.sectionName);
       }
+
+      isLoading(false);
+
+      Utils().showSuccessSnackBar(
+        'Success',
+        'Teacher Fetched successfully...',
+      );
     });
 
-    isLoading(false);
   }
 
 
   Future<void> fetchAssignedTeacher(String deptName, String semester, String section) async {
     try {
-      isLoading(true);
       final result = await fetchAssignedTeachersUseCase.execute(FetchAssignedTeachersParams(deptName: deptName, semester: semester, section: section));
       result.fold((left) {
         String message = left.failure.toString();
@@ -252,16 +259,12 @@ class TimeTableController extends GetxController {
 
         for (var item in assignedTeachersMap.entries) {
           if(item.value != null) {
-            selectedTeachers[item.key] = teachersIDMap[item.value];
+            selectedTeachers['$section-${item.key}'] = teachersIDMap[item.value];
           } else {
-            selectedTeachers[item.key] = 'Not Selected';
+            selectedTeachers['$section-${item.key}'] = 'Not Selected';
           }
         }
 
-        Utils().showSuccessSnackBar(
-          'Success',
-          'Teacher Fetched successfully...',
-        );
         // Get.to(HomeScreen());
       });
 

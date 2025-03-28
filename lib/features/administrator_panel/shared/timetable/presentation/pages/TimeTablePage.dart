@@ -129,8 +129,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
                 );
               } else {
                 return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (context, index) {
+                  delegate: SliverChildBuilderDelegate((context, index) {
                       var section = controller.sectionList[index];
                       List<Widget> courseWidgets = controller.coursesList.map((course) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -153,7 +152,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Text(controller.selectedTeachers[course.courseName] ?? 'Not selected'),
+                              child: Text(controller.selectedTeachers['${section.sectionName}-${course.courseName}'].toString() ?? 'Not selected'),
                             ),
                           ],
                         ),
