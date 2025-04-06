@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:digital_academic_portal/features/administrator_panel/presentation/widgets/AdministratorDrawer.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/CalendarPage.dart';
+import 'package:digital_academic_portal/features/auth/presentation/pages/LoginPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -28,7 +30,7 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
               Container(
                 height: screenSize.height * .25,
                 width: screenSize.width,
-                padding: const EdgeInsets.only(top: 35, left: 15, right: 15, bottom: 8),
+                padding: const EdgeInsets.only(top: 35, left: 15, right: 10, bottom: 3),
                 decoration: const BoxDecoration(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -535,8 +537,9 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                 leading: const Icon(Icons.logout),
                 title: const Text('Sign out'),
                 onTap: () {
-                  Navigator.of(context).pop();
-                  // Handle the action
+                  FirebaseAuth.instance.signOut();
+                  Get.back();
+                  Get.off(()=> const LoginPage());
                 },
               ),
             ],
