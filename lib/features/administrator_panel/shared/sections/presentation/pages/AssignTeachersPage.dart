@@ -264,9 +264,9 @@ class _AssignTeachersPageState extends State<AssignTeachersPage> {
   }
 
   void showConfirmationBottomSheet(BuildContext context, String deptName, String semester, String section, String courseName, Teacher teacher) {
-
     Get.defaultDialog(
       title: 'Are you sure you want to change?',
+      content: const SizedBox(),
       cancel: TextButton(
         onPressed: () {
           Get.back();
@@ -275,7 +275,7 @@ class _AssignTeachersPageState extends State<AssignTeachersPage> {
       ),
       confirm: ElevatedButton(
         style: ElevatedButton.styleFrom(
-            fixedSize: Size(100, 0)
+            fixedSize: const Size(100, 0)
         ),
         onPressed: () {
           controller.editAssignedTeacher(deptName, semester, section, courseName, teacher);

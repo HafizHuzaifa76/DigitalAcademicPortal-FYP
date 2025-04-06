@@ -6,6 +6,7 @@ import '../../features/administrator_panel/shared/courses/domain/entities/Semest
 import '../../features/administrator_panel/shared/departments/domain/entities/Semester.dart';
 import '../../features/administrator_panel/shared/sections/domain/entities/Section.dart';
 import '../../features/administrator_panel/shared/student/domain/entities/Student.dart';
+import '../../features/administrator_panel/shared/timetable/domain/entities/TimeTable.dart';
 
 abstract class UseCase<Type, Params> {
   Future<Either<Fail, Type>> execute(Params params);
@@ -30,6 +31,14 @@ class UpdateSemesterParams{
   final Semester semester;
 
   UpdateSemesterParams(this.deptName, this.semester);
+}
+
+class TimeTableParams{
+  final String deptName;
+  final String semester;
+  final List<TimeTableEntry> timeTable;
+
+  TimeTableParams({required this.deptName, required this.semester, required this.timeTable});
 }
 
 class SectionParams{

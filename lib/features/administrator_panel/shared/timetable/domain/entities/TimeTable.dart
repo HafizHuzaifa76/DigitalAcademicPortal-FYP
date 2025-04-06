@@ -1,17 +1,28 @@
 
-class TimetableEntry {
+class TimeTableEntry {
   final String id;
-  final String title;
-  final String description;
-  final DateTime datePosted;
-  final String? imageUrl;
+  final String courseCode;
+  final String courseName;
+  final String teacherName;
+  final String teacherCNIC;
+  final String room;
+  final String timeSlot;
+  final String day;
+  final String section;
+  final String semester;
 
-  TimetableEntry({
+  TimeTableEntry({
     required this.id,
-    required this.title,
-    required this.description,
-    required this.datePosted,
-    this.imageUrl,
+    required this.courseCode,
+    required this.courseName,
+    required this.teacherName,
+    required this.teacherCNIC,
+    required this.room,
+    required this.timeSlot,
+    required this.day,
+    required this.section,
+    required this.semester,
   });
 
 }
+

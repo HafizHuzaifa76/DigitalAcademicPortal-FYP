@@ -85,7 +85,7 @@ class SectionRemoteDataSourceImpl implements SectionRemoteDataSource{
           if (courseSnapshot.exists) {
             print('courseSnapshot exists');
             var teacherRef = departmentRef.collection('teachers').doc(coursesTeachersMap[course]!.teacherCNIC)
-                .collection('courses').doc(course);
+                .collection('sections').doc('$semester-$section');
           
             var ref = courseRef.collection('sections').doc(section);
             ref.set({
@@ -94,7 +94,8 @@ class SectionRemoteDataSourceImpl implements SectionRemoteDataSource{
             }, SetOptions(merge: true)).then((onValue)=>
                 print('teacher assigned to section'));
 
-            await teacherRef.set(courseSnapshot.data()!, SetOptions(merge: true));
+            await teacherRef.set({'sectionName': section}, SetOptions(merge: true));
+            await teacherRef.collection('courses').doc(course).set(courseSnapshot.data()!, SetOptions(merge: true));
             print('section added to teacher');
 
           }
@@ -170,11 +171,12 @@ class SectionRemoteDataSourceImpl implements SectionRemoteDataSource{
       print("Teacher updated successfully!");
 
       // Update teacher's courses collection (remove old and add new if needed)
-      var oldTeacherRef = departmentRef.collection('teachers').doc(oldTeacherID).collection('courses').doc(courseName);
+      var oldTeacherRef = departmentRef.collection('teachers').doc(oldTeacherID).collection('sections').doc('$semester-$section').collection('courses').doc(courseName);
       await oldTeacherRef.delete();
 
-      var newTeacherRef = departmentRef.collection('teachers').doc(newTeacher.teacherCNIC).collection('courses').doc(courseName);
-      await newTeacherRef.set(courseSnapshot.data()!, SetOptions(merge: true));
+      var newTeacherRef = departmentRef.collection('teachers').doc(newTeacher.teacherCNIC).collection('sections').doc('$semester-$section');
+      await newTeacherRef.set({'sectionName': section}, SetOptions(merge: true));
+      await newTeacherRef.collection('courses').doc(courseName).set(courseSnapshot.data()!, SetOptions(merge: true));
 
       print("Updated teacher's assigned courses!");
     } catch (e) {

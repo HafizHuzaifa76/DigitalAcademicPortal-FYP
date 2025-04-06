@@ -6,6 +6,8 @@ import 'package:digital_academic_portal/features/administrator_panel/shared/time
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/domain/usecases/GetCoursesUseCase.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/domain/usecases/GetSectionsUseCase.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/domain/usecases/GetTeachersUseCase.dart';
+import 'package:excel/excel.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -44,21 +46,18 @@ class TimeTableController extends GetxController {
     required this.getSectionsUseCase,
   });
 
-  var timeTableTitleController = TextEditingController();
-  var timeTableDescriptionController = TextEditingController();
-
   final ScrollController scrollController = ScrollController();
   RxDouble titlePadding = 70.0.obs;
   var isLoading = false.obs;
 
   var imageFile = Rxn<File>();
-  var timeTableList = <TimetableEntry>[].obs;
-  var filteredTimeTableList = <TimetableEntry>[].obs;
+  var timeTableMap = <String, List<TimeTableEntry>>{}.obs;
   var sectionList = <Section>[].obs;
   var teacherList = <Teacher>[].obs;
   var coursesList = <SemesterCourse>[].obs;
   var selectedTeachers = <String, dynamic>{}.obs;
   var teachersIDMap = <String, Teacher>{}.obs;
+  var coursesIDMap = <String, SemesterCourse>{}.obs;
 
   @override
   void onInit() {
@@ -88,23 +87,10 @@ class TimeTableController extends GetxController {
       await showDeptTeachers(deptName);
       await showAllSemesterCourses(deptName, semester);
       await showAllSections(deptName, semester);
-
+      await showAllTimeTables(deptName, semester);
       // await fetchAssignedTeacher(deptName, semester, section);
     } finally {
       // isLoading(false);
-    }
-  }
-
-  /// Filter TimeTables based on the query
-  void filterTimeTables(String query) {
-    if (query.isEmpty) {
-      filteredTimeTableList.assignAll(timeTableList); // Reset to full list if no query
-    } else {
-      filteredTimeTableList.assignAll(
-        timeTableList.where(
-              (timeTable) => timeTable.title.toLowerCase().contains(query.toLowerCase()),
-        ),
-      );
     }
   }
 
@@ -123,18 +109,12 @@ class TimeTableController extends GetxController {
     }
   }
 
-  Future<void> addTimeTable() async {
+  Future<void> addTimeTable(List<TimeTableEntry> timeTable, String deptName, String semester) async {
     EasyLoading.show(status: 'Adding...');
-    var newTimeTable = TimetableEntry(
-      id: DateTime.now().toIso8601String(), // Generate a unique ID
-      title: timeTableTitleController.text.trim(),
-      description: timeTableDescriptionController.text.trim(),
-      datePosted: DateTime.now(),
-    );
 
     try {
       isLoading(true);
-      final result = await addTimeTableUseCase.execute(newTimeTable);
+      final result = await addTimeTableUseCase.execute(TimeTableParams(deptName: deptName, semester: semester, timeTable: timeTable));
 
       result.fold((left) {
         String message = left.failure.toString();
@@ -143,78 +123,220 @@ class TimeTableController extends GetxController {
           print(message);
         }
       }, (right) {
-        timeTableList.add(newTimeTable);
-        filteredTimeTableList.add(newTimeTable);
-        Utils().showSuccessSnackBar('Success', 'TimeTable added successfully.');
+
+        Get.back();
+        Get.back();
+        showAllTimeTables(deptName, semester);
+        Utils().showSuccessSnackBar('Success', 'TimeTable added successfully');
       });
     } finally {
-      clearFields();
-      isLoading(false);
+      // clearFields();
       EasyLoading.dismiss();
+
     }
   }
 
-  Future<void> editTimeTable(TimetableEntry updatedTimeTable) async {
-    EasyLoading.show(status: 'Updating...');
-    try {
-      isLoading(true);
-      final result = await editTimeTableUseCase.execute(updatedTimeTable);
+  // Future<void> editTimeTable(TimeTableEntry updatedTimeTable) async {
+  //   EasyLoading.show(status: 'Updating...');
+  //   try {
+  //     isLoading(true);
+  //     final result = await editTimeTableUseCase.execute(updatedTimeTable);
+  //
+  //     result.fold((left) {
+  //       String message = left.failure.toString();
+  //       Utils().showErrorSnackBar('Error', message);
+  //     }, (right) {
+  //       // Update both lists
+  //       int index = timeTableList.indexWhere((n) => n.id == updatedTimeTable.id);
+  //       if (index != -1) {
+  //         timeTableList[index] = updatedTimeTable;
+  //       }
+  //       Utils().showSuccessSnackBar('Success', 'TimeTable updated successfully.');
+  //     });
+  //   } finally {
+  //     // clearFields();
+  //     isLoading(false);
+  //     EasyLoading.dismiss();
+  //   }
+  // }
+  //
+  // Future<void> deleteTimeTable(TimeTableEntry timeTable) async {
+  //   EasyLoading.show(status: 'Deleting...');
+  //   try {
+  //     isLoading(true);
+  //     final result = await deleteTimeTableUseCase.execute(timeTable);
+  //
+  //     result.fold((left) {
+  //       String message = left.failure.toString();
+  //       Utils().showErrorSnackBar('Error', message);
+  //     }, (right) {
+  //       timeTableList.remove(timeTable);
+  //       Utils().showSuccessSnackBar('Success', 'TimeTable deleted successfully.');
+  //     });
+  //   } finally {
+  //     isLoading(false);
+  //     EasyLoading.dismiss();
+  //   }
+  // }
 
-      result.fold((left) {
-        String message = left.failure.toString();
-        Utils().showErrorSnackBar('Error', message);
-      }, (right) {
-        // Update both lists
-        int index = timeTableList.indexWhere((n) => n.id == updatedTimeTable.id);
-        if (index != -1) {
-          timeTableList[index] = updatedTimeTable;
-          filterTimeTables(''); // Refresh filtered list
-        }
-        Utils().showSuccessSnackBar('Success', 'TimeTable updated successfully.');
-      });
-    } finally {
-      clearFields();
-      isLoading(false);
-      EasyLoading.dismiss();
-    }
-  }
-
-  Future<void> deleteTimeTable(TimetableEntry timeTable) async {
-    EasyLoading.show(status: 'Deleting...');
-    try {
-      isLoading(true);
-      final result = await deleteTimeTableUseCase.execute(timeTable);
-
-      result.fold((left) {
-        String message = left.failure.toString();
-        Utils().showErrorSnackBar('Error', message);
-      }, (right) {
-        timeTableList.remove(timeTable);
-        filteredTimeTableList.remove(timeTable);
-        Utils().showSuccessSnackBar('Success', 'TimeTable deleted successfully.');
-      });
-    } finally {
-      isLoading(false);
-      EasyLoading.dismiss();
-    }
-  }
-
-  Future<void> showAllTimeTables() async {
+  Future<void> showAllTimeTables(String deptName, String semester) async {
     isLoading(true);
-    final result = await allTimeTablesUseCase.execute(null);
+    final result = await allTimeTablesUseCase.execute(SemesterParams(deptName, semester));
 
     result.fold((left) {
       String message = left.failure.toString();
       Utils().showErrorSnackBar('Error', message);
-    }, (timeTables) {
-      timeTableList.assignAll(timeTables);
-      filteredTimeTableList.assignAll(timeTables); // Initialize filtered list with all TimeTables
+    }, (timeTableList) {
+
+      for(var section in sectionList){
+        timeTableMap[section.sectionName] = [];
+        timeTableMap[section.sectionName]?.addAll(
+            timeTableList.where((item) => item.section == section.sectionName).toList()
+        );
+
+      }
+
+      timeTableMap.entries.forEach((item)=> print('${item.key}: ${item.value.length}'));
       if (kDebugMode) {
         print('TimeTables fetched');
       }
     });
 
     isLoading(false);
+  }
+
+  Future<List<TimeTableEntry>> fetchTimeTableFromExcel(String semester, String section) async {
+    try {
+      // Open file picker to select an Excel file
+      if (kDebugMode) {
+        print('pick file');
+      }
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['xlsx', 'xls'],
+      );
+
+      if (result == null) {
+        throw Exception("No file selected");
+      }
+
+      File file = File(result.files.single.path!);
+      final bytes = file.readAsBytesSync();
+      final excel = Excel.decodeBytes(bytes);
+
+      // Get the first sheet
+      Sheet? sheet = excel.sheets.values.first;
+
+      if (sheet == null) {
+        throw Exception("No sheets found in Excel file");
+      }
+
+      List<TimeTableEntry> timeTableEntries = [];
+
+      // Get the headers (assuming the first row contains the headers)
+      final headers = sheet.rows.first;
+      Map<String, int> headerIndexMap = {};
+
+      // Map headers to their column indices
+      for (int i = 0; i < headers.length; i++) {
+        final headerValue = headers[i]?.value?.toString() ?? '';
+        headerIndexMap[headerValue.trim()] = i;
+      }
+
+      // Expected headers
+      const requiredHeaders = [
+        "Day",
+        "Course Code",
+        "Time Slot",
+        "Room",
+      ];
+
+      // Ensure all required headers are present
+      for (var header in requiredHeaders) {
+        if (!headerIndexMap.containsKey(header)) {
+          throw Exception("Missing required header: $header");
+        }
+      }
+
+      // Iterate through rows (skip header row)
+      for (int i = 1; i < sheet.rows.length; i++) {
+        final row = sheet.rows[i];
+
+        var courseCode = row[headerIndexMap["Course Code"]!]?.value.toString() ?? "";
+        var rowCourse = coursesIDMap[courseCode];
+        if (rowCourse == null) {
+          throw Exception('Invalid Course Code');
+        }
+
+        Teacher teacher = selectedTeachers['$section-${rowCourse.courseName}'];
+        timeTableEntries.add(
+            TimeTableEntry(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                courseCode: courseCode,
+                courseName: rowCourse.courseName,
+                teacherName: teacher.teacherName,
+                teacherCNIC: teacher.teacherCNIC,
+                room: row[headerIndexMap["Room"]!]?.value.toString() ?? "",
+                timeSlot: row[headerIndexMap["Time Slot"]!]?.value.toString() ?? "",
+                day: row[headerIndexMap["Day"]!]?.value.toString() ?? "",
+                section: section,
+                semester: semester
+            )
+        );
+      }
+
+      validateTimeTable(timeTableEntries, coursesIDMap.keys.toList());
+
+      return timeTableEntries;
+    } catch (e) {
+      Utils().showErrorSnackBar('Error reading Excel file', '$e');
+      return [];
+    }
+  }
+
+  void validateTimeTable(List<TimeTableEntry> timetableEntries, List<String> coursesList) {
+    Set<String> timetableCourseCodes = timetableEntries.map((e) => e.courseCode).toSet();
+    List<String> missingCourses = coursesList.where((c) => !timetableCourseCodes.contains(c)).toList();
+
+    // Store errors
+    List<String> errors = [];
+
+    if (missingCourses.isNotEmpty) {
+      throw Exception("These courses are missing: ${missingCourses.join(', ')}");
+      errors.add("Error: The following courses are missing from the timetable: ${missingCourses.join(', ')}");
+    }
+
+    // Maps to track conflicts
+    Map<String, String> teacherSchedule = {}; // (teacherCNIC + timeSlot) -> courseCode
+    Map<String, String> roomSchedule = {}; // (room + timeSlot) -> courseCode
+
+    for (var entry in timetableEntries) {
+      String teacherKey = "${entry.teacherCNIC}-${entry.timeSlot}-${entry.day}";
+      String roomKey = "${entry.room}-${entry.timeSlot}-${entry.day}";
+
+      // **Check if a teacher is assigned to multiple classes at the same time**
+      if (teacherSchedule.containsKey(teacherKey)) {
+        errors.add("Conflict: Teacher ${entry.teacherName} is assigned to multiple classes at ${entry.timeSlot} on ${entry.day}");
+      } else {
+        teacherSchedule[teacherKey] = entry.courseCode;
+      }
+
+      // **Check if a room is assigned to multiple classes at the same time**
+      if (roomSchedule.containsKey(roomKey)) {
+        errors.add("Conflict: Room ${entry.room} is assigned to multiple classes at ${entry.timeSlot} on ${entry.day}");
+      } else {
+        roomSchedule[roomKey] = entry.courseCode;
+      }
+    }
+
+    // **Print errors or success message**
+    if (errors.isNotEmpty) {
+      String allErrors = '';
+      for (var error in errors) {
+        allErrors = allErrors + error;
+      }
+      throw Exception('Errors: $allErrors');
+    }
   }
 
   Future<void> showAllSections(String deptName, String semester) async {
@@ -236,8 +358,6 @@ class TimeTableController extends GetxController {
       for (var section in sections) {
         await fetchAssignedTeacher(deptName, semester, section.sectionName);
       }
-
-      isLoading(false);
 
       Utils().showSuccessSnackBar(
         'Success',
@@ -285,6 +405,11 @@ class TimeTableController extends GetxController {
 
     }, (courses) {
       coursesList.assignAll(courses);
+
+      for (var course in courses) {
+        coursesIDMap[course.courseCode] = course;
+      }
+
       if (kDebugMode) {
         print('courses fetched');
       }
@@ -312,16 +437,6 @@ class TimeTableController extends GetxController {
 
   }
 
-  void clearFields() {
-    timeTableTitleController.clear();
-    timeTableDescriptionController.clear();
-    imageFile.value = null;
-  }
-
-  void updateTimeTableDetails(TimetableEntry timeTable) {
-    timeTableTitleController.text = timeTable.title;
-    timeTableDescriptionController.text = timeTable.description;
-  }
 }
 
 

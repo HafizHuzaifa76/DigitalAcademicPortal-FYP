@@ -1,40 +1,37 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../domain/entities/TimeTable.dart';
 import '../models/TimeTableEntryModel.dart';
 
 
 abstract class TimeTableRemoteDataSource{
-  Future<TimeTableEntryModel> addTimeTable(TimeTableEntryModel timeTable);
-  Future<TimeTableEntryModel> editTimeTable(TimeTableEntryModel timeTable);
-  Future<void> deleteTimeTable(String timeTableID);
-  Future<List<TimeTableEntryModel>> allTimeTables();
+  Future<void> addTimeTable(List<TimeTableEntry> timeTable, String deptName, String semester);
+  Future<TimeTableEntryModel> editTimeTable(TimeTableEntryModel timeTable, String deptName, String semester);
+  Future<void> deleteTimeTable(String timeTableID, String deptName, String semester);
+  Future<List<TimeTableEntryModel>> allTimeTables(String deptName, String semester);
 }
 
 class TimeTableRemoteDataSourceImpl implements TimeTableRemoteDataSource{
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
-  Future<TimeTableEntryModel> addTimeTable(TimeTableEntryModel timeTable) async {
-    var ref = _firestore.collection('TimeTables').doc(timeTable.id);
-    var snapshot = await ref.get();
-
-    if (!snapshot.exists) {
-      await ref.set(timeTable.toMap());
-    } else {
-      throw Exception('TimeTable already exists');
+  Future<void> addTimeTable(List<TimeTableEntry> timeTable, String deptName, String semester) async {
+    for(var entry in timeTable) {
+      var entryModel = TimeTableEntryModel.fromTimeTable(entry);
+      var ref = _firestore.collection('departments').doc(deptName).collection('semesters').doc(semester).collection('timetable');
+      await ref.add(entryModel.toMap());
     }
-
-    return timeTable;
   }
 
   @override
-  Future<void> deleteTimeTable(String timeTableID) async {
-    _firestore.collection('TimeTables').doc(timeTableID).delete();
+  Future<void> deleteTimeTable(String timeTableID, String deptName, String semester) async {
+    var ref = _firestore.collection('departments').doc(deptName).collection('semesters').doc(semester).collection('timetable').doc(timeTableID);
+    ref.delete();
   }
 
   @override
-  Future<TimeTableEntryModel> editTimeTable(TimeTableEntryModel timeTable) async {
-    var ref = _firestore.collection('TimeTables').doc(timeTable.id);
+  Future<TimeTableEntryModel> editTimeTable(TimeTableEntryModel timeTable, String deptName, String semester) async {
+    var ref = _firestore.collection('departments').doc(deptName).collection('semesters').doc(semester).collection('timetable').doc(timeTable.id);
     var snapshot = await ref.get();
 
     if (snapshot.exists) {
@@ -47,11 +44,11 @@ class TimeTableRemoteDataSourceImpl implements TimeTableRemoteDataSource{
   }
 
   @override
-  Future<List<TimeTableEntryModel>> allTimeTables() async {
-    final querySnapshot = await _firestore.collection('TimeTables').get();
+  Future<List<TimeTableEntryModel>> allTimeTables(String deptName, String semester) async {
+    var ref = _firestore.collection('departments').doc(deptName).collection('semesters').doc(semester).collection('timetable');
+    final querySnapshot = await ref.get();
     return querySnapshot.docs
-        .map((doc) => TimeTableEntryModel.fromMap(doc.data()))
-        .toList();
+        .map((doc) => TimeTableEntryModel.fromMap(doc.id, doc.data())).toList();
   }
 
 }
