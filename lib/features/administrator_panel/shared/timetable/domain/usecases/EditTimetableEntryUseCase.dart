@@ -4,13 +4,13 @@ import 'package:digital_academic_portal/core/usecases/UseCase.dart';
 import '../entities/TimeTable.dart';
 import '../repositories/TimeTableRepository.dart';
 
-class EditTimeTableUseCase implements UseCase<TimetableEntry, TimetableEntry>{
+class EditTimeTableUseCase implements UseCase<TimeTableEntry, TimeTableParams>{
   final TimeTableRepository repository;
 
   EditTimeTableUseCase(this.repository);
 
   @override
-  Future<Either<Fail, TimetableEntry>> execute(TimetableEntry timeTable) async {
-    return await repository.editTimeTable(timeTable);
+  Future<Either<Fail, TimeTableEntry>> execute(TimeTableParams params) async {
+    return await repository.editTimeTable(params.timeTable.first, params.deptName, params.semester);
   }
 }

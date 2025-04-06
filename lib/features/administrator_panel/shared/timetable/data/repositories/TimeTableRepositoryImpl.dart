@@ -10,11 +10,10 @@ class TimeTableRepositoryImpl implements TimeTableRepository{
 
   TimeTableRepositoryImpl({required this.timeTableRemoteDataSource});
 
-
   @override
-  Future<Either<Fail, TimetableEntry>> addTimeTable(TimetableEntry entry) async {
+  Future<Either<Fail, void>> addTimeTable(List<TimeTableEntry> timetable, String deptName, String semester) async {
     try {
-      return Right(await timeTableRemoteDataSource.addTimeTable(TimeTableEntryModel.fromTimeTable(entry)));
+      return Right(await timeTableRemoteDataSource.addTimeTable(timetable, deptName, semester));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');
@@ -26,9 +25,9 @@ class TimeTableRepositoryImpl implements TimeTableRepository{
   }
 
   @override
-  Future<Either<Fail, void>> deleteTimeTable(TimetableEntry entry) async {
+  Future<Either<Fail, void>> deleteTimeTable(TimeTableEntry entry, String deptName, String semester) async {
     try {
-      return Right(await timeTableRemoteDataSource.deleteTimeTable('id'));
+      return Right(await timeTableRemoteDataSource.deleteTimeTable(entry.id, deptName, semester));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');
@@ -40,9 +39,9 @@ class TimeTableRepositoryImpl implements TimeTableRepository{
   }
 
   @override
-  Future<Either<Fail, TimetableEntry>> editTimeTable(TimetableEntry timeTable) async {
+  Future<Either<Fail, TimeTableEntry>> editTimeTable(TimeTableEntry timeTable, String deptName, String semester) async {
     try {
-      return Right(await timeTableRemoteDataSource.editTimeTable(TimeTableEntryModel.fromTimeTable(timeTable)));
+      return Right(await timeTableRemoteDataSource.editTimeTable(TimeTableEntryModel.fromTimeTable(timeTable), deptName, semester));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');
@@ -54,9 +53,9 @@ class TimeTableRepositoryImpl implements TimeTableRepository{
   }
 
   @override
-  Future<Either<Fail, List<TimetableEntry>>> showAllTimeTables() async {
+  Future<Either<Fail, List<TimeTableEntry>>> showAllTimeTables(String deptName, String semester) async {
     try {
-      return Right(await timeTableRemoteDataSource.allTimeTables());
+      return Right(await timeTableRemoteDataSource.allTimeTables(deptName, semester));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');

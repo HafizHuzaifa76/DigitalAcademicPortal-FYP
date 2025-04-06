@@ -196,6 +196,7 @@ class SectionController extends GetxController{
         String message = left.failure.toString();
         Utils().showErrorSnackBar('Error', message);
       }, (right) {
+        isLoading(true);
         changeCourseTeacher(courseName, teacher);
 
         Utils().showSuccessSnackBar(
@@ -207,6 +208,7 @@ class SectionController extends GetxController{
 
     } finally {
       EasyLoading.dismiss(animation: true);
+      isLoading(false);
     }
   }
 

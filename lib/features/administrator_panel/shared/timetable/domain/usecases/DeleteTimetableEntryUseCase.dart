@@ -3,13 +3,13 @@ import 'package:digital_academic_portal/core/usecases/UseCase.dart';
 import '../entities/TimeTable.dart';
 import '../repositories/TimeTableRepository.dart';
 
-class DeleteTimeTableUseCase implements UseCase<void, TimetableEntry>{
+class DeleteTimeTableUseCase implements UseCase<void, TimeTableParams>{
   final TimeTableRepository repository;
 
   DeleteTimeTableUseCase(this.repository);
 
   @override
-  Future<Either<Fail, void>> execute(TimetableEntry timeTable) async {
-    return await repository.deleteTimeTable(timeTable);
+  Future<Either<Fail, void>> execute(TimeTableParams params) async {
+    return await repository.deleteTimeTable(params.timeTable.first, params.deptName, params.semester);
   }
 }
