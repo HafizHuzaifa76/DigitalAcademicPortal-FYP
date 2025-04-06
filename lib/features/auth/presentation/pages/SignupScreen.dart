@@ -27,8 +27,6 @@ class SignupScreen_State extends State<SignupScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  Map<String, dynamic> workoutPlanMap = {};
-
   FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
