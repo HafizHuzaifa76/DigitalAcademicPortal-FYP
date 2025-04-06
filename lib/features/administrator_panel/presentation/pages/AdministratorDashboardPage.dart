@@ -28,7 +28,7 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
               Container(
                 height: screenSize.height * .25,
                 width: screenSize.width,
-                padding: const EdgeInsets.only(top: 35, left: 15, right: 15, bottom: 8),
+                padding: const EdgeInsets.only(top: 35, left: 15, right: 10, bottom: 3),
                 decoration: const BoxDecoration(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

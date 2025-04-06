@@ -17,7 +17,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-
+import 'package:digital_academic_portal/features/student_panel/shared/student_calendar_events/stu_presentation/stu_pages/Stu_CalendarEventPage.dart';
 import 'features/administrator_panel/shared/courses/presentation/pages/DepartmentCoursePage.dart';
 import 'features/administrator_panel/shared/courses/presentation/pages/SemesterCoursePage.dart';
 import 'features/administrator_panel/shared/departments/presentation/bindings/DepartmentBindings.dart';
@@ -26,6 +26,12 @@ import 'features/administrator_panel/shared/noticeboard/presentation/bindings/No
 import 'features/administrator_panel/shared/sections/presentation/pages/SectionListPage.dart';
 import 'features/administrator_panel/shared/student/presentation/pages/AllStudentsPage.dart';
 import 'features/auth/presentation/bindings/AuthBinding.dart';
+import 'features/student_panel/shared/student_attendance/stu_presenation/stu_pages/Stu_Attendance.dart';
+import 'features/student_panel/shared/student_chatbot/stu_presentation/stu_pages/Stu_ChatBot.dart';
+import 'features/student_panel/shared/student_courses/stu_presentation/stu_pages/Stu_AllCourses.dart';
+import 'features/student_panel/shared/student_grades/stu_presentation/stu_pages/Stu_GradesScreen.dart';
+import 'features/student_panel/shared/student_noticeboard/stu_presentation/stu_pages/Stu_MainNoticeBoardPage.dart';
+import 'features/student_panel/shared/student_timetable/stu_presentation/stu_pages/Stu_TimeTablePage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -155,9 +161,44 @@ class MyApp extends StatelessWidget {
           binding: NoticeBoardBinding(),
         ),
         GetPage(
+          name: '/student_NoticeBoard',
+          page: () => const Stu_MainNoticeBoardPage(),
+          //binding: NoticeBoardBinding(),
+        ),
+        GetPage(
           name: '/calendarPage',
-          page: () => CalendarEventPage(),
+          page: () => const CalendarEventPage(),
           binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/student_calendarPage',
+          page: () => const Stu_CalendarScreen(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/student_timetablePage',
+          page: () => const Stu_TimeTablePage(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/student_gradesScreen',
+          page: () => const Stu_GradesScreen(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/Stu_ChatBot',
+          page: () => const Stu_ChatBot(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/student_allCourses',
+          page: () => const Stu_AllCourses(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/student_attendance',
+          page: () => const Stu_Attendance(),
+          //binding: CalendarEventBinding(),
         ),
       ],
       home: const SplashScreen(),

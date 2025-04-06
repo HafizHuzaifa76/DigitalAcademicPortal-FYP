@@ -1,26 +1,560 @@
-
-import 'package:flutter/cupertino.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:digital_academic_portal/features/administrator_panel/presentation/widgets/AdministratorDrawer.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/CalendarPage.dart';
+import 'package:digital_academic_portal/features/auth/presentation/pages/SignupScreen.dart';
+import 'package:digital_academic_portal/features/student_panel/presentation/widgets/StudentDrawer.dart';
+import 'package:digital_academic_portal/shared/presentation/pages/LoginScreen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 
-import '../controllers/StudentPanelController.dart';
-
+import '../../../auth/presentation/pages/LoginPage.dart';
 
 class StudentPortalDashboardPage extends StatefulWidget {
   const StudentPortalDashboardPage({super.key});
 
   @override
-  State<StudentPortalDashboardPage> createState() => _StudentPortalDashboardPageState();
+  State<StudentPortalDashboardPage> createState() => StudentPortalDashboardPageState();
 }
 
-class _StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> {
+class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> {
+  int count = 0;
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Student Panel'),
+      drawer: const StudentDrawer(),
+      body: Center(
+        child: Container(
+          color: Theme.of(context).primaryColor,
+          child: Column(
+            children: [
+              Container(
+                height: screenSize.height * .25,
+                width: screenSize.width,
+                padding: const EdgeInsets.only(top: 35, left: 15, right: 10, bottom: 3),
+                decoration: const BoxDecoration(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: kIsWeb ?  screenSize.height * 0.25 * 0.3 : screenSize.height * 0.25 * 0.4,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                              top: 20,
+                              right: 100,
+                              left: 100,
+                              child: Text(
+                                kIsWeb ? 'Student Dashboard' : 'Student \nDashboard',
+                                style: Theme.of(context).appBarTheme.titleTextStyle,
+                                textAlign: TextAlign.center,
+                              )
+                          ),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Wrap IconButton with Builder to get a proper context
+                              Builder(
+                                builder: (context) {
+                                  return SizedBox(
+                                    height: 20,
+                                    child: IconButton(
+                                        padding: const EdgeInsets.all(5),
+                                        onPressed: () {
+                                          Scaffold.of(context).openDrawer(); // Open drawer on click
+                                        },
+                                        icon: const Icon(
+                                          Icons.sort,
+                                          color: Colors.white,
+                                          size: 28,
+                                        )
+                                    ),
+                                  );
+                                },
+                              ),
+
+                              IconButton(
+                                icon: Image.asset(
+                                  'assets/images/admin.png',
+                                  height: 35,
+                                  width: 35,
+                                ),
+                                onPressed: () => _showCustomMenu(context),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Card(
+                          color: const Color(0xFF128771),
+                          borderOnForeground: true,
+                          semanticContainer: true,
+                          shadowColor: Colors.black,
+                          child: SizedBox(
+                            height: screenSize.height * 0.25 * 0.34,
+                            width: screenSize.width * 0.30,
+                            child: Center(
+                              child: Text(
+                                'Departments\n$count',
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Ubuntu',
+                                    color: Theme.of(context).primaryColorDark),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        Card(
+                          color: const Color(0xFF128771),
+                          child: SizedBox(
+                            height: screenSize.height * 0.25 * 0.34,
+                            width: screenSize.width * 0.28,
+                            child: Center(
+                              child: Text(
+                                'Teachers\n$count',
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    color: Theme.of(context).primaryColorDark,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Ubuntu'),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        Card(
+                          color: const Color(0xFF128771),
+                          surfaceTintColor: Colors.black,
+                          shadowColor: Theme.of(context).primaryColorLight,
+                          child: SizedBox(
+                            height: screenSize.height * 0.25 * 0.34,
+                            width: screenSize.width * 0.28,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Students\n$count',
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      color: Theme.of(context).primaryColorDark,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Ubuntu'),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+
+              Container(
+                height: screenSize.height * .75,
+                width: screenSize.width,
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const SizedBox(height: 10),
+
+                    Column(
+                      children: [
+                        SizedBox(
+                            height: 120,
+                            child: Image.asset('assets/images/DAP logo.png')),
+                        const SizedBox(height: 7),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Digital',
+                              style: TextStyle(
+                                  fontFamily: 'Belanosima',
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            const Text(
+                              ' Academic ',
+                              style: TextStyle(
+                                  fontFamily: 'Belanosima',
+                                  color: Colors.black,
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              'Portal',
+                              style: TextStyle(
+                                  fontFamily: 'Belanosima',
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+
+                    const SizedBox(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                              padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 12, vertical: 5))),
+                          onPressed: () => Get.toNamed('/student_attendance'),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset(
+                                'assets/images/attendance2.png',
+                                height: 60,
+                                width: 60,
+                              ),
+                              AutoSizeText(
+                                'Attendance',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColorLight,
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                  Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(
+                                  Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              padding: const WidgetStatePropertyAll(
+                                  EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 5))),
+                          onPressed: () => Get.toNamed('/allStudents'),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset(
+                                  'assets/images/students_icon.png',
+                                  height: 60,
+                                  width: 75),
+                              AutoSizeText(
+                                'Students',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColorLight,
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                  Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(
+                                  Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              padding: const WidgetStatePropertyAll(
+                                  EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 5))),
+                          onPressed: () => Get.toNamed('/student_gradesScreen'),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset('assets/images/grades.png',
+                                  height: 60, width: 60),
+                              AutoSizeText(
+                                'Grades',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColorLight,
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                  Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(
+                                  Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              padding: const WidgetStatePropertyAll(
+                                  EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 5))),
+                          onPressed: () => Get.toNamed('/student_allCourses'),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset(
+                                  'assets/images/course_icon.png',
+                                  height: 55, width: 60
+                              ),
+                              const SizedBox(height: 3),
+                              AutoSizeText(
+                                ' Courses ',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColorDark,
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                  Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(
+                                  Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              padding: const WidgetStatePropertyAll(
+                                  EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 5))),
+                          onPressed: () => Get.toNamed('/student_NoticeBoard'),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset(
+                                  'assets/images/noticeboard_icon.png',
+                                  height: 55,
+                                  width: 60),
+                              const SizedBox(height: 5),
+                              AutoSizeText(
+                                'Notice Board',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColorDark,
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                  Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(
+                                  Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              padding: const WidgetStatePropertyAll(
+                                  EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 5))),
+                          // onPressed: () => Get.to(const TableEventsExample()),
+                          onPressed: () => Get.toNamed('/student_calendarPage'),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset('assets/images/calendar_icon.png',
+                                  height: 50, width: 60),
+                              const SizedBox(height: 7),
+                              AutoSizeText(
+                                ' Calendar ',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColorDark,
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                    Theme.of(context).primaryColor),
+                                fixedSize: WidgetStatePropertyAll(
+                                    Size(screenSize.width * .3, 100)),
+                                shape: WidgetStatePropertyAll(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius.circular(10))),
+                                padding: const WidgetStatePropertyAll(
+                                    EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 5))),
+                            onPressed: () => Get.toNamed('/Stu_ChatBot'),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Image.asset('assets/images/chatbot_icon.png',
+                                    height: 60, width: 60),
+                                const AutoSizeText(
+                                  ' ChatBot ',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Ubuntu',
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                  maxLines: 1,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                    Theme.of(context).primaryColor),
+                                fixedSize: WidgetStatePropertyAll(
+                                    Size(screenSize.width * .3, 100)),
+                                shape: WidgetStatePropertyAll(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius.circular(10))),
+                                padding: const WidgetStatePropertyAll(
+                                    EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 5))),
+                            onPressed: () => Get.toNamed('/'),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Image.asset('assets/images/bugreport_icon.png',
+                                    height: 60, width: 60),
+                                const AutoSizeText(
+                                  ' Reports ',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Ubuntu',
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                  maxLines: 1,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
+    );
+  }
+
+  void _showCustomMenu(BuildContext context) {
+    final RenderBox appBarBox = context.findRenderObject() as RenderBox;
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        appBarBox.size.width, // Adjust the X position to align with the icon
+        70, // Adjust the Y position to the bottom of the AppBar
+        appBarBox.size.width, // This would be a maximum width after X position
+        appBarBox.size.height + 200, // This would be a maximum height after Y position
+      ),
+      items: [
+        PopupMenuItem(
+          enabled: false,
+          child: Column(
+            children: [
+              const ListTile(
+                title: Text('Hi, Hafiz!'),
+                subtitle: Text('hafizm.huzaifa1234gf@gmail.com'),
+                leading: CircleAvatar(
+                  backgroundImage:
+                  NetworkImage('https://via.placeholder.com/150'), // User's image URL
+                ),
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.account_circle),
+                title: const Text('Manage your Google Account'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // Handle the action
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text('Sign out'),
+                onTap: () {
+                  Navigator.of(context).pop(); // Close the drawer
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                        (Route<dynamic> route) => false, // Remove all previous routes
+                  );
+                },
+              ),
+
+
+            ],
+          ),
+        ),
+
+      ],
+      elevation: 8.0,
     );
   }
 }
