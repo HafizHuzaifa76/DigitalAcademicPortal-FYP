@@ -322,9 +322,10 @@ class _SectionDetailPageState extends State<SectionDetailPage> {
                                 padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 2, horizontal: 2)),
                                 shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                             ),
-                            onPressed: ()=> Get.toNamed('/allSections', arguments: {
+                            onPressed: ()=> Get.toNamed('/sectionTimeTablePage', arguments: {
                               'deptName': dept,
-                              'semester': semester
+                              'semester': semester,
+                              'section': section.sectionName,
                             }),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

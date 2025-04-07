@@ -12,7 +12,8 @@ import 'package:digital_academic_portal/features/administrator_panel/shared/teac
 import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/presentation/pages/AllTeachersPage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/presentation/pages/DeptTeacherPage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/bindings/TimeTableBindings.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/TimeTablePage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SectionTimeTablePage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SemesterTimeTablePage.dart';
 import 'package:digital_academic_portal/shared/presentation/pages/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -189,10 +190,19 @@ class MyApp extends StatelessWidget {
           binding: CalendarEventBinding(),
         ),
         GetPage(
-          name: '/timeTable',
-          page: () => TimeTablePage(
+          name: '/semesterTimeTablePage',
+          page: () => SemesterTimeTablePage(
               deptName: Get.arguments['deptName'],
               semester: Get.arguments['semester']),
+          binding: TimeTableBinding(),
+        ),
+        GetPage(
+          name: '/sectionTimeTablePage',
+          page: () => SectionTimeTablePage(
+              deptName: Get.arguments['deptName'],
+              semester: Get.arguments['semester'],
+              section: Get.arguments['section'],
+          ),
           binding: TimeTableBinding(),
         ),
         GetPage(

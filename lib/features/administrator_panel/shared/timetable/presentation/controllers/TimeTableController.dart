@@ -205,6 +205,28 @@ class TimeTableController extends GetxController {
     isLoading(false);
   }
 
+  Future<void> showSectionTimeTable(String deptName, String semester, String section) async {
+    isLoading(true);
+    final result = await allTimeTablesUseCase.execute(SemesterParams(deptName, semester));
+
+    result.fold((left) {
+      String message = left.failure.toString();
+      Utils().showErrorSnackBar('Error', message);
+    }, (timeTableList) {
+
+      timeTableMap[section] = [];
+      timeTableMap[section]?.addAll(
+          timeTableList.where((item) => item.section == section).toList()
+      );
+
+      if (kDebugMode) {
+        print('Section TimeTable fetched');
+      }
+    });
+
+    isLoading(false);
+  }
+
   Future<List<TimeTableEntry>> fetchTimeTableFromExcel(String semester, String section) async {
     try {
       // Open file picker to select an Excel file
