@@ -6,24 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../../../../shared/presentation/widgets/ImageView.dart';
-import '../../../sections/domain/entities/Section.dart';
-import '../../../teachers/domain/entities/Teacher.dart';
-import '../../domain/entities/TimeTable.dart';
 import '../controllers/TimeTableController.dart';
 import '../widgets/TimeTableWidget.dart';
 
-class TimeTablePage extends StatefulWidget {
+class SemesterTimeTablePage extends StatefulWidget {
   final String deptName;
   final String semester;
 
-  const TimeTablePage({super.key, required this.deptName, required this.semester});
+  const SemesterTimeTablePage({super.key, required this.deptName, required this.semester});
 
   @override
-  State<TimeTablePage> createState() => _TimeTablePageState();
+  State<SemesterTimeTablePage> createState() => _SemesterTimeTablePageState();
 }
 
-class _TimeTablePageState extends State<TimeTablePage> {
+class _SemesterTimeTablePageState extends State<SemesterTimeTablePage> {
   final TimeTableController controller = Get.find();
   final addTimeTableKey = GlobalKey<FormState>();
   final editTimeTableKey = GlobalKey<FormState>();
