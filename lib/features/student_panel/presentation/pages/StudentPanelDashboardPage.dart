@@ -1,12 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:digital_academic_portal/features/administrator_panel/presentation/widgets/AdministratorDrawer.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/CalendarPage.dart';
-import 'package:digital_academic_portal/features/auth/presentation/pages/SignupScreen.dart';
 import 'package:digital_academic_portal/features/student_panel/presentation/widgets/StudentDrawer.dart';
-import 'package:digital_academic_portal/shared/presentation/pages/LoginScreen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import '../../../auth/presentation/pages/LoginPage.dart';
@@ -540,11 +535,8 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                 leading: const Icon(Icons.logout),
                 title: const Text('Sign out'),
                 onTap: () {
-                  Navigator.of(context).pop(); // Close the drawer
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                        (Route<dynamic> route) => false, // Remove all previous routes
-                  );
+                  Get.back(); // Close the drawer
+                  Get.off(()=> const LoginPage());
                 },
               ),
 

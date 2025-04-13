@@ -28,8 +28,8 @@ class AuthController extends GetxController {
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
             colorText: Colors.white,
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: Icon(CupertinoIcons.clear_circled_solid, color: Colors.white,)
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white,)
         );
       }, (right) {
         Get.snackbar(
@@ -37,9 +37,9 @@ class AuthController extends GetxController {
             'Welcome back to your account!',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Get.theme.primaryColor,
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             colorText: Colors.white,
-            icon: Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
+            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
         );
         Get.toNamed('/admin');
       });

@@ -343,17 +343,11 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              // Lottie.asset(
-                              //   'assets/animations/loading_animation4.json',
-                              //   width: 35,
-                              //   height: 35,
-                              //   fit: BoxFit.scaleDown,
-                              // ),
 
                               //chatbot
                               //move students to next semester
-                              Icon(FontAwesomeIcons.calendarCheck, color: Theme.of(context).primaryColorDark, size: 35,),
-                              AutoSizeText(' TimeTable ', style: TextStyle(color: Theme.of(context).primaryColorDark, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
+                              Icon(Icons.more_horiz, color: Theme.of(context).primaryColorDark, size: 45,),
+                              AutoSizeText(' More ', style: TextStyle(color: Theme.of(context).primaryColorDark, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
                             ],
                           ),
                         ),
