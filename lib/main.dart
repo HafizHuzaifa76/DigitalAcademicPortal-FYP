@@ -14,6 +14,7 @@ import 'package:digital_academic_portal/features/administrator_panel/shared/teac
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/bindings/TimeTableBindings.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SectionTimeTablePage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SemesterTimeTablePage.dart';
+import 'package:digital_academic_portal/features/teacher_panel/presentation/pages/TeacherDashboardPage.dart';
 import 'package:digital_academic_portal/shared/presentation/pages/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -29,6 +30,7 @@ import 'features/administrator_panel/shared/noticeboard/presentation/bindings/No
 import 'features/administrator_panel/shared/sections/presentation/pages/SectionListPage.dart';
 import 'features/administrator_panel/shared/student/presentation/pages/AllStudentsPage.dart';
 import 'features/auth/presentation/bindings/AuthBinding.dart';
+import 'features/student_panel/presentation/pages/StudentPanelDashboardPage.dart';
 import 'features/student_panel/shared/student_attendance/presentation/pages/Stu_Attendance.dart';
 import 'features/student_panel/shared/student_chatbot/presentation/pages/Stu_ChatBot.dart';
 import 'features/student_panel/shared/student_courses/presentation/pages/Stu_AllCourses.dart';
@@ -115,6 +117,16 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/admin',
           page: () => const AdministratorDashboardPage(),
+          // binding: DepartmentBinding()
+        ),
+        GetPage(
+          name: '/teacherDashboard',
+          page: () => const TeacherDashboardPage(),
+          // binding: DepartmentBinding()
+        ),
+        GetPage(
+          name: '/studentDashboard',
+          page: () => const StudentPortalDashboardPage(),
           // binding: DepartmentBinding()
         ),
         GetPage(
