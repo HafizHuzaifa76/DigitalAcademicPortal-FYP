@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class StudentDrawer extends StatelessWidget {
-  const StudentDrawer({super.key});
+class TeacherDrawer extends StatelessWidget {
+  const TeacherDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,34 +60,34 @@ class StudentDrawer extends StatelessWidget {
             leading: Image.asset('assets/images/attendance2.png', height: 30, width: 30),
             title: Text('Attendance', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
             onTap: () {
-              Get.toNamed('/student_attendance');
+              Get.toNamed('/teacher_attendance');
             },
           ),
           const Divider(),
 
-          ListTile(
-            leading: Image.asset('assets/images/students_icon.png', height: 30, width: 30),
-            title: Text('Students', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
-            onTap: () {
-              Get.toNamed('/allStudents');
-            },
-          ),
-          const Divider(),
+          // ListTile(
+          //   leading: Image.asset('assets/images/students_icon.png', height: 30, width: 30),
+          //   title: Text('Students', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
+          //   onTap: () {
+          //     Get.toNamed('/allStudents');
+          //   },
+          // ),
+          // const Divider(),
 
-          ListTile(
-            leading: Image.asset('assets/images/grades.png', height: 30, width: 30),
-            title: Text('Grades', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
-            onTap: () {
-              Get.toNamed('/student_gradesScreen');
-            },
-          ),
-          const Divider(),
+          // ListTile(
+          //   leading: Image.asset('assets/images/grades.png', height: 30, width: 30),
+          //   title: Text('Grades', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
+          //   onTap: () {
+          //     Get.toNamed('/student_gradesScreen');
+          //   },
+          // ),
+          // const Divider(),
 
           ListTile(
             leading: Image.asset('assets/images/course_icon.png', height: 30, width: 30),
             title: Text('Courses', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
             onTap: () {
-              Get.toNamed('/student_allCourses');
+              Get.toNamed('/teacher_allCourses');
             },
           ),
           const Divider(),
@@ -96,7 +96,7 @@ class StudentDrawer extends StatelessWidget {
             leading: Image.asset('assets/images/noticeboard_icon.png', height: 30, width: 30),
             title: Text('Notice Board', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
             onTap: () {
-              Get.toNamed('/student_NoticeBoard');
+              Get.toNamed('/teacher_NoticeBoard');
             },
           ),
           const Divider(),
@@ -105,25 +105,25 @@ class StudentDrawer extends StatelessWidget {
             leading: Image.asset('assets/images/calendar_icon.png', height: 30, width: 30),
             title: Text('Calendar', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
             onTap: () {
-              Get.toNamed('/student_calendarPage');
+              Get.toNamed('/teacher_calendarPage');
             },
           ),
           const Divider(),
 
-          ListTile(
-            leading: Image.asset('assets/images/chatbot_icon.png', height: 30, width: 30),
-            title: Text('ChatBot', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
-            onTap: () {
-              Get.toNamed('/Stu_ChatBot');
-            },
-          ),
-          const Divider(),
+          // ListTile(
+          //   leading: Image.asset('assets/images/chatbot_icon.png', height: 30, width: 30),
+          //   title: Text('ChatBot', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
+          //   onTap: () {
+          //     Get.toNamed('/Stu_ChatBot');
+          //   },
+          // ),
+          // const Divider(),
 
           ListTile(
             leading: Image.asset('assets/images/bugreport_icon.png', height: 30, width: 30),
             title: Text('Reports', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
             onTap: () {
-              Get.toNamed('/Stu_report');
+              Get.toNamed('/teacher_reportsScreen');
             },
           ),
         ],

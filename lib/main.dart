@@ -36,8 +36,15 @@ import 'features/student_panel/shared/student_chatbot/presentation/pages/Stu_Cha
 import 'features/student_panel/shared/student_courses/presentation/pages/Stu_AllCourses.dart';
 import 'features/student_panel/shared/student_grades/presentation/pages/Stu_GradesScreen.dart';
 import 'features/student_panel/shared/student_noticeboard/presentation/pages/Stu_MainNoticeBoardPage.dart';
+import 'features/student_panel/shared/student_report/presentation/pages/Stu_Reports.dart';
 import 'features/student_panel/shared/student_timetable/presentation/pages/Stu_TimeTablePage.dart';
 import 'features/student_panel/shared/students_Diary/presentation/pages/Stu_Diary.dart';
+import 'features/teacher_panel/shared/teacher_attendance/presentation/pages/Tch_Attendance.dart';
+import 'features/teacher_panel/shared/teacher_calendar_events/presentation/pages/Tch_CalendarEventPage.dart';
+import 'features/teacher_panel/shared/teacher_courses/presentation/pages/Tch_AllCourses.dart';
+import 'features/teacher_panel/shared/teacher_noticeboard/presentation/pages/Tch_MainNoticeBoardPage.dart';
+import 'features/teacher_panel/shared/teacher_report/presentation/pages/Tch_Reports.dart';
+import 'features/teacher_panel/shared/teacher_timetable/presentation/pages/Tch_TimeTablePage.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -252,6 +259,41 @@ class MyApp extends StatelessWidget {
           page: () => const Stu_Diary(),
           //binding: CalendarEventBinding(),
         ),
+        GetPage(
+          name: '/Stu_report',
+          page: () => const Stu_Reports(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/teacher_calendarPage',
+          page: () => const Tch_CalendarScreen(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/teacher_timetablePage',
+          page: () => const Tch_TimeTablePage(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/teacher_NoticeBoard',
+          page: () => const Tch_MainNoticeBoardPage(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/teacher_reportsScreen',
+          page: () => const Tch_Reports(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/teacher_allCourses',
+          page: () => const Tch_AllCourses(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/teacher_attendance',
+          page: () => const Tch_Attendance(),
+          //binding: CalendarEventBinding(),
+        ),
       ],
       home: const SplashScreen(),
     );
@@ -318,3 +360,4 @@ class DefaultFirebaseOptions {
       appId: "1:849792758725:web:1239caff45159a088911ac",
       measurementId: "G-YX93SV1GFK");
 }
+
