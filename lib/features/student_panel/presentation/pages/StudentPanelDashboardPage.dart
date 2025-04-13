@@ -225,7 +225,7 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Image.asset(
-                                'assets/images/attendance2.png',
+                                'assets/images/attendanceB.png',
                                 height: 60,
                                 width: 60,
                               ),
@@ -254,16 +254,16 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/allStudents'),
+                          onPressed: () => Get.toNamed('/student_timetablePage'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Image.asset(
-                                  'assets/images/students_icon.png',
+                                  'assets/images/timetablebg.png',
                                   height: 60,
                                   width: 75),
                               AutoSizeText(
-                                'Students',
+                                'Time Table',
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColorLight,
                                     fontFamily: 'Ubuntu',
@@ -291,7 +291,7 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Image.asset('assets/images/grades.png',
+                              Image.asset('assets/images/gradesbg.png',
                                   height: 60, width: 60),
                               AutoSizeText(
                                 'Grades',
@@ -467,14 +467,14 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                                 padding: const WidgetStatePropertyAll(
                                     EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 5))),
-                            onPressed: () => Get.toNamed('/'),
+                            onPressed: () => Get.toNamed('/student_diary'),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Image.asset('assets/images/bugreport_icon.png',
+                                Image.asset('assets/images/diary.png',
                                     height: 60, width: 60),
                                 const AutoSizeText(
-                                  ' Reports ',
+                                  ' Students Diary ',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'Ubuntu',
