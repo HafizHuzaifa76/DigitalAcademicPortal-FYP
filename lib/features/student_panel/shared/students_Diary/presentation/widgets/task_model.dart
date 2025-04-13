@@ -1,7 +1,6 @@
 // task_modal.dart
+import '../../domain/entities/task.dart';
 import 'package:flutter/material.dart';
-import '../models/task.dart';
-
 class TaskModal extends StatefulWidget {
   final Task? task;
 

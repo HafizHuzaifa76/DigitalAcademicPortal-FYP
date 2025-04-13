@@ -20,7 +20,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:digital_academic_portal/features/student_panel/shared/student_calendar_events/stu_presentation/stu_pages/Stu_CalendarEventPage.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_calendar_events/presentation/pages/Stu_CalendarEventPage.dart';
 import 'features/administrator_panel/shared/courses/presentation/pages/DepartmentCoursePage.dart';
 import 'features/administrator_panel/shared/courses/presentation/pages/SemesterCoursePage.dart';
 import 'features/administrator_panel/shared/departments/presentation/bindings/DepartmentBindings.dart';
@@ -29,14 +29,13 @@ import 'features/administrator_panel/shared/noticeboard/presentation/bindings/No
 import 'features/administrator_panel/shared/sections/presentation/pages/SectionListPage.dart';
 import 'features/administrator_panel/shared/student/presentation/pages/AllStudentsPage.dart';
 import 'features/auth/presentation/bindings/AuthBinding.dart';
-import 'features/student_panel/shared/student_attendance/stu_presenation/stu_pages/Stu_Attendance.dart';
-import 'features/student_panel/shared/student_chatbot/stu_presentation/stu_pages/Stu_ChatBot.dart';
-import 'features/student_panel/shared/student_courses/stu_presentation/stu_pages/Stu_AllCourses.dart';
-import 'features/student_panel/shared/student_grades/stu_presentation/stu_pages/Stu_GradesScreen.dart';
-import 'features/student_panel/shared/student_noticeboard/stu_presentation/stu_pages/Stu_MainNoticeBoardPage.dart';
-import 'features/student_panel/shared/student_timetable/stu_presentation/stu_pages/Stu_TimeTablePage.dart';
-import 'features/student_panel/shared/students_Diary/stu_presentation/stu_pages/Stu_Diary.dart';
-
+import 'features/student_panel/shared/student_attendance/presentation/pages/Stu_Attendance.dart';
+import 'features/student_panel/shared/student_chatbot/presentation/pages/Stu_ChatBot.dart';
+import 'features/student_panel/shared/student_courses/presentation/pages/Stu_AllCourses.dart';
+import 'features/student_panel/shared/student_grades/presentation/pages/Stu_GradesScreen.dart';
+import 'features/student_panel/shared/student_noticeboard/presentation/pages/Stu_MainNoticeBoardPage.dart';
+import 'features/student_panel/shared/student_timetable/presentation/pages/Stu_TimeTablePage.dart';
+import 'features/student_panel/shared/students_Diary/presentation/pages/Stu_Diary.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
