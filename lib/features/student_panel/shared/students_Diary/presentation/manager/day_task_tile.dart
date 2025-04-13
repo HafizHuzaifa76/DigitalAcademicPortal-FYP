@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/task_card.dart';
-import '../models/task.dart';
+import '../../domain/entities/task.dart';
 import '../widgets/task_model.dart';
 
 class DayTaskTile extends StatefulWidget {

@@ -1,6 +1,6 @@
+import '../theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import '../stu_controllers/day_task_tile.dart';
-import '../theme/app_theme.dart'; // 💚 Import your custom theme here
+import '../manager/day_task_tile.dart';
 
 class Stu_Diary extends StatelessWidget {
   const Stu_Diary({super.key});
@@ -8,7 +8,7 @@ class Stu_Diary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: AppTheme.theme, // 🟢 Apply your theme only to this screen
+      data: AppTheme.theme,
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Student Diary"),
