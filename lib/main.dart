@@ -34,6 +34,7 @@ import 'features/student_panel/shared/student_courses/stu_presentation/stu_pages
 import 'features/student_panel/shared/student_grades/stu_presentation/stu_pages/Stu_GradesScreen.dart';
 import 'features/student_panel/shared/student_noticeboard/stu_presentation/stu_pages/Stu_MainNoticeBoardPage.dart';
 import 'features/student_panel/shared/student_timetable/stu_presentation/stu_pages/Stu_TimeTablePage.dart';
+import 'features/student_panel/shared/students_Diary/stu_presentation/stu_pages/Stu_Diary.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -223,6 +224,11 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/student_attendance',
           page: () => const Stu_Attendance(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/student_diary',
+          page: () =>  Stu_Diary(),
           //binding: CalendarEventBinding(),
         ),
       ],
