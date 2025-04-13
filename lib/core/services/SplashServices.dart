@@ -22,7 +22,7 @@ class SplashServices {
 
     else{
       Timer(const Duration(seconds: 3), (){
-        Get.off(() =>LoginPage());
+        Get.off(() =>const LoginPage());
         // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
       });
     }

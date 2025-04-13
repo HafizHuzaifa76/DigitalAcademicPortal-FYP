@@ -101,7 +101,10 @@ class _LoginPageState extends State<LoginPage> {
                                       prefixIcon: Icon(Icons.email_outlined, color: Theme.of(context).primaryColor)
                                   ),
                                   validator: (value){
-                                    if(value!.isEmpty){
+                                    if(value == null){
+                                      return 'Please enter your email!';
+                                    }
+                                    if(value.isEmpty){
                                       return 'Please enter your email!';
                                     }
                                     else if(!value.contains("@gmail.com")){
