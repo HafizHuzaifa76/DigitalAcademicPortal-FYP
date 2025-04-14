@@ -1,12 +1,8 @@
-// lib/features/auth/data/datasources/auth_remote_datasource.dart
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:digital_academic_portal/shared/presentation/pages/HomeScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<void> login(String email, String password);
+  Future<String> login(String identifier, String password); // Now returns role
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -14,20 +10,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
-  Future<void> login(String identifier, String password) async {
+  Future<String> login(String identifier, String password) async {
     try {
-      // Check if the identifier is an email
-      if (identifier.contains('@')) {
-        checkIfEmailExists(identifier);
-        // Assume it's an email and try to sign in
-        await _auth.signInWithEmailAndPassword(
-          email: identifier,
-          password: password,
-        );
-      } else {
-        // Assume it's a roll number and look up the email in Firestore
+      String email = identifier;
+
+      // If it's not an email, assume it's a roll number and find the email
+      if (!identifier.contains('@')) {
         QuerySnapshot userSnapshot = await _firestore
-            .collection('students')
+            .collectionGroup('students')
             .where('rollNo', isEqualTo: identifier)
             .limit(1)
             .get();
@@ -35,22 +25,46 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         if (userSnapshot.docs.isEmpty) {
           throw FirebaseAuthException(
             code: 'user-not-found',
-            message: 'No user found with that roll number.',
+            message: 'No student found with that roll number.',
           );
         }
 
-        // Get the email associated with the roll number
-        String email = userSnapshot.docs.first.get('email');
-
-        // Sign in with the associated email
-        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-
+        email = userSnapshot.docs.first.get('email');
       }
+      checkIfEmailExists(email);
+      // Sign in with email
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+      // Check for role
+      final user = _auth.currentUser!;
+      final uid = user.uid;
+
+      // 1. Check if admin (based on UID)
+      final adminDoc = await _firestore.collection('admins').doc(uid).get();
+      if (adminDoc.exists) return 'admin';
+
+      // 2. Check for student (by email in all departments)
+      final studentQuery = await _firestore
+          .collectionGroup('students')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+
+      if (studentQuery.docs.isNotEmpty) return 'studentDashboard';
+
+      // 3. Check for teacher (by email in all departments)
+      final teacherQuery = await _firestore
+          .collectionGroup('teachers')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+
+      if (teacherQuery.docs.isNotEmpty) return 'teacherDashboard';
+
+      // If no role matched
+      return 'admin';
     } catch (e) {
-      // Handle errors, such as user-not-found, wrong-password, etc.
+      print('login error: $e');
       throw e;
     }
   }
@@ -58,7 +72,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> checkIfEmailExists(String email) async {
     try {
       // Fetch the sign-in methods for the email
-      List<String> signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      List<String> signInMethods = await FirebaseAuth.instance
+          .fetchSignInMethodsForEmail(email);
 
       // If the list is not empty, the email is registered
       print(signInMethods.toString());

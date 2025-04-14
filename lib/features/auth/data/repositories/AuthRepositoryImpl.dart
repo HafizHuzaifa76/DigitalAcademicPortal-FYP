@@ -11,7 +11,7 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Fail, void>> login(String email, String password) async {
+  Future<Either<Fail, String>> login(String email, String password) async {
     try {
       return Right(await remoteDataSource.login(email, password));
     } catch (e) {

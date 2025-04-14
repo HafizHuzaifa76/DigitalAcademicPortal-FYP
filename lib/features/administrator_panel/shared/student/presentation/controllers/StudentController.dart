@@ -55,6 +55,7 @@ class StudentController extends GetxController {
 
   var isLoading = false.obs;
   var studentList = <Student>[].obs;
+  var departmentWiseStudents = <String, List<Student>>{}.obs;
   List<Semester> semesterList = [];
   var filteredStudentList = <Student>[].obs;
   String deptName = 'department';
@@ -389,8 +390,8 @@ class StudentController extends GetxController {
       );
 
     }, (students) {
-      studentList.assignAll(students);
-      filteredStudentList.assignAll(students);
+      departmentWiseStudents.value = students;
+      filteredStudentList.assignAll(students.values.expand((list) => list));
       print('All Students fetched ${students.length}');
     });
 

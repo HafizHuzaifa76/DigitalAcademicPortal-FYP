@@ -6,13 +6,13 @@ import 'package:digital_academic_portal/features/auth/domain/entities/UserEntity
 
 import '../repositories/AuthRepository.dart';
 
-class LoginUseCase implements UseCase<void, User>{
+class LoginUseCase implements UseCase<String, User>{
   final AuthRepository repository;
 
   LoginUseCase(this.repository);
 
   @override
-  Future<Either<Fail, dynamic>> execute(User user) async {
+  Future<Either<Fail, String>> execute(User user) async {
     return await repository.login(user.email, user.password);
   }
   
