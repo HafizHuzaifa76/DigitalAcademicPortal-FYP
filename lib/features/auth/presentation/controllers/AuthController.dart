@@ -31,7 +31,7 @@ class AuthController extends GetxController {
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white,)
         );
-      }, (right) {
+      }, (userRole) {
         Get.snackbar(
             'Account Login',
             'Welcome back to your account!',
@@ -41,7 +41,8 @@ class AuthController extends GetxController {
             colorText: Colors.white,
             icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
         );
-        Get.toNamed('/admin');
+
+        Get.toNamed('/$userRole');
       });
     } catch (e) {
       print(e);

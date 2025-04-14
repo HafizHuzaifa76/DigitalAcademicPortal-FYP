@@ -3,13 +3,13 @@ import 'package:digital_academic_portal/core/usecases/UseCase.dart';
 import '../entities/Student.dart';
 import '../repositories/StudentRepository.dart';
 
-class AllStudentsUseCase implements UseCase<List<Student>, void>{
+class AllStudentsUseCase implements UseCase<Map<String, List<Student>>, void>{
   final StudentRepository repository;
 
   AllStudentsUseCase(this.repository);
 
   @override
-  Future<Either<Fail, List<Student>>> execute(void params) async {
+  Future<Either<Fail, Map<String, List<Student>>>> execute(void params) async {
     return await repository.showAllStudents();
   }
 }

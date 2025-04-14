@@ -44,7 +44,7 @@ class StudentRepositoryImpl implements StudentRepository{
   @override
   Future<Either<Fail, void>> deleteStudent(Student student) async {
     try {
-      return Right(await studentRemoteDataSource.deleteStudent(student.studentRollNo));
+      return Right(await studentRemoteDataSource.deleteStudent(student.studentDepartment, student.studentRollNo));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');
@@ -70,7 +70,7 @@ class StudentRepositoryImpl implements StudentRepository{
   }
 
   @override
-  Future<Either<Fail, List<Student>>> showAllStudents() async {
+  Future<Either<Fail, Map<String, List<StudentModel>>>> showAllStudents() async {
     try {
       return Right(await studentRemoteDataSource.allStudents());
     } catch (e) {

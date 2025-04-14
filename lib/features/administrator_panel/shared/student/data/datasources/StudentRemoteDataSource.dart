@@ -11,8 +11,8 @@ abstract class StudentRemoteDataSource{
   Future<void> addNewStudentsList(List<Student> morningStudents, List<Student> eveningStudents);
   Future<void> addPreviousStudentsList(List<Student> morningStudents, List<Student> eveningStudents);
   Future<StudentModel> editStudent(StudentModel student);
-  Future<void> deleteStudent(String studentID);
-  Future<List<StudentModel>> allStudents();
+  Future<void> deleteStudent(String dept, String studentID);
+  Future<Map<String, List<StudentModel>>> allStudents();
   Future<List<StudentModel>> getStudentsByDepartment(String deptName);
   Future<List<StudentModel>> getStudentsBySemester(String deptName, String semester);
   Future<void> setSectionLimit(String deptName, String semester, int limit);
@@ -24,9 +24,14 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
 
   @override
   Future<StudentModel> addStudent(StudentModel student) async {
-    var studentRef = _firestore.collection('students').doc(student.studentRollNo);
-    var studentSnapshot = await studentRef.get();
+    var deptRef = _firestore.collection('departments').doc(student.studentDepartment);
+    var studentRef = deptRef.collection('students').doc(student.studentRollNo);
+    var deptSnapshot = await deptRef.get();
+    if (!deptSnapshot.exists) {
+      throw Exception('Department not exists');
+    }
 
+    var studentSnapshot = await studentRef.get();
     if (studentSnapshot.exists) {
       throw Exception('Student already exists');
     }
@@ -47,7 +52,8 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
   }
 
   void _createStudentAccount(StudentModel student) {
-    var studentRef = _firestore.collection('students').doc(student.studentRollNo);
+    var deptRef = _firestore.collection('departments').doc(student.studentDepartment);
+    var studentRef = deptRef.collection('students').doc(student.studentRollNo);
     _auth.createUserWithEmailAndPassword(email: student.studentEmail, password: student.studentCNIC);
 
     studentRef.set(student.toMap()).then((value) {
@@ -236,7 +242,8 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
   //   // Assign students to sections
   //   for (var currentStudent in students) {
   //     var student = StudentModel.fromStudent(currentStudent);
-  //     var studentRef = _firestore.collection('students').doc(student.studentRollNo);
+      // var deptRef = _firestore.collection('departments').doc(student.studentDepartment);
+      // var studentRef = deptRef.collection('students').doc(student.studentRollNo);
   //
   //     // Check if the student already exists
   //     var studentSnapshot = await studentRef.get();
@@ -394,7 +401,13 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
         var student = StudentModel.fromStudent(currentStudent);
 
         // Check if the student already exists
-        var studentRef = _firestore.collection('students').doc(student.studentRollNo);
+        var deptRef = _firestore.collection('departments').doc(student.studentDepartment);
+        var studentRef = deptRef.collection('students').doc(student.studentRollNo);
+        var deptSnapshot = await deptRef.get();
+        if (!deptSnapshot.exists) {
+          throw Exception('Department not exists');
+        }
+
         var studentSnapshot = await studentRef.get();
         if (studentSnapshot.exists) {
           throw Exception('Student with roll number ${student.studentRollNo} already exists');
@@ -527,7 +540,13 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
         var student = StudentModel.fromStudent(currentStudent);
 
         // Check if the student already exists
-        var studentRef = _firestore.collection('students').doc(student.studentRollNo);
+        var deptRef = _firestore.collection('departments').doc(student.studentDepartment);
+        var studentRef = deptRef.collection('students').doc(student.studentRollNo);
+        var deptSnapshot = await deptRef.get();
+        if (!deptSnapshot.exists) {
+          throw Exception('Department not exists');
+        }
+
         var studentSnapshot = await studentRef.get();
         if (studentSnapshot.exists) {
           throw Exception('Student with roll number ${student.studentRollNo} already exists');
@@ -637,7 +656,12 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
 
     // Process each student
     for (var student in students) {
-      var studentRef = _firestore.collection('students').doc(student.studentRollNo);
+      var deptRef = _firestore.collection('departments').doc(student.studentDepartment);
+      var studentRef = deptRef.collection('students').doc(student.studentRollNo);
+      var deptSnapshot = await deptRef.get();
+      if (!deptSnapshot.exists) {
+        throw Exception('Department not exists');
+      }
 
       // Check if the student already exists
       var studentSnapshot = await studentRef.get();
@@ -747,7 +771,8 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
   }
 
   // Future<StudentModel> addStudent(StudentModel student) async {
-  //   var ref = _firestore.collection('students').doc(student.studentRollNo);
+    // var deptRef = _firestore.collection('departments').doc(student.studentDepartment);
+    // var studentRef = deptRef.collection('students').doc(student.studentRollNo);
   //   var snapshot = await ref.get();
   //
   //   _auth.createUserWithEmailAndPassword(email: student.studentEmail, password: student.studentCNIC);
@@ -762,15 +787,22 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
   // }
 
   @override
-  Future<void> deleteStudent(String id) async {
-    _firestore.collection('students').doc(id).delete();
+  Future<void> deleteStudent(String dept, String rollNo) async {
+    var deptRef = _firestore.collection('departments').doc(dept);
+    var studentRef = deptRef.collection('students').doc(rollNo);
+    studentRef.delete();
   }
 
   @override
   Future<StudentModel> editStudent(StudentModel student) async {
-    var ref = _firestore.collection('students').doc(student.studentRollNo);
-    var snapshot = await ref.get();
+    var deptRef = _firestore.collection('departments').doc(student.studentDepartment);
+    var ref = deptRef.collection('students').doc(student.studentRollNo);
+    var deptSnapshot = await deptRef.get();
+    if (!deptSnapshot.exists) {
+      throw Exception('Department not exists');
+    }
 
+    var snapshot = await ref.get();
     if (snapshot.exists) {
       await ref.set(student.toMap());
     } else {
@@ -781,18 +813,37 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
   }
 
   @override
-  Future<List<StudentModel>> allStudents() async {
-    final querySnapshot = await _firestore.collection('students').get();
-    return querySnapshot.docs
-        .map((doc) => StudentModel.fromMap(doc.data()))
-        .toList();
+  Future<Map<String, List<StudentModel>>> allStudents() async {
+    final querySnapshot = await _firestore.collectionGroup('students').get();
+
+    final Map<String, List<StudentModel>> departmentWiseStudents = {};
+
+    for (var doc in querySnapshot.docs) {
+      final data = doc.data();
+
+      // Extract department ID from the document path
+      final pathSegments = doc.reference.path.split('/');
+      final departmentId = pathSegments[pathSegments.indexOf('departments') + 1];
+
+      final student = StudentModel.fromMap(data);
+
+      // Group students by department
+      if (departmentWiseStudents.containsKey(departmentId)) {
+        departmentWiseStudents[departmentId]!.add(student);
+      } else {
+        departmentWiseStudents[departmentId] = [student];
+      }
+    }
+
+    return departmentWiseStudents;
   }
+
 
   @override
   Future<List<StudentModel>> getStudentsByDepartment(String deptName) async {
-    final querySnapshot = await _firestore.collection('students')
-        .where('studentDepartment', isEqualTo: deptName)
-        .get();
+    var deptRef = _firestore.collection('departments').doc(deptName);
+    var studentRef = deptRef.collection('students');
+    final querySnapshot = await studentRef.get();
 
     return querySnapshot.docs
         .map((doc) => StudentModel.fromMap(doc.data()))
@@ -801,8 +852,9 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
 
   @override
   Future<List<StudentModel>> getStudentsBySemester(String deptName, String semester) async {
-    final querySnapshot = await _firestore.collection('students')
-        .where('studentDepartment',  isEqualTo: deptName)
+    var deptRef = _firestore.collection('departments').doc(deptName);
+    var studentRef = deptRef.collection('students');
+    final querySnapshot = await studentRef
         .where('studentSemester', isEqualTo: semester)
         .get();
 
