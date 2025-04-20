@@ -51,10 +51,13 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
     return student;
   }
 
-  void _createStudentAccount(StudentModel student) {
+  Future<void> _createStudentAccount(StudentModel student) async {
     var deptRef = _firestore.collection('departments').doc(student.studentDepartment);
     var studentRef = deptRef.collection('students').doc(student.studentRollNo);
-    _auth.createUserWithEmailAndPassword(email: student.studentEmail, password: student.studentCNIC);
+    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: student.studentEmail, password: student.studentCNIC);
+    final String displayName = 'student | ${student.studentDepartment} | ${student.studentName}';
+
+    await userCredential.user!.updateDisplayName(displayName);
 
     studentRef.set(student.toMap()).then((value) {
       _createCompulsoryCourseSections(student, student.studentSection);

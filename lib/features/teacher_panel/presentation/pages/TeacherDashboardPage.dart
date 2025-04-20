@@ -42,7 +42,7 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               right: 100,
                               left: 100,
                               child: Text(
-                                kIsWeb ? 'Student Dashboard' : 'Student \nDashboard',
+                                kIsWeb ? 'Teacher Dashboard' : 'Teacher \nDashboard',
                                 style: Theme.of(context).appBarTheme.titleTextStyle,
                                 textAlign: TextAlign.center,
                               )
