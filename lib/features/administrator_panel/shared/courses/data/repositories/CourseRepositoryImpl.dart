@@ -2,10 +2,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/courses/data/models/DeptCourseModel.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/courses/domain/entities/DepartmentCourse.dart';
-import '../../domain/entities/SemesterCourse.dart';
+import '../../../../../../shared/domain/entities/SemesterCourse.dart';
 import '../../domain/repositories/CourseRepository.dart';
 import '../datasources/CourseRemoteDataSource.dart';
-import '../models/SemesterCourseModel.dart';
+import '../../../../../../shared/data/models/SemesterCourseModel.dart';
 
 class CourseRepositoryImpl implements CourseRepository{
   final CourseRemoteDataSource courseRemoteDataSource;

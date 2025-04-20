@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../domain/entities/Student.dart';
+import '../../../../../../shared/domain/entities/Student.dart';
 import '../controllers/StudentController.dart';
 
 class SemesterStudentsPage extends StatefulWidget {

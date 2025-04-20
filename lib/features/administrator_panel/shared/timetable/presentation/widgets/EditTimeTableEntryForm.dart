@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/TimeTable.dart';
+import '../../../../../../shared/domain/entities/TimeTable.dart';
 
 class EditTimeTableEntryForm extends StatefulWidget {
   final TimeTableEntry entry;

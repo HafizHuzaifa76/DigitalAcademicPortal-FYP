@@ -1,11 +1,11 @@
 
 import 'package:digital_academic_portal/core/usecases/UseCase.dart';
 import 'package:digital_academic_portal/core/utils/Utils.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/courses/domain/entities/SemesterCourse.dart';
+import 'package:digital_academic_portal/shared/domain/entities/SemesterCourse.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/sections/domain/usecases/AssignTeachersUseCase.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/sections/domain/usecases/GetCoursesUseCase.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/sections/domain/usecases/GetTeachersUseCase.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/domain/entities/Teacher.dart';
+import 'package:digital_academic_portal/shared/domain/entities/Teacher.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
