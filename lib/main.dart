@@ -256,7 +256,7 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/student_diary',
-          page: () => const Stu_Diary(),
+          page: () => Stu_Diary(),
           //binding: CalendarEventBinding(),
         ),
         GetPage(
