@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:digital_academic_portal/core/usecases/UseCase.dart';
-import '../entities/Teacher.dart';
+import '../../../../../../shared/domain/entities/Teacher.dart';
 import '../repositories/TeacherRepository.dart';
 
 class DeleteTeacherUseCase implements UseCase<void, Teacher>{

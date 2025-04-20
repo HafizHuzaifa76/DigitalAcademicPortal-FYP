@@ -18,7 +18,7 @@ import '../../domain/usecases/AllStudentUseCase.dart';
 import '../../domain/usecases/DeleteStudentUseCase.dart';
 import '../../domain/usecases/DepartmentStudentsUseCase.dart';
 import '../../domain/usecases/EditStudentUseCase.dart';
-import '../../domain/entities/Student.dart';
+import '../../../../../../shared/domain/entities/Student.dart';
 import '../../domain/usecases/SetSectionLimitUseCase.dart';
 
 class StudentController extends GetxController {

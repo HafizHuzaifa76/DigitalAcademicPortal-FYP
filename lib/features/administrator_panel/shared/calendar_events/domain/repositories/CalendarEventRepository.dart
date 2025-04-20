@@ -1,6 +1,6 @@
 
 import 'package:dartz/dartz.dart';
-import '../entities/CalendarEvent.dart';
+import '../../../../../../shared/domain/entities/CalendarEvent.dart';
 
 abstract class CalendarEventRepository{
 

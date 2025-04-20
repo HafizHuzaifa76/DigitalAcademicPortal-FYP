@@ -1,5 +1,5 @@
 import 'package:digital_academic_portal/core/utils/Utils.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/noticeboard/domain/entities/MainNotice.dart';
+import 'package:digital_academic_portal/shared/domain/entities/MainNotice.dart';
 import 'package:digital_academic_portal/shared/presentation/widgets/ImageView.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

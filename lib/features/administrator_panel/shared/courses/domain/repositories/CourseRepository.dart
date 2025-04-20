@@ -1,7 +1,7 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/courses/domain/entities/DepartmentCourse.dart';
-import '../entities/SemesterCourse.dart';
+import '../../../../../../shared/domain/entities/SemesterCourse.dart';
 
 abstract class CourseRepository{
 

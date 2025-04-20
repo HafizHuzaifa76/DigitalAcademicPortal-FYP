@@ -1,6 +1,6 @@
 
 import 'package:dartz/dartz.dart';
-import '../entities/MainNotice.dart';
+import '../../../../../../shared/domain/entities/MainNotice.dart';
 
 abstract class NoticeRepository{
 

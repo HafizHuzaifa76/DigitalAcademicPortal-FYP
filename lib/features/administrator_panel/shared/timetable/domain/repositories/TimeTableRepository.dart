@@ -1,7 +1,7 @@
 
 import 'package:dartz/dartz.dart';
 
-import '../entities/TimeTable.dart';
+import '../../../../../../shared/domain/entities/TimeTable.dart';
 
 abstract class TimeTableRepository{
 
