@@ -38,28 +38,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // Check for role
       final user = _auth.currentUser!;
       final uid = user.uid;
+      List<String> parts = user.displayName!.split(' | ');
+      String userRole = parts[0];
+      String userDept = parts[1];
 
       // 1. Check if admin (based on UID)
       final adminDoc = await _firestore.collection('admins').doc(uid).get();
       if (adminDoc.exists) return 'admin';
 
-      // 2. Check for student (by email in all departments)
-      final studentQuery = await _firestore
-          .collectionGroup('students')
-          .where('email', isEqualTo: email)
-          .limit(1)
-          .get();
+      if (userRole.contains('student')) return 'studentDashboard';
 
-      if (studentQuery.docs.isNotEmpty) return 'studentDashboard';
-
-      // 3. Check for teacher (by email in all departments)
-      final teacherQuery = await _firestore
-          .collectionGroup('teachers')
-          .where('email', isEqualTo: email)
-          .limit(1)
-          .get();
-
-      if (teacherQuery.docs.isNotEmpty) return 'teacherDashboard';
+      if (userRole.contains('teacher')) return 'teacherDashboard';
 
       // If no role matched
       return 'admin';

@@ -49,6 +49,9 @@ class TeacherRemoteDataSourceImpl implements TeacherRemoteDataSource{
         password: teacher.teacherCNIC,
       );
 
+      final String displayName = 'teacher | ${teacher.teacherDept} | ${teacher.teacherName}';
+      await userCredential.user!.updateDisplayName(displayName);
+
       var ref = _firestore.collection('departments').doc(teacher.teacherDept)
           .collection('teachers').doc(teacher.teacherCNIC);
       await ref.set(teacher.toMap());

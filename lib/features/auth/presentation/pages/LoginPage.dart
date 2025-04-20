@@ -222,25 +222,25 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 15.0),
 
-                    OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                            fixedSize: const Size(200, 0)
-                        ),
-                        onPressed: (){
-                          Get.offNamed('/studentDashboard');
-                        },
-                        child: const Text('Student Portal', style: TextStyle(fontWeight: FontWeight.bold),)
-                    ),
-
-                    OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                            fixedSize: const Size(200, 0)
-                        ),
-                        onPressed: (){
-                          Get.offNamed('/teacherDashboard');
-                        },
-                        child: const Text('Teacher Portal', style: TextStyle(fontWeight: FontWeight.bold),)
-                    ),
+                    // OutlinedButton(
+                    //     style: OutlinedButton.styleFrom(
+                    //         fixedSize: const Size(200, 0)
+                    //     ),
+                    //     onPressed: (){
+                    //       Get.offNamed('/studentDashboard');
+                    //     },
+                    //     child: const Text('Student Portal', style: TextStyle(fontWeight: FontWeight.bold),)
+                    // ),
+                    //
+                    // OutlinedButton(
+                    //     style: OutlinedButton.styleFrom(
+                    //         fixedSize: const Size(200, 0)
+                    //     ),
+                    //     onPressed: (){
+                    //       Get.offNamed('/teacherDashboard');
+                    //     },
+                    //     child: const Text('Teacher Portal', style: TextStyle(fontWeight: FontWeight.bold),)
+                    // ),
                   ],
                 ),
 
