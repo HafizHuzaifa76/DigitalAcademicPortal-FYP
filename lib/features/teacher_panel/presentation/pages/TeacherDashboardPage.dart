@@ -399,7 +399,7 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
                           // onPressed: () => Get.to(const TableEventsExample()),
-                          onPressed: () => Get.toNamed('/teacher_calendarPage'),
+                          onPressed: () => Get.toNamed('/teacherCalendarPage'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [

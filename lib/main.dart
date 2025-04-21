@@ -16,6 +16,7 @@ import 'package:digital_academic_portal/features/administrator_panel/shared/time
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SemesterTimeTablePage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/bindings/TeacherBindings.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/pages/TeacherDashboardPage.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_calendar_events/presentation/bindings/TeacherCalendarEventBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/bindings/TeacherCourseBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/pages/TeacherCoursesPage.dart';
 import 'package:digital_academic_portal/shared/presentation/pages/SplashScreen.dart';
@@ -271,12 +272,12 @@ class MyApp extends StatelessWidget {
           //binding: CalendarEventBinding(),
         ),
         GetPage(
-          name: '/teacher_calendarPage',
-          page: () => const Tch_CalendarScreen(),
-          //binding: CalendarEventBinding(),
+          name: '/teacherCalendarPage',
+          page: () => const TeacherCalendarPage(),
+          binding: TeacherCalendarEventBinding(),
         ),
         GetPage(
-          name: '/teacher_timetablePage',
+          name: '/teacherTimetablePage',
           page: () => const Tch_TimeTablePage(),
           //binding: CalendarEventBinding(),
         ),
@@ -292,7 +293,8 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/teacherCoursesPage',
-          page: () => TeacherCoursesPage(teacherDept: Get.arguments['teacherDept']),
+          page: () =>
+              TeacherCoursesPage(teacherDept: Get.arguments['teacherDept']),
           binding: TeacherCourseBinding(),
         ),
         GetPage(
