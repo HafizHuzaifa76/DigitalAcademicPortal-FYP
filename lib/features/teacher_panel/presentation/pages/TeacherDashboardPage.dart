@@ -265,8 +265,7 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () =>
-                              Get.toNamed('/teacher_timetablePage'),
+                          onPressed: () => Get.toNamed('/teacherTimetablePage'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -296,15 +295,14 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () =>
-                              Get.toNamed('/teacher_reportsScreen'),
+                          onPressed: () => Get.toNamed('/teacherQueryPage'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Image.asset('assets/images/gradesbg.png',
                                   height: 60, width: 60),
                               AutoSizeText(
-                                'Reports',
+                                'Queries',
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColorLight,
                                     fontFamily: 'Ubuntu',
@@ -367,7 +365,7 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/teacher_NoticeBoard'),
+                          onPressed: () => Get.toNamed('/teacherAnnouncement'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -375,7 +373,7 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                                   height: 55, width: 60),
                               const SizedBox(height: 5),
                               AutoSizeText(
-                                'Notice Board',
+                                'Announcement',
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColorDark,
                                     fontFamily: 'Ubuntu',

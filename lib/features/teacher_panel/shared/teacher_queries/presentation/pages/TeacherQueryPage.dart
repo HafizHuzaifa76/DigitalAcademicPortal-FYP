@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class Tch_MainNoticeBoardPage extends StatelessWidget {
-  const Tch_MainNoticeBoardPage({super.key});
+class TeacherQueryPage extends StatelessWidget {
+  const TeacherQueryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Teacher Noticeboard"),
+        title: const Text("Queries Section"),
       ),
       body: const Center(
         child: Text(
-          "Teacher Noticeboard Screen",
+          "Queries",
           style: TextStyle(fontSize: 20),
         ),
       ),
