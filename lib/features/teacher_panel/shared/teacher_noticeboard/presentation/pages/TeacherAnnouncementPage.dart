@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class Tch_Reports extends StatelessWidget {
-  const Tch_Reports({super.key});
+class TeacherAnnouncementPage extends StatelessWidget {
+  const TeacherAnnouncementPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Stu_Reports"),
+        title: const Text("Announcement"),
       ),
       body: const Center(
         child: Text(
-          "Stu_Reports",
+          "Teacher Announcement Screen",
           style: TextStyle(fontSize: 20),
         ),
       ),

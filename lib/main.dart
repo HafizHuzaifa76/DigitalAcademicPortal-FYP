@@ -46,8 +46,8 @@ import 'features/student_panel/shared/students_Diary/presentation/pages/Stu_Diar
 import 'features/teacher_panel/shared/teacher_attendance/presentation/pages/Tch_Attendance.dart';
 import 'features/teacher_panel/shared/teacher_calendar_events/presentation/pages/Tch_CalendarEventPage.dart';
 import 'features/teacher_panel/shared/teacher_courses/presentation/pages/Tch_AllCourses.dart';
-import 'features/teacher_panel/shared/teacher_noticeboard/presentation/pages/Tch_MainNoticeBoardPage.dart';
-import 'features/teacher_panel/shared/teacher_report/presentation/pages/Tch_Reports.dart';
+import 'features/teacher_panel/shared/teacher_announcement/presentation/pages/TeacherAnnouncementPage.dart';
+import 'features/teacher_panel/shared/teacher_queries/presentation/pages/TeacherQueryPage.dart';
 import 'features/teacher_panel/shared/teacher_timetable/presentation/pages/Tch_TimeTablePage.dart';
 
 Future<void> main() async {
@@ -282,13 +282,13 @@ class MyApp extends StatelessWidget {
           //binding: CalendarEventBinding(),
         ),
         GetPage(
-          name: '/teacher_NoticeBoard',
-          page: () => const Tch_MainNoticeBoardPage(),
+          name: '/teacherAnnouncement',
+          page: () => const TeacherAnnouncementPage(),
           //binding: CalendarEventBinding(),
         ),
         GetPage(
-          name: '/teacher_reportsScreen',
-          page: () => const Tch_Reports(),
+          name: '/teacherQueryPage',
+          page: () => const TeacherQueryPage(),
           //binding: CalendarEventBinding(),
         ),
         GetPage(
