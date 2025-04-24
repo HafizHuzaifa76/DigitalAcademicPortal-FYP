@@ -287,14 +287,14 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/teacher_reportsScreen'),
+                          onPressed: () => Get.toNamed('/teacher_assignments'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Image.asset('assets/images/gradesbg.png',
+                              Image.asset('assets/images/assign.png',
                                   height: 60, width: 60),
                               AutoSizeText(
-                                'Reports',
+                                'Assignments',
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColorLight,
                                     fontFamily: 'Ubuntu',

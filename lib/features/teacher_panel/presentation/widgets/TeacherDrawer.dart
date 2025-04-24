@@ -100,6 +100,14 @@ class TeacherDrawer extends StatelessWidget {
             },
           ),
           const Divider(),
+          ListTile(
+            leading: Image.asset('assets/images/assign.png', height: 30, width: 30),
+            title: Text('Assignments', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
+            onTap: () {
+              Get.toNamed('/teacher_assignments');
+            },
+          ),
+          const Divider(),
 
           ListTile(
             leading: Image.asset('assets/images/calendar_icon.png', height: 30, width: 30),
