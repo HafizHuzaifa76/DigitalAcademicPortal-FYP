@@ -31,6 +31,7 @@ import 'features/administrator_panel/shared/sections/presentation/pages/SectionL
 import 'features/administrator_panel/shared/student/presentation/pages/AllStudentsPage.dart';
 import 'features/auth/presentation/bindings/AuthBinding.dart';
 import 'features/student_panel/presentation/pages/StudentPanelDashboardPage.dart';
+import 'features/student_panel/shared/student_assignment/presentation/pages/Stu_Assignments.dart';
 import 'features/student_panel/shared/student_attendance/presentation/pages/Stu_Attendance.dart';
 import 'features/student_panel/shared/student_chatbot/presentation/pages/Stu_ChatBot.dart';
 import 'features/student_panel/shared/student_courses/presentation/pages/Stu_AllCourses.dart';
@@ -39,6 +40,7 @@ import 'features/student_panel/shared/student_noticeboard/presentation/pages/Stu
 import 'features/student_panel/shared/student_report/presentation/pages/Stu_Reports.dart';
 import 'features/student_panel/shared/student_timetable/presentation/pages/Stu_TimeTablePage.dart';
 import 'features/student_panel/shared/students_Diary/presentation/pages/Stu_Diary.dart';
+import 'features/teacher_panel/shared/teacher_assignment/presentation/pages/Tch_Assignment.dart';
 import 'features/teacher_panel/shared/teacher_attendance/presentation/pages/Tch_Attendance.dart';
 import 'features/teacher_panel/shared/teacher_calendar_events/presentation/pages/Tch_CalendarEventPage.dart';
 import 'features/teacher_panel/shared/teacher_courses/presentation/pages/Tch_AllCourses.dart';
@@ -236,7 +238,12 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/student_gradesScreen',
-          page: () => const Stu_GradesScreen(),
+          page: () => const GradeScreen(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/pendingAssignment',
+          page: () =>  AssignmentPage(),
           //binding: CalendarEventBinding(),
         ),
         GetPage(
@@ -277,6 +284,11 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/teacher_NoticeBoard',
           page: () => const Tch_MainNoticeBoardPage(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/teacher_assignments',
+          page: () => const TeacherAssignmentPortal(),
           //binding: CalendarEventBinding(),
         ),
         GetPage(

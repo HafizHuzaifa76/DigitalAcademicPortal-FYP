@@ -55,6 +55,9 @@ dependencies:
   fl_chart: ^0.66.0
   flutter_speed_dial: ^7.0.0
   flutter_expandable_fab: ^2.3.0
+  pdf: ^3.10.4
+  printing: ^5.10.4
+
   shared_preferences: ^2.2.2  # or the latest version
 
 
