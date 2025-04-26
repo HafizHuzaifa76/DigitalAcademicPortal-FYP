@@ -1,4 +1,4 @@
-import 'package:digital_academic_portal/features/administrator_panel/shared/calendar_events/domain/entities/CalendarEvent.dart';
+import 'package:digital_academic_portal/shared/domain/entities/CalendarEvent.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:table_calendar/table_calendar.dart';

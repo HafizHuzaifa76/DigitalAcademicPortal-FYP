@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/calendar_events/domain/entities/CalendarEvent.dart';
+import 'package:digital_academic_portal/shared/domain/entities/CalendarEvent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

@@ -7,26 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SplashServices {
-
   void isLogin(BuildContext context) {
-
     final auth = FirebaseAuth.instance;
     final user = auth.currentUser;
+    final displayName = user?.displayName ?? '';
+    List<String> parts = displayName.split(' | ');
 
-    if(user != null){
+    if (user != null) {
       Timer(const Duration(seconds: 4), () async {
-        Get.offNamed('/admin');
-        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        if (parts[0].contains('student')) {
+          Get.offNamed('/studentDashboard');
+        } else if (parts[0].contains('teacher')) {
+          Get.offNamed('/teacherDashboard');
+        } else {
+          Get.offNamed('/admin');
+        }
+      });
+    } else {
+      Timer(const Duration(seconds: 3), () {
+        Get.off(() => const LoginPage());
       });
     }
-
-    else{
-      Timer(const Duration(seconds: 3), (){
-        Get.off(() =>const LoginPage());
-        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
-      });
-    }
-
   }
-
 }

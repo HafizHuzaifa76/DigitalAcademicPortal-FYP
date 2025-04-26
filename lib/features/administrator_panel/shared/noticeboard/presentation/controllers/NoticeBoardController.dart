@@ -12,7 +12,7 @@ import '../../domain/usecases/AddNoticeUseCase.dart';
 import '../../domain/usecases/AllNoticeUseCase.dart';
 import '../../domain/usecases/DeleteNoticeUseCase.dart';
 import '../../domain/usecases/EditNoticeUseCase.dart';
-import '../../domain/entities/MainNotice.dart';
+import '../../../../../../shared/domain/entities/MainNotice.dart';
 
 class NoticeBoardController extends GetxController {
   final AddNoticeUseCase addNoticeUseCase;

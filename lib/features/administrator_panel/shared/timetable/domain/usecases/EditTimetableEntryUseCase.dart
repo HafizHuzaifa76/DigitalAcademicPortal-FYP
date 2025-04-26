@@ -1,7 +1,7 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:digital_academic_portal/core/usecases/UseCase.dart';
-import '../entities/TimeTable.dart';
+import '../../../../../../shared/domain/entities/TimeTable.dart';
 import '../repositories/TimeTableRepository.dart';
 
 class EditTimeTableUseCase implements UseCase<TimeTableEntry, TimeTableParams>{

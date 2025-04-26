@@ -1,7 +1,7 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:digital_academic_portal/core/usecases/UseCase.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/student/domain/entities/Student.dart';
+import 'package:digital_academic_portal/shared/domain/entities/Student.dart';
 import 'package:flutter/cupertino.dart';
 import '../repositories/StudentRepository.dart';
 

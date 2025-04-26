@@ -6,7 +6,7 @@ import 'package:lottie/lottie.dart';
 
 import '../controllers/SectionController.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/sections/domain/entities/Section.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/domain/entities/Teacher.dart';
+import 'package:digital_academic_portal/shared/domain/entities/Teacher.dart';
 
 class AssignTeachersPage extends StatefulWidget {
   final String deptName;
