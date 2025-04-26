@@ -10,10 +10,12 @@ class StudentPortalDashboardPage extends StatefulWidget {
   const StudentPortalDashboardPage({super.key});
 
   @override
-  State<StudentPortalDashboardPage> createState() => StudentPortalDashboardPageState();
+  State<StudentPortalDashboardPage> createState() =>
+      StudentPortalDashboardPageState();
 }
 
-class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> {
+class StudentPortalDashboardPageState
+    extends State<StudentPortalDashboardPage> {
   int count = 0;
   @override
   Widget build(BuildContext context) {
@@ -28,13 +30,16 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
               Container(
                 height: screenSize.height * .25,
                 width: screenSize.width,
-                padding: const EdgeInsets.only(top: 35, left: 15, right: 10, bottom: 3),
+                padding: const EdgeInsets.only(
+                    top: 35, left: 15, right: 10, bottom: 3),
                 decoration: const BoxDecoration(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      height: kIsWeb ?  screenSize.height * 0.25 * 0.3 : screenSize.height * 0.25 * 0.4,
+                      height: kIsWeb
+                          ? screenSize.height * 0.25 * 0.3
+                          : screenSize.height * 0.25 * 0.4,
                       child: Stack(
                         children: [
                           Positioned(
@@ -42,12 +47,14 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                               right: 100,
                               left: 100,
                               child: Text(
-                                kIsWeb ? 'Student Dashboard' : 'Student \nDashboard',
-                                style: Theme.of(context).appBarTheme.titleTextStyle,
+                                kIsWeb
+                                    ? 'Student Dashboard'
+                                    : 'Student \nDashboard',
+                                style: Theme.of(context)
+                                    .appBarTheme
+                                    .titleTextStyle,
                                 textAlign: TextAlign.center,
-                              )
-                          ),
-
+                              )),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,14 +67,14 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                                     child: IconButton(
                                         padding: const EdgeInsets.all(5),
                                         onPressed: () {
-                                          Scaffold.of(context).openDrawer(); // Open drawer on click
+                                          Scaffold.of(context)
+                                              .openDrawer(); // Open drawer on click
                                         },
                                         icon: const Icon(
                                           Icons.sort,
                                           color: Colors.white,
                                           size: 28,
-                                        )
-                                    ),
+                                        )),
                                   );
                                 },
                               ),
@@ -85,7 +92,6 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                         ],
                       ),
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -110,7 +116,6 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                             ),
                           ),
                         ),
-
                         Card(
                           color: const Color(0xFF128771),
                           child: SizedBox(
@@ -129,7 +134,6 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                             ),
                           ),
                         ),
-
                         Card(
                           color: const Color(0xFF128771),
                           surfaceTintColor: Colors.black,
@@ -159,18 +163,18 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                   ],
                 ),
               ),
-
               Container(
                 height: screenSize.height * .75,
                 width: screenSize.width,
                 decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30))),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     const SizedBox(height: 10),
-
                     Column(
                       children: [
                         SizedBox(
@@ -209,17 +213,22 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                       ],
                     ),
                     const SizedBox(height: 10),
-
                     const SizedBox(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
-                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                              padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 12, vertical: 5))),
+                              backgroundColor: WidgetStatePropertyAll(
+                                  Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(
+                                  Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              padding: const WidgetStatePropertyAll(
+                                  EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 5))),
                           onPressed: () => Get.toNamed('/student_attendance'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -241,7 +250,6 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                             ],
                           ),
                         ),
-
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
@@ -254,14 +262,13 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/student_timetablePage'),
+                          onPressed: () =>
+                              Get.toNamed('/student_timetablePage'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Image.asset(
-                                  'assets/images/timetablebg.png',
-                                  height: 60,
-                                  width: 75),
+                              Image.asset('assets/images/timetablebg.png',
+                                  height: 60, width: 75),
                               AutoSizeText(
                                 'Time Table',
                                 style: TextStyle(
@@ -274,7 +281,6 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                             ],
                           ),
                         ),
-
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
@@ -307,7 +313,6 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                         ),
                       ],
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -327,10 +332,8 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Image.asset(
-                                  'assets/images/course_icon.png',
-                                  height: 55, width: 60
-                              ),
+                              Image.asset('assets/images/course_icon.png',
+                                  height: 55, width: 60),
                               const SizedBox(height: 3),
                               AutoSizeText(
                                 ' Courses ',
@@ -344,7 +347,6 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                             ],
                           ),
                         ),
-
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
@@ -361,10 +363,8 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Image.asset(
-                                  'assets/images/noticeboard_icon.png',
-                                  height: 55,
-                                  width: 60),
+                              Image.asset('assets/images/noticeboard_icon.png',
+                                  height: 55, width: 60),
                               const SizedBox(height: 5),
                               AutoSizeText(
                                 'Notice Board',
@@ -378,7 +378,6 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                             ],
                           ),
                         ),
-
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
@@ -413,7 +412,6 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                         ),
                       ],
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -428,7 +426,7 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                                 shape: WidgetStatePropertyAll(
                                     RoundedRectangleBorder(
                                         borderRadius:
-                                        BorderRadius.circular(10))),
+                                            BorderRadius.circular(10))),
                                 padding: const WidgetStatePropertyAll(
                                     EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 5))),
@@ -451,7 +449,6 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                             ),
                           ),
                         ),
-
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: ElevatedButton(
@@ -463,7 +460,7 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                                 shape: WidgetStatePropertyAll(
                                     RoundedRectangleBorder(
                                         borderRadius:
-                                        BorderRadius.circular(10))),
+                                            BorderRadius.circular(10))),
                                 padding: const WidgetStatePropertyAll(
                                     EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 5))),
@@ -507,7 +504,8 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
         appBarBox.size.width, // Adjust the X position to align with the icon
         70, // Adjust the Y position to the bottom of the AppBar
         appBarBox.size.width, // This would be a maximum width after X position
-        appBarBox.size.height + 200, // This would be a maximum height after Y position
+        appBarBox.size.height +
+            200, // This would be a maximum height after Y position
       ),
       items: [
         PopupMenuItem(
@@ -518,8 +516,8 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                 title: Text('Hi, Hafiz!'),
                 subtitle: Text('hafizm.huzaifa1234gf@gmail.com'),
                 leading: CircleAvatar(
-                  backgroundImage:
-                  NetworkImage('https://via.placeholder.com/150'), // User's image URL
+                  backgroundImage: NetworkImage(
+                      'https://via.placeholder.com/150'), // User's image URL
                 ),
               ),
               const Divider(),
@@ -536,15 +534,12 @@ class StudentPortalDashboardPageState extends State<StudentPortalDashboardPage> 
                 title: const Text('Sign out'),
                 onTap: () {
                   Get.back(); // Close the drawer
-                  Get.off(()=> const LoginPage());
+                  Get.offNamed('/login');
                 },
               ),
-
-
             ],
           ),
         ),
-
       ],
       elevation: 8.0,
     );

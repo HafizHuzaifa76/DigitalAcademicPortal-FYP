@@ -542,7 +542,7 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                 title: const Text('Sign out'),
                 onTap: () {
                   Get.back(); // Close the drawer
-                  Get.off(() => const LoginPage());
+                  Get.offNamed('/login');
                 },
               ),
             ],
