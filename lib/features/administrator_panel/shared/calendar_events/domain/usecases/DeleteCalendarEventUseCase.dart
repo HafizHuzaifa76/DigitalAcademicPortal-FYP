@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:digital_academic_portal/core/usecases/UseCase.dart';
-import '../entities/CalendarEvent.dart';
+import '../../../../../../shared/domain/entities/CalendarEvent.dart';
 import '../repositories/CalendarEventRepository.dart';
 
 class DeleteCalendarEventUseCase implements UseCase<void, CalendarEvent>{

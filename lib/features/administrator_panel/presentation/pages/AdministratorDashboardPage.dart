@@ -12,10 +12,12 @@ class AdministratorDashboardPage extends StatefulWidget {
   const AdministratorDashboardPage({super.key});
 
   @override
-  State<AdministratorDashboardPage> createState() => _AdministratorDashboardPageState();
+  State<AdministratorDashboardPage> createState() =>
+      _AdministratorDashboardPageState();
 }
 
-class _AdministratorDashboardPageState extends State<AdministratorDashboardPage> {
+class _AdministratorDashboardPageState
+    extends State<AdministratorDashboardPage> {
   int count = 0;
   @override
   Widget build(BuildContext context) {
@@ -30,13 +32,16 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
               Container(
                 height: screenSize.height * .25,
                 width: screenSize.width,
-                padding: const EdgeInsets.only(top: 35, left: 15, right: 10, bottom: 3),
+                padding: const EdgeInsets.only(
+                    top: 35, left: 15, right: 10, bottom: 3),
                 decoration: const BoxDecoration(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      height: kIsWeb ?  screenSize.height * 0.25 * 0.3 : screenSize.height * 0.25 * 0.4,
+                      height: kIsWeb
+                          ? screenSize.height * 0.25 * 0.3
+                          : screenSize.height * 0.25 * 0.4,
                       child: Stack(
                         children: [
                           Positioned(
@@ -44,12 +49,14 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                               right: 100,
                               left: 100,
                               child: Text(
-                                kIsWeb ? 'Administrator Dashboard' : 'Administrator\nDashboard',
-                                style: Theme.of(context).appBarTheme.titleTextStyle,
+                                kIsWeb
+                                    ? 'Administrator Dashboard'
+                                    : 'Administrator\nDashboard',
+                                style: Theme.of(context)
+                                    .appBarTheme
+                                    .titleTextStyle,
                                 textAlign: TextAlign.center,
-                              )
-                          ),
-
+                              )),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,14 +69,14 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                                     child: IconButton(
                                         padding: const EdgeInsets.all(8),
                                         onPressed: () {
-                                          Scaffold.of(context).openDrawer(); // Open drawer on click
+                                          Scaffold.of(context)
+                                              .openDrawer(); // Open drawer on click
                                         },
                                         icon: const Icon(
                                           Icons.sort,
                                           color: Colors.white,
                                           size: 28,
-                                        )
-                                    ),
+                                        )),
                                   );
                                 },
                               ),
@@ -87,7 +94,6 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                         ],
                       ),
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -112,7 +118,6 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                             ),
                           ),
                         ),
-
                         Card(
                           color: const Color(0xFF128771),
                           child: SizedBox(
@@ -131,7 +136,6 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                             ),
                           ),
                         ),
-
                         Card(
                           color: const Color(0xFF128771),
                           surfaceTintColor: Colors.black,
@@ -161,18 +165,18 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                   ],
                 ),
               ),
-
               Container(
                 height: screenSize.height * .75,
                 width: screenSize.width,
                 decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30))),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     const SizedBox(height: 10),
-
                     Column(
                       children: [
                         SizedBox(
@@ -211,17 +215,22 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                       ],
                     ),
                     const SizedBox(height: 10),
-
                     const SizedBox(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
-                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                              padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 12, vertical: 5))),
+                              backgroundColor: WidgetStatePropertyAll(
+                                  Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(
+                                  Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              padding: const WidgetStatePropertyAll(
+                                  EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 5))),
                           onPressed: () => Get.toNamed('/departments'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -243,7 +252,6 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                             ],
                           ),
                         ),
-
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
@@ -260,10 +268,8 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Image.asset(
-                                  'assets/images/students_icon.png',
-                                  height: 60,
-                                  width: 75),
+                              Image.asset('assets/images/students_icon.png',
+                                  height: 60, width: 75),
                               AutoSizeText(
                                 'Students',
                                 style: TextStyle(
@@ -276,7 +282,6 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                             ],
                           ),
                         ),
-
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
@@ -309,7 +314,6 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                         ),
                       ],
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -329,10 +333,8 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Image.asset(
-                                  'assets/images/admin.png',
-                                  height: 55, width: 60
-                              ),
+                              Image.asset('assets/images/admin.png',
+                                  height: 55, width: 60),
                               const SizedBox(height: 3),
                               AutoSizeText(
                                 ' Sub Admins ',
@@ -346,7 +348,6 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                             ],
                           ),
                         ),
-
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
@@ -363,10 +364,8 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Image.asset(
-                                  'assets/images/noticeboard_icon.png',
-                                  height: 55,
-                                  width: 60),
+                              Image.asset('assets/images/noticeboard_icon.png',
+                                  height: 55, width: 60),
                               const SizedBox(height: 5),
                               AutoSizeText(
                                 'Notice Board',
@@ -380,7 +379,6 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                             ],
                           ),
                         ),
-
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
@@ -415,7 +413,6 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                         ),
                       ],
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -430,7 +427,7 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                                 shape: WidgetStatePropertyAll(
                                     RoundedRectangleBorder(
                                         borderRadius:
-                                        BorderRadius.circular(10))),
+                                            BorderRadius.circular(10))),
                                 padding: const WidgetStatePropertyAll(
                                     EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 5))),
@@ -453,7 +450,6 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                             ),
                           ),
                         ),
-
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: ElevatedButton(
@@ -465,7 +461,7 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                                 shape: WidgetStatePropertyAll(
                                     RoundedRectangleBorder(
                                         borderRadius:
-                                        BorderRadius.circular(10))),
+                                            BorderRadius.circular(10))),
                                 padding: const WidgetStatePropertyAll(
                                     EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 5))),
@@ -509,7 +505,8 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
         appBarBox.size.width, // Adjust the X position to align with the icon
         70, // Adjust the Y position to the bottom of the AppBar
         appBarBox.size.width, // This would be a maximum width after X position
-        appBarBox.size.height + 200, // This would be a maximum height after Y position
+        appBarBox.size.height +
+            200, // This would be a maximum height after Y position
       ),
       items: [
         PopupMenuItem(
@@ -520,8 +517,8 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                 title: Text('Hi, Hafiz!'),
                 subtitle: Text('hafizm.huzaifa1234gf@gmail.com'),
                 leading: CircleAvatar(
-                  backgroundImage:
-                  NetworkImage('https://via.placeholder.com/150'), // User's image URL
+                  backgroundImage: NetworkImage(
+                      'https://via.placeholder.com/150'), // User's image URL
                 ),
               ),
               const Divider(),
@@ -539,7 +536,7 @@ class _AdministratorDashboardPageState extends State<AdministratorDashboardPage>
                 onTap: () {
                   FirebaseAuth.instance.signOut();
                   Get.back();
-                  Get.off(()=> const LoginPage());
+                  Get.offNamed('/login');
                 },
               ),
             ],

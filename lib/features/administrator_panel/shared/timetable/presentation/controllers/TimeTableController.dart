@@ -16,10 +16,10 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../core/usecases/UseCase.dart';
-import '../../../courses/domain/entities/SemesterCourse.dart';
+import '../../../../../../shared/domain/entities/SemesterCourse.dart';
 import '../../../sections/domain/entities/Section.dart';
-import '../../../teachers/domain/entities/Teacher.dart';
-import '../../domain/entities/TimeTable.dart';
+import '../../../../../../shared/domain/entities/Teacher.dart';
+import '../../../../../../shared/domain/entities/TimeTable.dart';
 import '../../domain/usecases/AddTimetableEntryUseCase.dart';
 import '../../domain/usecases/AllTimetableEntryUseCase.dart';
 import '../../domain/usecases/DeleteTimetableEntryUseCase.dart';

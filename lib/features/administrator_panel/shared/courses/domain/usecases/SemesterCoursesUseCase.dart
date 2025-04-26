@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:digital_academic_portal/core/usecases/UseCase.dart';
-import '../entities/SemesterCourse.dart';
+import '../../../../../../shared/domain/entities/SemesterCourse.dart';
 import '../repositories/CourseRepository.dart';
 
 class AllSemesterCoursesUseCase implements UseCase<List<SemesterCourse>, String>{

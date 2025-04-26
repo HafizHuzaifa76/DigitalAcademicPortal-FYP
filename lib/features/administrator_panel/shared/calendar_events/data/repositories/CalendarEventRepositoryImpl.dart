@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import '../../domain/entities/CalendarEvent.dart';
+import '../../../../../../shared/domain/entities/CalendarEvent.dart';
 import '../../domain/repositories/CalendarEventRepository.dart';
 import '../datasources/CalendarEventRemoteDataSource.dart';
-import '../models/CalendarEventModel.dart';
+import '../../../../../../shared/data/models/CalendarEventModel.dart';
 
 class CalendarEventRepositoryImpl implements CalendarEventRepository {
   final CalendarEventRemoteDataSource remoteDataSource;

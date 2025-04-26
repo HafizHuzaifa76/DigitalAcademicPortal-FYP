@@ -1,6 +1,6 @@
 
 import 'package:dartz/dartz.dart';
-import '../entities/Teacher.dart';
+import '../../../../../../shared/domain/entities/Teacher.dart';
 
 abstract class TeacherRepository{
 

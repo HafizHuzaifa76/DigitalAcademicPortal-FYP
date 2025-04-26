@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/Student.dart'; // Make sure to replace the path accordingly
+import '../../../../../../shared/domain/entities/Student.dart'; // Make sure to replace the path accordingly
 
 class StudentDetailPage extends StatelessWidget {
   final Student student;

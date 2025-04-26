@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/sections/data/models/SectionModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import '../../domain/entities/Student.dart';
-import '../models/StudentModel.dart';
+import '../../../../../../shared/domain/entities/Student.dart';
+import '../../../../../../shared/data/models/StudentModel.dart';
 
 abstract class StudentRemoteDataSource{
   Future<StudentModel> addStudent(StudentModel student);
