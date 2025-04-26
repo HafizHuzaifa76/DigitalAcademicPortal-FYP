@@ -1,13 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:digital_academic_portal/core/utils/Utils.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/courses/data/models/SemesterCourseModel.dart';
+import 'package:digital_academic_portal/shared/data/models/SemesterCourseModel.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/courses/domain/entities/DepartmentCourse.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../../departments/domain/entities/Semester.dart';
-import '../../domain/entities/SemesterCourse.dart';
+import '../../../../../../shared/domain/entities/SemesterCourse.dart';
 import '../controllers/CourseController.dart';
 import 'CourseDetailPage.dart';
 

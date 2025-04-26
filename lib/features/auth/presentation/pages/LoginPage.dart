@@ -208,9 +208,9 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
-                          fixedSize: MaterialStateProperty.all(const Size(330,55)),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          backgroundColor: WidgetStateProperty.all(Theme.of(context).primaryColor),
+                          fixedSize: WidgetStateProperty.all(const Size(330,55)),
+                          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(40.0), // Set your desired border radius
                             ),

@@ -1,6 +1,6 @@
 
 import 'package:dartz/dartz.dart';
-import '../entities/Student.dart';
+import '../../../../../../shared/domain/entities/Student.dart';
 
 abstract class StudentRepository{
 

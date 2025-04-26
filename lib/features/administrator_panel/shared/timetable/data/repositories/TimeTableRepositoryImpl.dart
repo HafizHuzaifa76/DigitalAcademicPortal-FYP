@@ -1,9 +1,9 @@
 
 import 'package:dartz/dartz.dart';
-import '../../domain/entities/TimeTable.dart';
+import '../../../../../../shared/domain/entities/TimeTable.dart';
 import '../../domain/repositories/TimeTableRepository.dart';
 import '../datasources/TimeTableRemoteDataSource.dart';
-import '../models/TimeTableEntryModel.dart';
+import '../../../../../../shared/data/models/TimeTableEntryModel.dart';
 
 class TimeTableRepositoryImpl implements TimeTableRepository{
   final TimeTableRemoteDataSource timeTableRemoteDataSource;
