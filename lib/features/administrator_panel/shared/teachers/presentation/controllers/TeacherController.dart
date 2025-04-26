@@ -14,7 +14,7 @@ import '../../domain/usecases/DeleteTeacherUseCase.dart';
 import '../../domain/usecases/DeptTeacherUseCase.dart';
 import '../../domain/usecases/EditTeacherUseCase.dart';
 
-import '../../domain/entities/Teacher.dart';
+import '../../../../../../shared/domain/entities/Teacher.dart';
 
 class TeacherController extends GetxController{
   final AddTeacherUseCase addTeacherUseCase;

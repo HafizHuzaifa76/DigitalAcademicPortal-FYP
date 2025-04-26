@@ -1,7 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../domain/entities/TimeTable.dart';
-import '../models/TimeTableEntryModel.dart';
+import '../../../../../../shared/domain/entities/TimeTable.dart';
+import '../../../../../../shared/data/models/TimeTableEntryModel.dart';
 
 
 abstract class TimeTableRemoteDataSource{

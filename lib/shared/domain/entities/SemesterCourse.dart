@@ -1,5 +1,5 @@
 
-import 'DepartmentCourse.dart';
+import '../../../features/administrator_panel/shared/courses/domain/entities/DepartmentCourse.dart';
 
 class SemesterCourse extends DepartmentCourse{
   final String courseSemester;

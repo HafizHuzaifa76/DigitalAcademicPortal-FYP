@@ -1,6 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/domain/entities/Teacher.dart';
+import 'package:digital_academic_portal/shared/domain/entities/Teacher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 

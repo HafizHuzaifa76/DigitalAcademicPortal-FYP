@@ -20,19 +20,19 @@ class AuthController extends GetxController {
   Future<void> login() async {
     try {
       isLoading(true);
-      final result = await loginUsecase.execute(User(email: emailController.text, password: passwordController.text));
+      final result = await loginUsecase.execute(
+          User(email: emailController.text, password: passwordController.text));
 
       result.fold((left) {
         String message = left.failure.toString();
         Utils().showErrorSnackBar(
-          'Account Login Error', message,
+          'Account Login Error',
+          message,
         );
       }, (userRole) {
         Utils().showSuccessSnackBar(
-          'Account Login',
-          'Welcome back to your account!'
-        );
-
+            'Account Login', 'Welcome back to your account!');
+        print('user: $userRole');
         Get.offNamed('/$userRole');
       });
     } catch (e) {
@@ -44,4 +44,3 @@ class AuthController extends GetxController {
     }
   }
 }
-
