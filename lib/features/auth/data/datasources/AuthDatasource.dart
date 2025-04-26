@@ -38,9 +38,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // Check for role
       final user = _auth.currentUser!;
       final uid = user.uid;
-      List<String> parts = user.displayName!.split(' | ');
-      String userRole = parts[0];
-      String userDept = parts[1];
+      List<String> parts = user.displayName?.split(' | ') ?? [];
+
+      String userRole = parts.isNotEmpty ? parts[0] : '';
+      String userDept = parts.length > 1 ? parts[1] : '';
 
       // 1. Check if admin (based on UID)
       final adminDoc = await _firestore.collection('admins').doc(uid).get();
@@ -61,8 +62,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> checkIfEmailExists(String email) async {
     try {
       // Fetch the sign-in methods for the email
-      List<String> signInMethods = await FirebaseAuth.instance
-          .fetchSignInMethodsForEmail(email);
+      List<String> signInMethods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
 
       // If the list is not empty, the email is registered
       print(signInMethods.toString());

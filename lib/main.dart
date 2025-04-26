@@ -14,6 +14,7 @@ import 'package:digital_academic_portal/features/administrator_panel/shared/teac
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/bindings/TimeTableBindings.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SectionTimeTablePage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SemesterTimeTablePage.dart';
+import 'package:digital_academic_portal/features/auth/presentation/pages/LoginPage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/bindings/TeacherBindings.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/pages/TeacherDashboardPage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_calendar_events/presentation/bindings/TeacherCalendarEventBinding.dart';
@@ -126,6 +127,10 @@ class MyApp extends StatelessWidget {
       initialBinding: AuthBinding(),
       builder: EasyLoading.init(),
       getPages: [
+        GetPage(
+            name: '/login',
+            page: () => const LoginPage(),
+            binding: AuthBinding()),
         GetPage(
           name: '/admin',
           page: () => const AdministratorDashboardPage(),
