@@ -68,12 +68,12 @@ class EditAssignTeachersParams{
   EditAssignTeachersParams({required this.deptName, required this.semester, required this.section, required this.courseName, required this.teacher});
 }
 
-class FetchAssignedTeachersParams{
+class SectionParams2{
   final String deptName;
   final String semester;
   final String section;
 
-  FetchAssignedTeachersParams({required this.deptName, required this.semester, required this.section});
+  SectionParams2({required this.deptName, required this.semester, required this.section});
 }
 
 class SectionLimitParams{

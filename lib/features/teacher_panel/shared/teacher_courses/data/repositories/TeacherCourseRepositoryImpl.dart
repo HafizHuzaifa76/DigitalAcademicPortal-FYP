@@ -10,9 +10,9 @@ class TeacherCourseRepositoryImpl implements TeacherCourseRepository {
 
   @override
   Future<Either<Fail, List<TeacherCourse>>> getTeacherCourses(
-      String teacherEmail) async {
+      String teacherDept) async {
     try {
-      final courses = await remoteDataSource.getTeacherCourses(teacherEmail);
+      final courses = await remoteDataSource.getTeacherCourses(teacherDept);
       return Right(courses);
     } catch (e) {
       print('Error: $e');

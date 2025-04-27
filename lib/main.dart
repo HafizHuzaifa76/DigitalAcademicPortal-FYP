@@ -15,11 +15,13 @@ import 'package:digital_academic_portal/features/administrator_panel/shared/time
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SectionTimeTablePage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SemesterTimeTablePage.dart';
 import 'package:digital_academic_portal/features/auth/presentation/pages/LoginPage.dart';
-import 'package:digital_academic_portal/features/teacher_panel/presentation/bindings/TeacherBindings.dart';
+import 'package:digital_academic_portal/features/teacher_panel/presentation/bindings/TeacherPanelBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/pages/TeacherDashboardPage.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_attendance/presentation/bindings/TeacherAttendanceBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_calendar_events/presentation/bindings/TeacherCalendarEventBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/bindings/TeacherCourseBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/pages/TeacherCoursesPage.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_timetable/presentation/bindings/TeacherTimeTableBinding.dart';
 import 'package:digital_academic_portal/shared/presentation/pages/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -46,12 +48,11 @@ import 'features/student_panel/shared/student_report/presentation/pages/Stu_Repo
 import 'features/student_panel/shared/student_timetable/presentation/pages/Stu_TimeTablePage.dart';
 import 'features/student_panel/shared/students_Diary/presentation/pages/Stu_Diary.dart';
 import 'features/teacher_panel/shared/teacher_assignment/presentation/pages/Tch_Assignment.dart';
-import 'features/teacher_panel/shared/teacher_attendance/presentation/pages/Tch_Attendance.dart';
+import 'features/teacher_panel/shared/teacher_attendance/presentation/pages/TeacherAttendancePage.dart';
 import 'features/teacher_panel/shared/teacher_calendar_events/presentation/pages/Tch_CalendarEventPage.dart';
-import 'features/teacher_panel/shared/teacher_courses/presentation/pages/Tch_AllCourses.dart';
 import 'features/teacher_panel/shared/teacher_announcement/presentation/pages/TeacherAnnouncementPage.dart';
 import 'features/teacher_panel/shared/teacher_queries/presentation/pages/TeacherQueryPage.dart';
-import 'features/teacher_panel/shared/teacher_timetable/presentation/pages/Tch_TimeTablePage.dart';
+import 'features/teacher_panel/shared/teacher_timetable/presentation/pages/TeacherTimeTablePage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -141,7 +142,7 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/teacherDashboard',
           page: () => const TeacherDashboardPage(),
-          binding: TeacherDashboardBinding(),
+          binding: TeacherPanelBinding(),
         ),
         GetPage(
           name: '/studentDashboard',
@@ -290,8 +291,10 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/teacherTimetablePage',
-          page: () => const Tch_TimeTablePage(),
-          //binding: CalendarEventBinding(),
+          page: () => TeacherTimeTablePage(
+            teacherCNIC: Get.arguments['teacherCNIC'],
+          ),
+          binding: TeacherTimeTableBinding(),
         ),
         GetPage(
           name: '/teacherAnnouncement',
@@ -315,9 +318,9 @@ class MyApp extends StatelessWidget {
           binding: TeacherCourseBinding(),
         ),
         GetPage(
-          name: '/teacher_attendance',
-          page: () => const Tch_Attendance(),
-          //binding: CalendarEventBinding(),
+          name: '/teacherAttendancePage',
+          page: () => TeacherAttendancePage(teacherDept: Get.arguments['teacherDept'],),
+          binding: TeacherAttendanceBinding(),
         ),
       ],
       home: const SplashScreen(),

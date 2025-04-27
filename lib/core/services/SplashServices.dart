@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:digital_academic_portal/features/auth/presentation/pages/LoginPage.dart';
-import 'package:digital_academic_portal/shared/presentation/pages/HomeScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
