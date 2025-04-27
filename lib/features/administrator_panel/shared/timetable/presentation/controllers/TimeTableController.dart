@@ -1,8 +1,8 @@
-
 import 'dart:io';
 
 import 'package:digital_academic_portal/core/utils/Utils.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/domain/usecases/FetchAssignedTeachersUseCase.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/domain/usecases/FetchSectionTimeTable.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/domain/usecases/GetCoursesUseCase.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/domain/usecases/GetSectionsUseCase.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/domain/usecases/GetTeachersUseCase.dart';
@@ -30,6 +30,7 @@ class TimeTableController extends GetxController {
   final DeleteTimeTableUseCase deleteTimeTableUseCase;
   final EditTimeTableUseCase editTimeTableUseCase;
   final AllTimeTablesUseCase allTimeTablesUseCase;
+  final FetchSectionTimeTable fetchSectionTimeTable;
   final GetAssignedTeachersUseCase fetchAssignedTeachersUseCase;
   final GetTimeTableCoursesUseCase getCoursesUseCase;
   final GetTimeTableTeachersUseCase getTeachersUseCase;
@@ -44,6 +45,7 @@ class TimeTableController extends GetxController {
     required this.getCoursesUseCase,
     required this.getTeachersUseCase,
     required this.getSectionsUseCase,
+    required this.fetchSectionTimeTable,
   });
 
   final ScrollController scrollController = ScrollController();
@@ -109,12 +111,14 @@ class TimeTableController extends GetxController {
     }
   }
 
-  Future<void> addTimeTable(List<TimeTableEntry> timeTable, String deptName, String semester) async {
+  Future<void> addTimeTable(
+      List<TimeTableEntry> timeTable, String deptName, String semester) async {
     EasyLoading.show(status: 'Adding...');
 
     try {
       isLoading(true);
-      final result = await addTimeTableUseCase.execute(TimeTableParams(deptName: deptName, semester: semester, timeTable: timeTable));
+      final result = await addTimeTableUseCase.execute(TimeTableParams(
+          deptName: deptName, semester: semester, timeTable: timeTable));
 
       result.fold((left) {
         String message = left.failure.toString();
@@ -123,7 +127,6 @@ class TimeTableController extends GetxController {
           print(message);
         }
       }, (right) {
-
         Get.back();
         Get.back();
         showAllTimeTables(deptName, semester);
@@ -132,7 +135,6 @@ class TimeTableController extends GetxController {
     } finally {
       // clearFields();
       EasyLoading.dismiss();
-
     }
   }
 
@@ -181,22 +183,22 @@ class TimeTableController extends GetxController {
 
   Future<void> showAllTimeTables(String deptName, String semester) async {
     isLoading(true);
-    final result = await allTimeTablesUseCase.execute(SemesterParams(deptName, semester));
+    final result =
+        await allTimeTablesUseCase.execute(SemesterParams(deptName, semester));
 
     result.fold((left) {
       String message = left.failure.toString();
       Utils().showErrorSnackBar('Error', message);
     }, (timeTableList) {
-
-      for(var section in sectionList){
+      for (var section in sectionList) {
         timeTableMap[section.sectionName] = [];
-        timeTableMap[section.sectionName]?.addAll(
-            timeTableList.where((item) => item.section == section.sectionName).toList()
-        );
-
+        timeTableMap[section.sectionName]?.addAll(timeTableList
+            .where((item) => item.section == section.sectionName)
+            .toList());
       }
 
-      timeTableMap.entries.forEach((item)=> print('${item.key}: ${item.value.length}'));
+      // timeTableMap.entries
+      //     .forEach((item) => print('${item.key}: ${item.value.length}'));
       if (kDebugMode) {
         print('TimeTables fetched');
       }
@@ -207,17 +209,14 @@ class TimeTableController extends GetxController {
 
   Future<void> showSectionTimeTable(String deptName, String semester, String section) async {
     isLoading(true);
-    final result = await allTimeTablesUseCase.execute(SemesterParams(deptName, semester));
+    final result = await fetchSectionTimeTable.execute(SectionParams2( deptName: deptName, semester: semester, section: section));
 
     result.fold((left) {
       String message = left.failure.toString();
       Utils().showErrorSnackBar('Error', message);
     }, (timeTableList) {
-
       timeTableMap[section] = [];
-      timeTableMap[section]?.addAll(
-          timeTableList.where((item) => item.section == section).toList()
-      );
+      timeTableMap[section]?.addAll(timeTableList);
 
       if (kDebugMode) {
         print('Section TimeTable fetched');
@@ -227,7 +226,8 @@ class TimeTableController extends GetxController {
     isLoading(false);
   }
 
-  Future<List<TimeTableEntry>> fetchTimeTableFromExcel(String semester, String section) async {
+  Future<List<TimeTableEntry>> fetchTimeTableFromExcel(
+      String semester, String section) async {
     try {
       // Open file picker to select an Excel file
       if (kDebugMode) {
@@ -284,27 +284,25 @@ class TimeTableController extends GetxController {
       for (int i = 1; i < sheet.rows.length; i++) {
         final row = sheet.rows[i];
 
-        var courseCode = row[headerIndexMap["Course Code"]!]?.value.toString() ?? "";
+        var courseCode =
+            row[headerIndexMap["Course Code"]!]?.value.toString() ?? "";
         var rowCourse = coursesIDMap[courseCode];
         if (rowCourse == null) {
           throw Exception('Invalid Course Code');
         }
 
         Teacher teacher = selectedTeachers['$section-${rowCourse.courseName}'];
-        timeTableEntries.add(
-            TimeTableEntry(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                courseCode: courseCode,
-                courseName: rowCourse.courseName,
-                teacherName: teacher.teacherName,
-                teacherCNIC: teacher.teacherCNIC,
-                room: row[headerIndexMap["Room"]!]?.value.toString() ?? "",
-                timeSlot: row[headerIndexMap["Time Slot"]!]?.value.toString() ?? "",
-                day: row[headerIndexMap["Day"]!]?.value.toString() ?? "",
-                section: section,
-                semester: semester
-            )
-        );
+        timeTableEntries.add(TimeTableEntry(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            courseCode: courseCode,
+            courseName: rowCourse.courseName,
+            teacherName: teacher.teacherName,
+            teacherCNIC: teacher.teacherCNIC,
+            room: row[headerIndexMap["Room"]!]?.value.toString() ?? "",
+            timeSlot: row[headerIndexMap["Time Slot"]!]?.value.toString() ?? "",
+            day: row[headerIndexMap["Day"]!]?.value.toString() ?? "",
+            section: section,
+            semester: semester));
       }
 
       validateTimeTable(timeTableEntries, coursesIDMap.keys.toList());
@@ -316,20 +314,26 @@ class TimeTableController extends GetxController {
     }
   }
 
-  void validateTimeTable(List<TimeTableEntry> timetableEntries, List<String> coursesList) {
-    Set<String> timetableCourseCodes = timetableEntries.map((e) => e.courseCode).toSet();
-    List<String> missingCourses = coursesList.where((c) => !timetableCourseCodes.contains(c)).toList();
+  void validateTimeTable(
+      List<TimeTableEntry> timetableEntries, List<String> coursesList) {
+    Set<String> timetableCourseCodes =
+        timetableEntries.map((e) => e.courseCode).toSet();
+    List<String> missingCourses =
+        coursesList.where((c) => !timetableCourseCodes.contains(c)).toList();
 
     // Store errors
     List<String> errors = [];
 
     if (missingCourses.isNotEmpty) {
-      throw Exception("These courses are missing: ${missingCourses.join(', ')}");
-      errors.add("Error: The following courses are missing from the timetable: ${missingCourses.join(', ')}");
+      throw Exception(
+          "These courses are missing: ${missingCourses.join(', ')}");
+      errors.add(
+          "Error: The following courses are missing from the timetable: ${missingCourses.join(', ')}");
     }
 
     // Maps to track conflicts
-    Map<String, String> teacherSchedule = {}; // (teacherCNIC + timeSlot) -> courseCode
+    Map<String, String> teacherSchedule =
+        {}; // (teacherCNIC + timeSlot) -> courseCode
     Map<String, String> roomSchedule = {}; // (room + timeSlot) -> courseCode
 
     for (var entry in timetableEntries) {
@@ -338,14 +342,16 @@ class TimeTableController extends GetxController {
 
       // **Check if a teacher is assigned to multiple classes at the same time**
       if (teacherSchedule.containsKey(teacherKey)) {
-        errors.add("Conflict: Teacher ${entry.teacherName} is assigned to multiple classes at ${entry.timeSlot} on ${entry.day}");
+        errors.add(
+            "Conflict: Teacher ${entry.teacherName} is assigned to multiple classes at ${entry.timeSlot} on ${entry.day}");
       } else {
         teacherSchedule[teacherKey] = entry.courseCode;
       }
 
       // **Check if a room is assigned to multiple classes at the same time**
       if (roomSchedule.containsKey(roomKey)) {
-        errors.add("Conflict: Room ${entry.room} is assigned to multiple classes at ${entry.timeSlot} on ${entry.day}");
+        errors.add(
+            "Conflict: Room ${entry.room} is assigned to multiple classes at ${entry.timeSlot} on ${entry.day}");
       } else {
         roomSchedule[roomKey] = entry.courseCode;
       }
@@ -362,9 +368,9 @@ class TimeTableController extends GetxController {
   }
 
   Future<void> showAllSections(String deptName, String semester) async {
-
     isLoading(true);
-    final result = await getSectionsUseCase.execute(SemesterParams(deptName, semester));
+    final result =
+        await getSectionsUseCase.execute(SemesterParams(deptName, semester));
 
     result.fold((left) {
       String message = left.failure.toString();
@@ -386,13 +392,13 @@ class TimeTableController extends GetxController {
         'Teacher Fetched successfully...',
       );
     });
-
   }
 
-
-  Future<void> fetchAssignedTeacher(String deptName, String semester, String section) async {
+  Future<void> fetchAssignedTeacher(
+      String deptName, String semester, String section) async {
     try {
-      final result = await fetchAssignedTeachersUseCase.execute(FetchAssignedTeachersParams(deptName: deptName, semester: semester, section: section));
+      final result = await fetchAssignedTeachersUseCase.execute(SectionParams2(
+          deptName: deptName, semester: semester, section: section));
       result.fold((left) {
         String message = left.failure.toString();
         Utils().showErrorSnackBar('Error', message);
@@ -400,8 +406,9 @@ class TimeTableController extends GetxController {
         print('assignedTeachersMap: $assignedTeachersMap');
 
         for (var item in assignedTeachersMap.entries) {
-          if(item.value != null) {
-            selectedTeachers['$section-${item.key}'] = teachersIDMap[item.value];
+          if (item.value != null) {
+            selectedTeachers['$section-${item.key}'] =
+                teachersIDMap[item.value];
           } else {
             selectedTeachers['$section-${item.key}'] = 'Not Selected';
           }
@@ -409,8 +416,7 @@ class TimeTableController extends GetxController {
 
         // Get.to(HomeScreen());
       });
-
-    } catch(e) {
+    } catch (e) {
       Utils().showErrorSnackBar('Error', '$e');
       if (kDebugMode) {
         print('error: $e');
@@ -419,12 +425,12 @@ class TimeTableController extends GetxController {
   }
 
   Future<void> showAllSemesterCourses(String deptName, String semester) async {
-    final result = await getCoursesUseCase.execute(SemesterParams(deptName, semester));
+    final result =
+        await getCoursesUseCase.execute(SemesterParams(deptName, semester));
 
     result.fold((left) {
       String message = left.failure.toString();
       Utils().showErrorSnackBar('Error', message);
-
     }, (courses) {
       coursesList.assignAll(courses);
 
@@ -436,7 +442,6 @@ class TimeTableController extends GetxController {
         print('courses fetched');
       }
     });
-
   }
 
   Future<void> showDeptTeachers(String deptName) async {
@@ -445,7 +450,6 @@ class TimeTableController extends GetxController {
     result.fold((left) {
       String message = left.failure.toString();
       Utils().showErrorSnackBar('Error', message);
-
     }, (teachers) {
       teacherList.assignAll(teachers);
       for (var teacher in teachers) {
@@ -456,9 +460,5 @@ class TimeTableController extends GetxController {
         print('teachers fetched');
       }
     });
-
   }
-
 }
-
-

@@ -3,7 +3,7 @@ import '../models/TeacherCourseModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class TeacherCourseRemoteDataSource {
-  Future<List<TeacherCourseModel>> getTeacherCourses(String teacherEmail);
+  Future<List<TeacherCourseModel>> getTeacherCourses(String teacherDept);
 }
 
 class TeacherCourseRemoteDataSourceImpl implements TeacherCourseRemoteDataSource {

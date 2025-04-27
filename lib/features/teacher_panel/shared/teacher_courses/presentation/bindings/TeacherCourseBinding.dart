@@ -2,6 +2,7 @@ import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_co
 import 'package:get/get.dart';
 import '../../data/datasources/TeacherCourseRemoteDataSource.dart';
 import '../../data/repositories/TeacherCourseRepositoryImpl.dart';
+import '../../domain/usecases/FetchAllTeacherCoursesUseCase.dart';
 import '../controllers/TeacherCourseController.dart';
 
 class TeacherCourseBinding extends Bindings {
@@ -15,8 +16,10 @@ class TeacherCourseBinding extends Bindings {
       () => TeacherCourseRepositoryImpl(Get.find()),
     );
 
+    Get.lazyPut(() => FetchAllTeacherCoursesUseCase(Get.find()));
+
     Get.lazyPut<TeacherCourseController>(
-      () => TeacherCourseController(Get.find()),
+      () => TeacherCourseController(fetchAllTeacherCourses: Get.find()),
     );
   }
 }

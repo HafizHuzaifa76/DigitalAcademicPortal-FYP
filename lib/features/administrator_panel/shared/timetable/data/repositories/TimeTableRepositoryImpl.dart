@@ -66,4 +66,18 @@ class TimeTableRepositoryImpl implements TimeTableRepository{
     }
   }
 
+  @override
+  Future<Either<Fail, List<TimeTableEntry>>> showSectionTimeTables(String deptName, String semester, String section) async {
+    try {
+      return Right(await timeTableRemoteDataSource.sectionTimeTable(deptName, semester, section));
+    } catch (e) {
+      String message = e.toString();
+      int startIndex = message.indexOf(']');
+      if (startIndex != -1){
+        message = message.substring(startIndex+2);
+      }
+      return Left(Fail(message));
+    }
+  }
+
 }

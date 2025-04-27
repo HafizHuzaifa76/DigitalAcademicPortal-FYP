@@ -9,6 +9,7 @@ abstract class TimeTableRemoteDataSource{
   Future<TimeTableEntryModel> editTimeTable(TimeTableEntryModel timeTable, String deptName, String semester);
   Future<void> deleteTimeTable(String timeTableID, String deptName, String semester);
   Future<List<TimeTableEntryModel>> allTimeTables(String deptName, String semester);
+  Future<List<TimeTableEntryModel>> sectionTimeTable(String deptName, String semester, String section);
 }
 
 class TimeTableRemoteDataSourceImpl implements TimeTableRemoteDataSource{
@@ -50,5 +51,24 @@ class TimeTableRemoteDataSourceImpl implements TimeTableRemoteDataSource{
     return querySnapshot.docs
         .map((doc) => TimeTableEntryModel.fromMap(doc.id, doc.data())).toList();
   }
+
+  @override
+  Future<List<TimeTableEntryModel>> sectionTimeTable(String deptName, String semester, String section) async {
+    var ref = _firestore
+        .collection('departments')
+        .doc(deptName)
+        .collection('semesters')
+        .doc(semester)
+        .collection('timetable');
+    
+    final querySnapshot = await ref
+        .where('section', isEqualTo: section)
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) => TimeTableEntryModel.fromMap(doc.id, doc.data()))
+        .toList();
+  }
+
 
 }

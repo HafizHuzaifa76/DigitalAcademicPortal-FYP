@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:digital_academic_portal/core/utils/Utils.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/controllers/TeacherDashboardController.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -232,7 +233,17 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/teacher_attendance'),
+                          onPressed: () {
+                            if (controller.teacher.value != null) {
+                              Get.toNamed('/teacherAttendancePage', arguments: {
+                                'teacherDept':
+                                    controller.teacher.value?.teacherDept ?? ''
+                              });
+                            } else {
+                              Utils().showErrorSnackBar('Error',
+                                  'Teacher data not loaded. Please wait or refresh.');
+                            }
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -265,7 +276,17 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/teacherTimetablePage'),
+                          onPressed: () {
+                            if (controller.teacher.value != null) {
+                              Get.toNamed('/teacherTimetablePage', arguments: {
+                                'teacherCNIC':
+                                    controller.teacher.value?.teacherCNIC ?? ''
+                              });
+                            } else {
+                              Utils().showErrorSnackBar('Error',
+                                  'Teacher data not loaded. Please wait or refresh.');
+                            }
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -295,16 +316,21 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/teacher_assignments'),
-                          // onPressed: () => Get.toNamed('/teacherQueryPage'),
+                          onPressed: () {
+                            if (controller.teacher.value != null) {
+                              Get.toNamed('/teacher_assignments');
+                            } else {
+                              Utils().showErrorSnackBar('Error',
+                                  'Teacher data not loaded. Please wait or refresh.');
+                            }
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Image.asset('assets/images/assign.png',
+                              Image.asset('assets/images/gradesbg.png',
                                   height: 60, width: 60),
                               AutoSizeText(
                                 'Assignments',
-                                // 'Queries',
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColorLight,
                                     fontFamily: 'Ubuntu',
@@ -333,10 +359,17 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/teacherCoursesPage',
-                              arguments: {
-                                'teacherDept': controller.teacherDept.value
-                              }),
+                          onPressed: () {
+                            if (controller.teacher.value != null) {
+                              Get.toNamed('/teacherCoursesPage', arguments: {
+                                'teacherDept':
+                                    controller.teacher.value?.teacherDept ?? ''
+                              });
+                            } else {
+                              Utils().showErrorSnackBar('Error',
+                                  'Teacher data not loaded. Please wait or refresh.');
+                            }
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -367,7 +400,14 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/teacherAnnouncement'),
+                          onPressed: () {
+                            if (controller.teacher.value != null) {
+                              Get.toNamed('/teacherAnnouncement');
+                            } else {
+                              Utils().showErrorSnackBar('Error',
+                                  'Teacher data not loaded. Please wait or refresh.');
+                            }
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -399,7 +439,14 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
                           // onPressed: () => Get.to(const TableEventsExample()),
-                          onPressed: () => Get.toNamed('/teacherCalendarPage'),
+                          onPressed: () {
+                            if (controller.teacher.value != null) {
+                              Get.toNamed('/teacherCalendarPage');
+                            } else {
+                              Utils().showErrorSnackBar('Error',
+                                  'Teacher data not loaded. Please wait or refresh.');
+                            }
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -523,8 +570,10 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
           child: Column(
             children: [
               ListTile(
-                title: Text('Hi, ${controller.teacherName.value}!'),
-                subtitle: Text(controller.teacherEmail.value),
+                title: Text(
+                    'Hi, ${controller.teacher.value?.teacherName ?? 'Loading...'}!'),
+                subtitle: Text(
+                    controller.teacher.value?.teacherEmail ?? 'Loading...'),
                 leading: CircleAvatar(
                   backgroundImage: NetworkImage(
                       'https://via.placeholder.com/150'), // User's image URL
@@ -544,7 +593,7 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                 title: const Text('Sign out'),
                 onTap: () {
                   Get.back(); // Close the drawer
-                  Get.offNamed('/login');
+                  Get.off(() => const LoginPage());
                 },
               ),
             ],
