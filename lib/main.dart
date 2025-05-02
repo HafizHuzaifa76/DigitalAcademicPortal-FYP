@@ -15,6 +15,7 @@ import 'package:digital_academic_portal/features/administrator_panel/shared/time
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SectionTimeTablePage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SemesterTimeTablePage.dart';
 import 'package:digital_academic_portal/features/auth/presentation/pages/LoginPage.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_noticeboard/presentation/pages/StudentNoticeBoardPage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/bindings/TeacherPanelBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/pages/TeacherDashboardPage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_attendance/presentation/bindings/TeacherAttendanceBinding.dart';
@@ -43,7 +44,6 @@ import 'features/student_panel/shared/student_attendance/presentation/pages/Stu_
 import 'features/student_panel/shared/student_chatbot/presentation/pages/Stu_ChatBot.dart';
 import 'features/student_panel/shared/student_courses/presentation/pages/Stu_AllCourses.dart';
 import 'features/student_panel/shared/student_grades/presentation/pages/Stu_GradesScreen.dart';
-import 'features/student_panel/shared/student_noticeboard/presentation/pages/Stu_MainNoticeBoardPage.dart';
 import 'features/student_panel/shared/student_report/presentation/pages/Stu_Reports.dart';
 import 'features/student_panel/shared/student_timetable/presentation/pages/Stu_TimeTablePage.dart';
 import 'features/student_panel/shared/students_Diary/presentation/pages/Stu_Diary.dart';
@@ -215,7 +215,7 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/student_NoticeBoard',
-          page: () => const Stu_MainNoticeBoardPage(),
+          page: () => const StudentNoticeBoardPage(),
           //binding: NoticeBoardBinding(),
         ),
         GetPage(
