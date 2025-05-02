@@ -38,31 +38,41 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // Check for role
       final user = _auth.currentUser!;
       final uid = user.uid;
-
-      // 1. Check if admin (based on UID)
+      // 1. Check if admin
       final adminDoc = await _firestore.collection('admins').doc(uid).get();
-      if (adminDoc.exists) return 'admin';
+      if (adminDoc.exists) {
+        return 'admin';
+      }
 
-      // 2. Check for student (by email in all departments)
-      final studentQuery = await _firestore
-          .collectionGroup('students')
-          .where('email', isEqualTo: email)
-          .limit(1)
-          .get();
+      // 2. Check for departments
+      final departmentsSnapshot = await _firestore.collection('departments').get();
 
-      if (studentQuery.docs.isNotEmpty) return 'studentDashboard';
+      for (final dept in departmentsSnapshot.docs) {
+        final studentDoc = await _firestore
+            .collection('departments')
+            .doc(dept.id)
+            .collection('students')
+            .doc(uid)
+            .get();
 
-      // 3. Check for teacher (by email in all departments)
-      final teacherQuery = await _firestore
-          .collectionGroup('teachers')
-          .where('email', isEqualTo: email)
-          .limit(1)
-          .get();
+        if (studentDoc.exists) {
+          return 'studentDashboard';
+        }
 
-      if (teacherQuery.docs.isNotEmpty) return 'teacherDashboard';
+        final teacherDoc = await _firestore
+            .collection('departments')
+            .doc(dept.id)
+            .collection('teachers')
+            .doc(uid)
+            .get();
+
+        if (teacherDoc.exists) {
+          return 'teacherDashboard';
+        }
+      }
 
       // If no role matched
-      return 'admin';
+      throw 'Unknown User, No Data matched';
     } catch (e) {
       print('login error: $e');
       throw e;
