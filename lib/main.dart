@@ -14,7 +14,14 @@ import 'package:digital_academic_portal/features/administrator_panel/shared/teac
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/bindings/TimeTableBindings.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SectionTimeTablePage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SemesterTimeTablePage.dart';
+import 'package:digital_academic_portal/features/auth/presentation/pages/LoginPage.dart';
+import 'package:digital_academic_portal/features/teacher_panel/presentation/bindings/TeacherPanelBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/pages/TeacherDashboardPage.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_attendance/presentation/bindings/TeacherAttendanceBinding.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_calendar_events/presentation/bindings/TeacherCalendarEventBinding.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/bindings/TeacherCourseBinding.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/pages/TeacherCoursesPage.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_timetable/presentation/bindings/TeacherTimeTableBinding.dart';
 import 'package:digital_academic_portal/shared/presentation/pages/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -31,6 +38,7 @@ import 'features/administrator_panel/shared/sections/presentation/pages/SectionL
 import 'features/administrator_panel/shared/student/presentation/pages/AllStudentsPage.dart';
 import 'features/auth/presentation/bindings/AuthBinding.dart';
 import 'features/student_panel/presentation/pages/StudentPanelDashboardPage.dart';
+import 'features/student_panel/shared/student_assignment/presentation/pages/Stu_Assignments.dart';
 import 'features/student_panel/shared/student_attendance/presentation/pages/Stu_Attendance.dart';
 import 'features/student_panel/shared/student_chatbot/presentation/pages/Stu_ChatBot.dart';
 import 'features/student_panel/shared/student_courses/presentation/pages/Stu_AllCourses.dart';
@@ -39,12 +47,13 @@ import 'features/student_panel/shared/student_noticeboard/presentation/pages/Stu
 import 'features/student_panel/shared/student_report/presentation/pages/Stu_Reports.dart';
 import 'features/student_panel/shared/student_timetable/presentation/pages/Stu_TimeTablePage.dart';
 import 'features/student_panel/shared/students_Diary/presentation/pages/Stu_Diary.dart';
-import 'features/teacher_panel/shared/teacher_attendance/presentation/pages/Tch_Attendance.dart';
+import 'features/teacher_panel/shared/teacher_assignment/presentation/pages/Tch_Assignment.dart';
+import 'features/teacher_panel/shared/teacher_attendance/presentation/pages/TeacherAttendancePage.dart';
 import 'features/teacher_panel/shared/teacher_calendar_events/presentation/pages/Tch_CalendarEventPage.dart';
-import 'features/teacher_panel/shared/teacher_courses/presentation/pages/Tch_AllCourses.dart';
-import 'features/teacher_panel/shared/teacher_noticeboard/presentation/pages/Tch_MainNoticeBoardPage.dart';
-import 'features/teacher_panel/shared/teacher_report/presentation/pages/Tch_Reports.dart';
-import 'features/teacher_panel/shared/teacher_timetable/presentation/pages/Tch_TimeTablePage.dart';
+import 'features/teacher_panel/shared/teacher_announcement/presentation/pages/TeacherAnnouncementPage.dart';
+import 'features/teacher_panel/shared/teacher_queries/presentation/pages/TeacherQueryPage.dart';
+import 'features/teacher_panel/shared/teacher_timetable/presentation/pages/TeacherTimeTablePage.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -122,6 +131,10 @@ class MyApp extends StatelessWidget {
       builder: EasyLoading.init(),
       getPages: [
         GetPage(
+            name: '/login',
+            page: () => const LoginPage(),
+            binding: AuthBinding()),
+        GetPage(
           name: '/admin',
           page: () => const AdministratorDashboardPage(),
           // binding: DepartmentBinding()
@@ -129,7 +142,7 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/teacherDashboard',
           page: () => const TeacherDashboardPage(),
-          // binding: DepartmentBinding()
+          binding: TeacherPanelBinding(),
         ),
         GetPage(
           name: '/studentDashboard',
@@ -141,13 +154,14 @@ class MyApp extends StatelessWidget {
             page: () => const DepartmentPage(),
             binding: DepartmentBinding()),
         GetPage(
-            name: '/departmentStudents',
-            page: () => DepartmentStudentsPage(
-                  deptName: Get.arguments['deptName'],
-                  deptCode: Get.arguments['deptCode'],
-                  semesterList: Get.arguments['semesterList'],
-                ),
-            binding: StudentBinding()),
+          name: '/departmentStudents',
+          page: () => DepartmentStudentsPage(
+            deptName: Get.arguments['deptName'],
+            deptCode: Get.arguments['deptCode'],
+            semesterList: Get.arguments['semesterList'],
+          ),
+          binding: StudentBinding(),
+        ),
         GetPage(
             name: '/semesterStudents',
             page: () => SemesterStudentsPage(
@@ -156,9 +170,10 @@ class MyApp extends StatelessWidget {
                 ),
             binding: StudentBinding()),
         GetPage(
-            name: '/allStudents',
-            page: () => const AllStudentsPage(),
-            binding: StudentBinding()),
+          name: '/allStudents',
+          page: () => const AllStudentsPage(),
+          binding: StudentBinding(),
+        ),
         GetPage(
             name: '/deptTeachers',
             page: () => DeptTeacherPage(deptName: Get.arguments['deptName']),
@@ -218,9 +233,9 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/sectionTimeTablePage',
           page: () => SectionTimeTablePage(
-              deptName: Get.arguments['deptName'],
-              semester: Get.arguments['semester'],
-              section: Get.arguments['section'],
+            deptName: Get.arguments['deptName'],
+            semester: Get.arguments['semester'],
+            section: Get.arguments['section'],
           ),
           binding: TimeTableBinding(),
         ),
@@ -236,7 +251,12 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/student_gradesScreen',
-          page: () => const Stu_GradesScreen(),
+          page: () => const GradeScreen(),
+          //binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/pendingAssignment',
+          page: () => AssignmentPage(),
           //binding: CalendarEventBinding(),
         ),
         GetPage(
@@ -256,7 +276,7 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/student_diary',
-          page: () => const Stu_Diary(),
+          page: () => Stu_Diary(),
           //binding: CalendarEventBinding(),
         ),
         GetPage(
@@ -265,34 +285,42 @@ class MyApp extends StatelessWidget {
           //binding: CalendarEventBinding(),
         ),
         GetPage(
-          name: '/teacher_calendarPage',
-          page: () => const Tch_CalendarScreen(),
+          name: '/teacherCalendarPage',
+          page: () => const TeacherCalendarPage(),
+          binding: TeacherCalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/teacherTimetablePage',
+          page: () => TeacherTimeTablePage(
+            teacherCNIC: Get.arguments['teacherCNIC'],
+          ),
+          binding: TeacherTimeTableBinding(),
+        ),
+        GetPage(
+          name: '/teacherAnnouncement',
+          page: () => const TeacherAnnouncementPage(),
           //binding: CalendarEventBinding(),
         ),
         GetPage(
-          name: '/teacher_timetablePage',
-          page: () => const Tch_TimeTablePage(),
+          name: '/teacher_assignments',
+          page: () => const TeacherAssignmentPortal(),
           //binding: CalendarEventBinding(),
         ),
         GetPage(
-          name: '/teacher_NoticeBoard',
-          page: () => const Tch_MainNoticeBoardPage(),
+          name: '/teacherQueryPage',
+          page: () => const TeacherQueryPage(),
           //binding: CalendarEventBinding(),
         ),
         GetPage(
-          name: '/teacher_reportsScreen',
-          page: () => const Tch_Reports(),
-          //binding: CalendarEventBinding(),
+          name: '/teacherCoursesPage',
+          page: () =>
+              TeacherCoursesPage(teacherDept: Get.arguments['teacherDept']),
+          binding: TeacherCourseBinding(),
         ),
         GetPage(
-          name: '/teacher_allCourses',
-          page: () => const Tch_AllCourses(),
-          //binding: CalendarEventBinding(),
-        ),
-        GetPage(
-          name: '/teacher_attendance',
-          page: () => const Tch_Attendance(),
-          //binding: CalendarEventBinding(),
+          name: '/teacherAttendancePage',
+          page: () => TeacherAttendancePage(teacherDept: Get.arguments['teacherDept'],),
+          binding: TeacherAttendanceBinding(),
         ),
       ],
       home: const SplashScreen(),
@@ -360,4 +388,3 @@ class DefaultFirebaseOptions {
       appId: "1:849792758725:web:1239caff45159a088911ac",
       measurementId: "G-YX93SV1GFK");
 }
-

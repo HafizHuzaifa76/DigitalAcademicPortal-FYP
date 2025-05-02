@@ -2,7 +2,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../../../core/usecases/UseCase.dart';
-import '../../../courses/domain/entities/SemesterCourse.dart';
+import '../../../../../../shared/domain/entities/SemesterCourse.dart';
 import '../../../courses/domain/usecases/SemesterCoursesUseCase.dart';
 
 class GetCoursesUseCase implements UseCase<List<SemesterCourse>, SemesterParams>{

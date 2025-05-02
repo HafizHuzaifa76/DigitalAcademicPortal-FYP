@@ -1,4 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:digital_academic_portal/core/utils/Utils.dart';
+import 'package:digital_academic_portal/features/teacher_panel/presentation/controllers/TeacherDashboardController.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,6 +16,8 @@ class TeacherDashboardPage extends StatefulWidget {
 }
 
 class TeacherDashboardPageState extends State<TeacherDashboardPage> {
+  final TeacherDashboardController controller = Get.find();
+
   int count = 0;
   @override
   Widget build(BuildContext context) {
@@ -28,13 +32,16 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
               Container(
                 height: screenSize.height * .25,
                 width: screenSize.width,
-                padding: const EdgeInsets.only(top: 35, left: 15, right: 10, bottom: 3),
+                padding: const EdgeInsets.only(
+                    top: 35, left: 15, right: 10, bottom: 3),
                 decoration: const BoxDecoration(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      height: kIsWeb ?  screenSize.height * 0.25 * 0.3 : screenSize.height * 0.25 * 0.4,
+                      height: kIsWeb
+                          ? screenSize.height * 0.25 * 0.3
+                          : screenSize.height * 0.25 * 0.4,
                       child: Stack(
                         children: [
                           Positioned(
@@ -42,12 +49,14 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               right: 100,
                               left: 100,
                               child: Text(
-                                kIsWeb ? 'Student Dashboard' : 'Student \nDashboard',
-                                style: Theme.of(context).appBarTheme.titleTextStyle,
+                                kIsWeb
+                                    ? 'Teacher Dashboard'
+                                    : 'Teacher \nDashboard',
+                                style: Theme.of(context)
+                                    .appBarTheme
+                                    .titleTextStyle,
                                 textAlign: TextAlign.center,
-                              )
-                          ),
-
+                              )),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,14 +69,14 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                                     child: IconButton(
                                         padding: const EdgeInsets.all(5),
                                         onPressed: () {
-                                          Scaffold.of(context).openDrawer(); // Open drawer on click
+                                          Scaffold.of(context)
+                                              .openDrawer(); // Open drawer on click
                                         },
                                         icon: const Icon(
                                           Icons.sort,
                                           color: Colors.white,
                                           size: 28,
-                                        )
-                                    ),
+                                        )),
                                   );
                                 },
                               ),
@@ -85,7 +94,6 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                         ],
                       ),
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -110,7 +118,6 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                             ),
                           ),
                         ),
-
                         Card(
                           color: const Color(0xFF128771),
                           child: SizedBox(
@@ -129,7 +136,6 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                             ),
                           ),
                         ),
-
                         Card(
                           color: const Color(0xFF128771),
                           surfaceTintColor: Colors.black,
@@ -159,13 +165,14 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                   ],
                 ),
               ),
-
               Container(
                 height: screenSize.height * .75,
                 width: screenSize.width,
                 decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30))),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -216,11 +223,27 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                       children: [
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
-                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                              padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/teacher_attendance'),
+                              backgroundColor: WidgetStatePropertyAll(
+                                  Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(
+                                  Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              padding: const WidgetStatePropertyAll(
+                                  EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 5))),
+                          onPressed: () {
+                            if (controller.teacher.value != null) {
+                              Get.toNamed('/teacherAttendancePage', arguments: {
+                                'teacherDept':
+                                    controller.teacher.value?.teacherDept ?? ''
+                              });
+                            } else {
+                              Utils().showErrorSnackBar('Error',
+                                  'Teacher data not loaded. Please wait or refresh.');
+                            }
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -241,7 +264,6 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                             ],
                           ),
                         ),
-
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
@@ -254,14 +276,22 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/teacher_timetablePage'),
+                          onPressed: () {
+                            if (controller.teacher.value != null) {
+                              Get.toNamed('/teacherTimetablePage', arguments: {
+                                'teacherCNIC':
+                                    controller.teacher.value?.teacherCNIC ?? ''
+                              });
+                            } else {
+                              Utils().showErrorSnackBar('Error',
+                                  'Teacher data not loaded. Please wait or refresh.');
+                            }
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Image.asset(
-                                  'assets/images/timetablebg.png',
-                                  height: 60,
-                                  width: 75),
+                              Image.asset('assets/images/timetablebg.png',
+                                  height: 60, width: 75),
                               AutoSizeText(
                                 'Time Table',
                                 style: TextStyle(
@@ -274,7 +304,6 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                             ],
                           ),
                         ),
-
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
@@ -287,14 +316,21 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/teacher_reportsScreen'),
+                          onPressed: () {
+                            if (controller.teacher.value != null) {
+                              Get.toNamed('/teacher_assignments');
+                            } else {
+                              Utils().showErrorSnackBar('Error',
+                                  'Teacher data not loaded. Please wait or refresh.');
+                            }
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Image.asset('assets/images/gradesbg.png',
                                   height: 60, width: 60),
                               AutoSizeText(
-                                'Reports',
+                                'Assignments',
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColorLight,
                                     fontFamily: 'Ubuntu',
@@ -323,14 +359,22 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/teacher_allCourses'),
+                          onPressed: () {
+                            if (controller.teacher.value != null) {
+                              Get.toNamed('/teacherCoursesPage', arguments: {
+                                'teacherDept':
+                                    controller.teacher.value?.teacherDept ?? ''
+                              });
+                            } else {
+                              Utils().showErrorSnackBar('Error',
+                                  'Teacher data not loaded. Please wait or refresh.');
+                            }
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Image.asset(
-                                  'assets/images/course_icon.png',
-                                  height: 55, width: 60
-                              ),
+                              Image.asset('assets/images/course_icon.png',
+                                  height: 55, width: 60),
                               const SizedBox(height: 3),
                               AutoSizeText(
                                 ' Courses ',
@@ -344,7 +388,6 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                             ],
                           ),
                         ),
-
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
@@ -357,17 +400,22 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/teacher_NoticeBoard'),
+                          onPressed: () {
+                            if (controller.teacher.value != null) {
+                              Get.toNamed('/teacherAnnouncement');
+                            } else {
+                              Utils().showErrorSnackBar('Error',
+                                  'Teacher data not loaded. Please wait or refresh.');
+                            }
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Image.asset(
-                                  'assets/images/noticeboard_icon.png',
-                                  height: 55,
-                                  width: 60),
+                              Image.asset('assets/images/noticeboard_icon.png',
+                                  height: 55, width: 60),
                               const SizedBox(height: 5),
                               AutoSizeText(
-                                'Notice Board',
+                                'Announcement',
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColorDark,
                                     fontFamily: 'Ubuntu',
@@ -378,7 +426,6 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                             ],
                           ),
                         ),
-
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
@@ -392,7 +439,14 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
                           // onPressed: () => Get.to(const TableEventsExample()),
-                          onPressed: () => Get.toNamed('/teacher_calendarPage'),
+                          onPressed: () {
+                            if (controller.teacher.value != null) {
+                              Get.toNamed('/teacherCalendarPage');
+                            } else {
+                              Utils().showErrorSnackBar('Error',
+                                  'Teacher data not loaded. Please wait or refresh.');
+                            }
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -507,19 +561,22 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
         appBarBox.size.width, // Adjust the X position to align with the icon
         70, // Adjust the Y position to the bottom of the AppBar
         appBarBox.size.width, // This would be a maximum width after X position
-        appBarBox.size.height + 200, // This would be a maximum height after Y position
+        appBarBox.size.height +
+            200, // This would be a maximum height after Y position
       ),
       items: [
         PopupMenuItem(
           enabled: false,
           child: Column(
             children: [
-              const ListTile(
-                title: Text('Hi, Hafiz!'),
-                subtitle: Text('hafizm.huzaifa1234gf@gmail.com'),
+              ListTile(
+                title: Text(
+                    'Hi, ${controller.teacher.value?.teacherName ?? 'Loading...'}!'),
+                subtitle: Text(
+                    controller.teacher.value?.teacherEmail ?? 'Loading...'),
                 leading: CircleAvatar(
-                  backgroundImage:
-                  NetworkImage('https://via.placeholder.com/150'), // User's image URL
+                  backgroundImage: NetworkImage(
+                      'https://via.placeholder.com/150'), // User's image URL
                 ),
               ),
               const Divider(),
@@ -536,15 +593,12 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                 title: const Text('Sign out'),
                 onTap: () {
                   Get.back(); // Close the drawer
-                  Get.off(()=> const LoginPage());
+                  Get.off(() => const LoginPage());
                 },
               ),
-
-
             ],
           ),
         ),
-
       ],
       elevation: 8.0,
     );

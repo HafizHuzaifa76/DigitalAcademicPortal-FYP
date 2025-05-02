@@ -1,7 +1,7 @@
 
 import 'package:dartz/dartz.dart';
 
-import '../entities/TimeTable.dart';
+import '../../../../../../shared/domain/entities/TimeTable.dart';
 
 abstract class TimeTableRepository{
 
@@ -9,5 +9,6 @@ abstract class TimeTableRepository{
   Future<Either<Fail, TimeTableEntry>> editTimeTable(TimeTableEntry timeTable, String deptName, String semester);
   Future<Either<Fail, void>> deleteTimeTable(TimeTableEntry timeTable, String deptName, String semester);
   Future<Either<Fail, List<TimeTableEntry>>> showAllTimeTables(String deptName, String semester);
+  Future<Either<Fail, List<TimeTableEntry>>> showSectionTimeTables(String deptName, String semester, String section);
 
 }

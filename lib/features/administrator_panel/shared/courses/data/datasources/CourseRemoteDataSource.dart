@@ -2,10 +2,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/courses/data/models/DeptCourseModel.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/courses/domain/entities/DepartmentCourse.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/courses/domain/entities/SemesterCourse.dart';
+import 'package:digital_academic_portal/shared/domain/entities/SemesterCourse.dart';
 import 'package:flutter/material.dart';
 
-import '../models/SemesterCourseModel.dart';
+import '../../../../../../shared/data/models/SemesterCourseModel.dart';
 
 abstract class CourseRemoteDataSource {
   Future<DeptCourseModel> addCourse(String deptName, DeptCourseModel course);

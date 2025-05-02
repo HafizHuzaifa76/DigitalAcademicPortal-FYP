@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/courses/domain/entities/DepartmentCourse.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/domain/entities/Teacher.dart';
+import 'package:digital_academic_portal/shared/domain/entities/Teacher.dart';
 
-import '../../features/administrator_panel/shared/courses/domain/entities/SemesterCourse.dart';
+import '../../shared/domain/entities/SemesterCourse.dart';
 import '../../features/administrator_panel/shared/departments/domain/entities/Semester.dart';
 import '../../features/administrator_panel/shared/sections/domain/entities/Section.dart';
-import '../../features/administrator_panel/shared/student/domain/entities/Student.dart';
-import '../../features/administrator_panel/shared/timetable/domain/entities/TimeTable.dart';
+import '../../shared/domain/entities/Student.dart';
+import '../../shared/domain/entities/TimeTable.dart';
 
 abstract class UseCase<Type, Params> {
   Future<Either<Fail, Type>> execute(Params params);
@@ -68,12 +68,12 @@ class EditAssignTeachersParams{
   EditAssignTeachersParams({required this.deptName, required this.semester, required this.section, required this.courseName, required this.teacher});
 }
 
-class FetchAssignedTeachersParams{
+class SectionParams2{
   final String deptName;
   final String semester;
   final String section;
 
-  FetchAssignedTeachersParams({required this.deptName, required this.semester, required this.section});
+  SectionParams2({required this.deptName, required this.semester, required this.section});
 }
 
 class SectionLimitParams{

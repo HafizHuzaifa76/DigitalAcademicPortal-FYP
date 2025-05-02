@@ -1,9 +1,9 @@
 
 import 'package:dartz/dartz.dart';
-import '../../domain/entities/Student.dart';
+import '../../../../../../shared/domain/entities/Student.dart';
 import '../../domain/repositories/StudentRepository.dart';
 import '../datasources/StudentRemoteDataSource.dart';
-import '../models/StudentModel.dart';
+import '../../../../../../shared/data/models/StudentModel.dart';
 
 class StudentRepositoryImpl implements StudentRepository{
   final StudentRemoteDataSource studentRemoteDataSource;

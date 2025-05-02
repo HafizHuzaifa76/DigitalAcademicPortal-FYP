@@ -1,11 +1,11 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/domain/entities/Teacher.dart';
+import 'package:digital_academic_portal/shared/domain/entities/Teacher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../models/TeacherModel.dart';
+import '../../../../../../shared/data/models/TeacherModel.dart';
 
 abstract class TeacherRemoteDataSource{
   Future<TeacherModel> addTeacher(TeacherModel teacher);
@@ -48,6 +48,9 @@ class TeacherRemoteDataSourceImpl implements TeacherRemoteDataSource{
         email: teacher.teacherEmail,
         password: teacher.teacherCNIC,
       );
+
+      final String displayName = 'teacher | ${teacher.teacherDept} | ${teacher.teacherName}';
+      await userCredential.user!.updateDisplayName(displayName);
 
       var ref = _firestore.collection('departments').doc(teacher.teacherDept)
           .collection('teachers').doc(teacher.teacherCNIC);

@@ -64,7 +64,14 @@ class StudentDrawer extends StatelessWidget {
             },
           ),
           const Divider(),
-
+          ListTile(
+            leading: Image.asset('assets/images/assign.png', height: 30, width: 30),
+            title: Text('Pending Assignments', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
+            onTap: () {
+              Get.toNamed('/pendingAssignment');
+            },
+          ),
+          const Divider(),
           ListTile(
             leading: Image.asset('assets/images/students_icon.png', height: 30, width: 30),
             title: Text('Students', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),

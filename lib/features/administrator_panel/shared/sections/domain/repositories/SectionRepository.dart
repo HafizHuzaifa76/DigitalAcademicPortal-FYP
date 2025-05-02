@@ -1,6 +1,6 @@
 
 import 'package:dartz/dartz.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/domain/entities/Teacher.dart';
+import 'package:digital_academic_portal/shared/domain/entities/Teacher.dart';
 import '../entities/Section.dart';
 
 abstract class SectionRepository{
