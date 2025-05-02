@@ -208,9 +208,9 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
-                          fixedSize: MaterialStateProperty.all(const Size(330,55)),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          backgroundColor: WidgetStateProperty.all(Theme.of(context).primaryColor),
+                          fixedSize: WidgetStateProperty.all(const Size(330,55)),
+                          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(40.0), // Set your desired border radius
                             ),
@@ -222,25 +222,25 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 15.0),
 
-                    OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                            fixedSize: const Size(200, 0)
-                        ),
-                        onPressed: (){
-                          Get.offNamed('/studentDashboard');
-                        },
-                        child: const Text('Student Portal', style: TextStyle(fontWeight: FontWeight.bold),)
-                    ),
-
-                    OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                            fixedSize: const Size(200, 0)
-                        ),
-                        onPressed: (){
-                          Get.offNamed('/teacherDashboard');
-                        },
-                        child: const Text('Teacher Portal', style: TextStyle(fontWeight: FontWeight.bold),)
-                    ),
+                    // OutlinedButton(
+                    //     style: OutlinedButton.styleFrom(
+                    //         fixedSize: const Size(200, 0)
+                    //     ),
+                    //     onPressed: (){
+                    //       Get.offNamed('/studentDashboard');
+                    //     },
+                    //     child: const Text('Student Portal', style: TextStyle(fontWeight: FontWeight.bold),)
+                    // ),
+                    //
+                    // OutlinedButton(
+                    //     style: OutlinedButton.styleFrom(
+                    //         fixedSize: const Size(200, 0)
+                    //     ),
+                    //     onPressed: (){
+                    //       Get.offNamed('/teacherDashboard');
+                    //     },
+                    //     child: const Text('Teacher Portal', style: TextStyle(fontWeight: FontWeight.bold),)
+                    // ),
                   ],
                 ),
 

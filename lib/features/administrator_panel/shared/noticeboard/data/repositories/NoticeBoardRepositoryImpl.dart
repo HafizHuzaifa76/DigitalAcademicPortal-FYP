@@ -1,9 +1,9 @@
 
 import 'package:dartz/dartz.dart';
-import '../../domain/entities/MainNotice.dart';
+import '../../../../../../shared/domain/entities/MainNotice.dart';
 import '../../domain/repositories/NoticeBoardRepository.dart';
 import '../datasources/NoticeBoardRemoteDataSource.dart';
-import '../models/NoticeBoardModel.dart';
+import '../../../../../../shared/data/models/NoticeBoardModel.dart';
 
 class NoticeRepositoryImpl implements NoticeRepository{
   final NoticeRemoteDataSource noticeRemoteDataSource;

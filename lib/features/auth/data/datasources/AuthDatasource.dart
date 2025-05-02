@@ -38,38 +38,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // Check for role
       final user = _auth.currentUser!;
       final uid = user.uid;
-      // 1. Check if admin
+      List<String> parts = user.displayName?.split(' | ') ?? [];
+
+      String userRole = parts.isNotEmpty ? parts[0] : '';
+      String userDept = parts.length > 1 ? parts[1] : '';
+
+      // 1. Check if admin (based on UID)
       final adminDoc = await _firestore.collection('admins').doc(uid).get();
       if (adminDoc.exists) {
         return 'admin';
       }
 
-      // 2. Check for departments
-      final departmentsSnapshot = await _firestore.collection('departments').get();
+      if (userRole.contains('student')) return 'studentDashboard';
 
-      for (final dept in departmentsSnapshot.docs) {
-        final studentDoc = await _firestore
-            .collection('departments')
-            .doc(dept.id)
-            .collection('students')
-            .doc(uid)
-            .get();
-
-        if (studentDoc.exists) {
-          return 'studentDashboard';
-        }
-
-        final teacherDoc = await _firestore
-            .collection('departments')
-            .doc(dept.id)
-            .collection('teachers')
-            .doc(uid)
-            .get();
-
-        if (teacherDoc.exists) {
-          return 'teacherDashboard';
-        }
-      }
+      if (userRole.contains('teacher')) return 'teacherDashboard';
 
       // If no role matched
       throw 'Unknown User, No Data matched';
@@ -82,8 +64,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> checkIfEmailExists(String email) async {
     try {
       // Fetch the sign-in methods for the email
-      List<String> signInMethods = await FirebaseAuth.instance
-          .fetchSignInMethodsForEmail(email);
+      List<String> signInMethods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
 
       // If the list is not empty, the email is registered
       print(signInMethods.toString());

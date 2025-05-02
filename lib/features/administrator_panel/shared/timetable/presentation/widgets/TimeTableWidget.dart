@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../domain/entities/TimeTable.dart';
+import '../../../../../../shared/domain/entities/TimeTable.dart';
 import '../controllers/TimeTableController.dart';
 import 'EditTimeTableEntryForm.dart';
 

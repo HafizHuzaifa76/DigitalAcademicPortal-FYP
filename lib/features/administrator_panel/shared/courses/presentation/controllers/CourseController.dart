@@ -17,7 +17,7 @@ import '../../domain/usecases/AllCourseUseCase.dart';
 import '../../domain/usecases/DeleteCourseUseCase.dart';
 import '../../domain/usecases/DeptCoursesUseCase.dart';
 import '../../domain/usecases/EditCourseUseCase.dart';
-import '../../domain/entities/SemesterCourse.dart';
+import '../../../../../../shared/domain/entities/SemesterCourse.dart';
 import '../../domain/usecases/UpdateCourseInSemesterUseCase.dart';
 
 class CourseController extends GetxController{

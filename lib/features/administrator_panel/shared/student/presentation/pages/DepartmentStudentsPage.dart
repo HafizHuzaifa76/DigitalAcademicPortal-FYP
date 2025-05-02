@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import '../../domain/entities/Student.dart';
+import '../../../../../../shared/domain/entities/Student.dart';
 import '../controllers/StudentController.dart';
 
 class DepartmentStudentsPage extends StatefulWidget {

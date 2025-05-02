@@ -1,11 +1,10 @@
-
 import 'package:digital_academic_portal/core/usecases/UseCase.dart';
 import 'package:digital_academic_portal/core/utils/Utils.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/courses/domain/entities/SemesterCourse.dart';
+import 'package:digital_academic_portal/shared/domain/entities/SemesterCourse.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/sections/domain/usecases/AssignTeachersUseCase.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/sections/domain/usecases/GetCoursesUseCase.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/sections/domain/usecases/GetTeachersUseCase.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/domain/entities/Teacher.dart';
+import 'package:digital_academic_portal/shared/domain/entities/Teacher.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,7 @@ import '../../domain/usecases/EditSectionUseCase.dart';
 
 import '../../domain/entities/Section.dart';
 
-class SectionController extends GetxController{
+class SectionController extends GetxController {
   final AddSectionUseCase addSectionUseCase;
   final DeleteSectionUseCase deleteSectionUseCase;
   final EditSectionUseCase editSectionUseCase;
@@ -29,7 +28,16 @@ class SectionController extends GetxController{
   final GetCoursesUseCase getCoursesUseCase;
   final GetTeachersUseCase getTeachersUseCase;
 
-  SectionController({required this.addSectionUseCase, required this.deleteSectionUseCase, required this.getCoursesUseCase, required this.getTeachersUseCase, required this.editSectionUseCase, required this.allSectionsUseCase, required this.assignTeachersUseCase, required this.editAssignTeachersUseCase, required this.fetchAssignedTeachersUseCase});
+  SectionController(
+      {required this.addSectionUseCase,
+      required this.deleteSectionUseCase,
+      required this.getCoursesUseCase,
+      required this.getTeachersUseCase,
+      required this.editSectionUseCase,
+      required this.allSectionsUseCase,
+      required this.assignTeachersUseCase,
+      required this.editAssignTeachersUseCase,
+      required this.fetchAssignedTeachersUseCase});
 
   var totalSemestersController = TextEditingController();
   var totalStudentsController = TextEditingController();
@@ -53,7 +61,10 @@ class SectionController extends GetxController{
       filteredSectionList.assignAll(sectionList);
     } else {
       filteredSectionList.assignAll(
-        sectionList.where((section) => section.sectionName.toLowerCase().contains(query.toLowerCase())).toList(),
+        sectionList
+            .where((section) =>
+                section.sectionName.toLowerCase().contains(query.toLowerCase()))
+            .toList(),
       );
     }
   }
@@ -74,12 +85,13 @@ class SectionController extends GetxController{
         sectionID: 'sectionID',
         sectionName: 'sectionName',
         shift: 'shift',
-        totalStudents: 0, studentList: []
-    );
+        totalStudents: 0,
+        studentList: []);
 
     try {
       isLoading(true);
-      final result = await addSectionUseCase.execute(SectionParams(deptName: deptName, semester: semester, section: newSection));
+      final result = await addSectionUseCase.execute(SectionParams(
+          deptName: deptName, semester: semester, section: newSection));
 
       result.fold((left) {
         String message = left.failure.toString();
@@ -91,16 +103,17 @@ class SectionController extends GetxController{
         );
         // Get.to(HomeScreen());
       });
-
     } finally {
       isLoading(false);
     }
   }
 
-  Future<void> editSection(String deptName, String semester, Section newSection) async {
+  Future<void> editSection(
+      String deptName, String semester, Section newSection) async {
     try {
       isLoading(true);
-      final result = await editSectionUseCase.execute(SectionParams(deptName: deptName, semester: semester, section: newSection));
+      final result = await editSectionUseCase.execute(SectionParams(
+          deptName: deptName, semester: semester, section: newSection));
 
       result.fold((left) {
         String message = left.failure.toString();
@@ -112,17 +125,17 @@ class SectionController extends GetxController{
         );
         // Get.to(HomeScreen());
       });
-
     } finally {
       isLoading(false);
     }
   }
 
-  Future<void> deleteSection(String deptName, String semester, Section section) async {
-
+  Future<void> deleteSection(
+      String deptName, String semester, Section section) async {
     try {
       isLoading(true);
-      final result = await deleteSectionUseCase.execute(SectionParams(deptName: deptName, semester: semester, section: section));
+      final result = await deleteSectionUseCase.execute(SectionParams(
+          deptName: deptName, semester: semester, section: section));
 
       result.fold((left) {
         String message = left.failure.toString();
@@ -134,29 +147,28 @@ class SectionController extends GetxController{
         );
         // Get.to(HomeScreen());
       });
-
     } finally {
       isLoading(false);
     }
   }
 
   Future<void> showAllSections(String deptName, String semester) async {
-      isLoading(true);
-      final result = await allSectionsUseCase.execute(SemesterParams(deptName, semester));
+    isLoading(true);
+    final result =
+        await allSectionsUseCase.execute(SemesterParams(deptName, semester));
 
-      result.fold((left) {
-        String message = left.failure.toString();
-        Utils().showErrorSnackBar('Error', message);
+    result.fold((left) {
+      String message = left.failure.toString();
+      Utils().showErrorSnackBar('Error', message);
+    }, (sections) {
+      sectionList.assignAll(sections);
+      filteredSectionList.assignAll(sections);
+      if (kDebugMode) {
+        print('sections fetched');
+      }
+    });
 
-      }, (sections) {
-        sectionList.assignAll(sections);
-        filteredSectionList.assignAll(sections);
-        if (kDebugMode) {
-          print('sections fetched');
-        }
-      });
-
-      isLoading(false);
+    isLoading(false);
   }
 
   void changeCourseTeacher(String courseCode, Teacher teacher) {
@@ -164,11 +176,16 @@ class SectionController extends GetxController{
     print(selectedTeachers);
   }
 
-  Future<void> assignTeacherToCourse(String deptName, String semester, String section) async {
+  Future<void> assignTeacherToCourse(
+      String deptName, String semester, String section) async {
     try {
       isLoading(true);
       EasyLoading.show(status: 'Assigning...');
-      final result = await assignTeachersUseCase.execute(AssignTeachersParams(deptName: deptName, semester: semester, section: section, coursesTeachersMap: selectedTeachers));
+      final result = await assignTeachersUseCase.execute(AssignTeachersParams(
+          deptName: deptName,
+          semester: semester,
+          section: section,
+          coursesTeachersMap: selectedTeachers));
 
       result.fold((left) {
         String message = left.failure.toString();
@@ -180,17 +197,23 @@ class SectionController extends GetxController{
         );
         // Get.to(HomeScreen());
       });
-
     } finally {
       EasyLoading.dismiss(animation: true);
       isLoading(false);
     }
   }
 
-  Future<void> editAssignedTeacher(String deptName, String semester, String section, String courseName, Teacher teacher) async {
+  Future<void> editAssignedTeacher(String deptName, String semester,
+      String section, String courseName, Teacher teacher) async {
     try {
       EasyLoading.show(status: 'Updating...');
-      final result = await editAssignTeachersUseCase.execute(EditAssignTeachersParams(deptName: deptName, semester: semester, section: section, courseName: courseName, teacher: teacher));
+      final result = await editAssignTeachersUseCase.execute(
+          EditAssignTeachersParams(
+              deptName: deptName,
+              semester: semester,
+              section: section,
+              courseName: courseName,
+              teacher: teacher));
 
       result.fold((left) {
         String message = left.failure.toString();
@@ -205,23 +228,23 @@ class SectionController extends GetxController{
         );
         // Get.to(HomeScreen());
       });
-
     } finally {
       EasyLoading.dismiss(animation: true);
       isLoading(false);
     }
   }
 
-  Future<void> fetchAssignedTeacher(String deptName, String semester, String section) async {
+  Future<void> fetchAssignedTeacher(
+      String deptName, String semester, String section) async {
     try {
-      final result = await fetchAssignedTeachersUseCase.execute(FetchAssignedTeachersParams(deptName: deptName, semester: semester, section: section));
+      final result = await fetchAssignedTeachersUseCase.execute(SectionParams2(
+          deptName: deptName, semester: semester, section: section));
 
       result.fold((left) {
         String message = left.failure.toString();
         Utils().showErrorSnackBar('Error', message);
       }, (assignedTeachersMap) {
-
-        if(assignedTeachersMap.isNotEmpty) {
+        if (assignedTeachersMap.isNotEmpty) {
           isEdit.value = true;
         }
         for (var item in assignedTeachersMap.entries) {
@@ -234,7 +257,6 @@ class SectionController extends GetxController{
         );
         // Get.to(HomeScreen());
       });
-
     } finally {
       EasyLoading.dismiss(animation: true);
       isLoading(false);
@@ -242,38 +264,35 @@ class SectionController extends GetxController{
   }
 
   Future<void> showAllSemesterCourses(String deptName, String semester) async {
-      final result = await getCoursesUseCase.execute(SemesterParams(deptName, semester));
+    final result =
+        await getCoursesUseCase.execute(SemesterParams(deptName, semester));
 
-      result.fold((left) {
-        String message = left.failure.toString();
-        Utils().showErrorSnackBar('Error', message);
-
-      }, (courses) {
-        coursesList.assignAll(courses);
-        if (kDebugMode) {
-          print('courses fetched');
-        }
-      });
-
+    result.fold((left) {
+      String message = left.failure.toString();
+      Utils().showErrorSnackBar('Error', message);
+    }, (courses) {
+      coursesList.assignAll(courses);
+      if (kDebugMode) {
+        print('courses fetched');
+      }
+    });
   }
 
   Future<void> showDeptTeachers(String deptName) async {
-      final result = await getTeachersUseCase.execute(deptName);
+    final result = await getTeachersUseCase.execute(deptName);
 
-      result.fold((left) {
-        String message = left.failure.toString();
-        Utils().showErrorSnackBar('Error', message);
+    result.fold((left) {
+      String message = left.failure.toString();
+      Utils().showErrorSnackBar('Error', message);
+    }, (teachers) {
+      teacherList.assignAll(teachers);
+      for (var teacher in teachers) {
+        teachersIDMap[teacher.teacherCNIC] = teacher;
+      }
 
-      }, (teachers) {
-        teacherList.assignAll(teachers);
-        for (var teacher in teachers) {
-          teachersIDMap[teacher.teacherCNIC] = teacher;
-        }
-
-        if (kDebugMode) {
-          print('teachers fetched');
-        }
-      });
-
+      if (kDebugMode) {
+        print('teachers fetched');
+      }
+    });
   }
 }

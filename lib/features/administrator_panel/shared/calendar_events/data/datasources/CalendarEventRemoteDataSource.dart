@@ -1,7 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../domain/entities/CalendarEvent.dart';
-import '../models/CalendarEventModel.dart';
+import '../../../../../../shared/domain/entities/CalendarEvent.dart';
+import '../../../../../../shared/data/models/CalendarEventModel.dart';
 
 abstract class CalendarEventRemoteDataSource{
   Future<CalendarEventModel> addCalendarEvent(CalendarEventModel department);

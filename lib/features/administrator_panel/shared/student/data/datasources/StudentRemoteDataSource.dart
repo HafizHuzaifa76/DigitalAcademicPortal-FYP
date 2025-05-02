@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/sections/data/models/SectionModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import '../../domain/entities/Student.dart';
-import '../models/StudentModel.dart';
+import '../../../../../../shared/domain/entities/Student.dart';
+import '../../../../../../shared/data/models/StudentModel.dart';
 
 abstract class StudentRemoteDataSource{
   Future<StudentModel> addStudent(StudentModel student);
@@ -51,10 +51,13 @@ class StudentRemoteDataSourceImpl implements StudentRemoteDataSource{
     return student;
   }
 
-  void _createStudentAccount(StudentModel student) {
+  Future<void> _createStudentAccount(StudentModel student) async {
     var deptRef = _firestore.collection('departments').doc(student.studentDepartment);
     var studentRef = deptRef.collection('students').doc(student.studentRollNo);
-    _auth.createUserWithEmailAndPassword(email: student.studentEmail, password: student.studentCNIC);
+    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: student.studentEmail, password: student.studentCNIC);
+    final String displayName = 'student | ${student.studentDepartment} | ${student.studentName}';
+
+    await userCredential.user!.updateDisplayName(displayName);
 
     studentRef.set(student.toMap()).then((value) {
       _createCompulsoryCourseSections(student, student.studentSection);
