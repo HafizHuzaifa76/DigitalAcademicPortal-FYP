@@ -15,6 +15,8 @@ import 'package:digital_academic_portal/features/administrator_panel/shared/time
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SectionTimeTablePage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SemesterTimeTablePage.dart';
 import 'package:digital_academic_portal/features/auth/presentation/pages/LoginPage.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_calendar_events/presentation/bindings/StudentCalendarEventBinding.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_calendar_events/presentation/pages/StudentCalendarPage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/bindings/TeacherPanelBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/pages/TeacherDashboardPage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_attendance/presentation/bindings/TeacherAttendanceBinding.dart';
@@ -28,7 +30,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:digital_academic_portal/features/student_panel/shared/student_calendar_events/presentation/pages/Stu_CalendarEventPage.dart';
 import 'features/administrator_panel/shared/courses/presentation/pages/DepartmentCoursePage.dart';
 import 'features/administrator_panel/shared/courses/presentation/pages/SemesterCoursePage.dart';
 import 'features/administrator_panel/shared/departments/presentation/bindings/DepartmentBindings.dart';
@@ -241,8 +242,8 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/student_calendarPage',
-          page: () => const Stu_CalendarScreen(),
-          //binding: CalendarEventBinding(),
+          page: () => const StudentCalendarPage(),
+          binding: StudentCalendarEventBinding(),
         ),
         GetPage(
           name: '/student_timetablePage',
@@ -319,7 +320,9 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/teacherAttendancePage',
-          page: () => TeacherAttendancePage(teacherDept: Get.arguments['teacherDept'],),
+          page: () => TeacherAttendancePage(
+            teacherDept: Get.arguments['teacherDept'],
+          ),
           binding: TeacherAttendanceBinding(),
         ),
       ],
