@@ -319,7 +319,7 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/teacherAttendancePage',
-          page: () => TeacherAttendancePage(teacherDept: Get.arguments['teacherDept'],),
+          page: () => const TeacherAttendancePage(teacherDept: '',),
           binding: TeacherAttendanceBinding(),
         ),
       ],
