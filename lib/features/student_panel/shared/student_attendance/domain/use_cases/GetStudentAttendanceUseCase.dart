@@ -4,19 +4,20 @@ import '../entities/StudentAttendance.dart';
 import '../repositories/StudentAttendanceRepository.dart';
 
 class GetStudentAttendanceParams {
-  final String studentId;
   final String courseId;
 
-  GetStudentAttendanceParams({required this.studentId, required this.courseId});
+  GetStudentAttendanceParams({required this.courseId});
 }
 
-class GetStudentAttendanceUseCase implements UseCase<List<StudentAttendance>, GetStudentAttendanceParams> {
+class GetStudentAttendanceUseCase
+    implements UseCase<List<StudentAttendance>, GetStudentAttendanceParams> {
   final StudentAttendanceRepository repository;
 
   GetStudentAttendanceUseCase(this.repository);
 
   @override
-  Future<Either<Fail, List<StudentAttendance>>> execute(GetStudentAttendanceParams params) async {
-    return await repository.getStudentAttendance(params.studentId, params.courseId);
+  Future<Either<Fail, List<StudentAttendance>>> execute(
+      GetStudentAttendanceParams params) async {
+    return await repository.getStudentAttendance(params.courseId);
   }
 }
