@@ -6,7 +6,8 @@ abstract class TeacherCourseRemoteDataSource {
   Future<List<TeacherCourseModel>> getTeacherCourses(String teacherDept);
 }
 
-class TeacherCourseRemoteDataSourceImpl implements TeacherCourseRemoteDataSource {
+class TeacherCourseRemoteDataSourceImpl
+    implements TeacherCourseRemoteDataSource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -19,7 +20,7 @@ class TeacherCourseRemoteDataSourceImpl implements TeacherCourseRemoteDataSource
       }
 
       List<TeacherCourseModel> allCourses = [];
-      
+
       final QuerySnapshot teacherSnapshot = await _firestore
           .collection('departments')
           .doc(teacherDept)
@@ -30,17 +31,18 @@ class TeacherCourseRemoteDataSourceImpl implements TeacherCourseRemoteDataSource
       // If teacher found in this department
       if (teacherSnapshot.docs.isNotEmpty) {
         // Get all sections for this teacher
-        final QuerySnapshot sectionsSnapshot = await teacherSnapshot.docs.first.reference
+        final QuerySnapshot sectionsSnapshot = await teacherSnapshot
+            .docs.first.reference
             .collection('sections')
             .get();
 
         // Iterate through each section
         for (var section in sectionsSnapshot.docs) {
           // Get courses in this section
-            Map<String, dynamic> sectionData = section.data() as Map<String, dynamic>;
-          final QuerySnapshot coursesSnapshot = await section.reference
-              .collection('courses')
-              .get();
+          Map<String, dynamic> sectionData =
+              section.data() as Map<String, dynamic>;
+          final QuerySnapshot coursesSnapshot =
+              await section.reference.collection('courses').get();
 
           // Add courses to the list
           final sectionCourses = coursesSnapshot.docs.map((doc) {

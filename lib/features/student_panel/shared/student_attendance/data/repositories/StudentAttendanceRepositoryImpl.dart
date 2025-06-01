@@ -9,9 +9,10 @@ class StudentAttendanceRepositoryImpl implements StudentAttendanceRepository {
   StudentAttendanceRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Fail, List<StudentAttendance>>> getStudentAttendance(String studentId, String courseId) async {
+  Future<Either<Fail, List<StudentAttendance>>> getStudentAttendance(
+      String courseId) async {
     try {
-      final result = await remoteDataSource.getStudentAttendance(studentId, courseId);
+      final result = await remoteDataSource.getStudentAttendance(courseId);
       return Right(result);
     } catch (e) {
       return Left(Fail(e.toString()));
@@ -19,9 +20,9 @@ class StudentAttendanceRepositoryImpl implements StudentAttendanceRepository {
   }
 
   @override
-  Future<Either<Fail, List<StudentAttendance>>> getAllAttendance(String studentId) async {
+  Future<Either<Fail, List<StudentAttendance>>> getAllAttendance() async {
     try {
-      final result = await remoteDataSource.getAllAttendance(studentId);
+      final result = await remoteDataSource.getAllAttendance();
       return Right(result);
     } catch (e) {
       return Left(Fail(e.toString()));

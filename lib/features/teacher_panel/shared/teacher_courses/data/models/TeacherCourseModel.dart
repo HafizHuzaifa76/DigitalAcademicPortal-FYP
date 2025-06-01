@@ -9,6 +9,7 @@ class TeacherCourseModel extends TeacherCourse {
     required super.courseType,
     required super.courseCreditHours,
     required super.courseSection,
+    required super.studentIds,
   });
 
   factory TeacherCourseModel.fromMap(Map<String, dynamic> map) {
@@ -20,6 +21,7 @@ class TeacherCourseModel extends TeacherCourse {
       courseSemester: map['courseSemester'] as String,
       courseCreditHours: map['courseCreditHours'].toInt(),
       courseSection: map['courseSection'] as String,
+      studentIds: map['studentIds'] as List<dynamic>,
     );
   }
 
@@ -32,6 +34,7 @@ class TeacherCourseModel extends TeacherCourse {
       'courseCreditHours': courseCreditHours,
       'courseSection': courseSection,
       'courseType': courseType,
+      'studentIds': studentIds,
     };
   }
 }

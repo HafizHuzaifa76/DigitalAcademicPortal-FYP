@@ -30,15 +30,16 @@ class StudentAttendanceController extends GetxController {
 
   Future<void> loadStudentCourses() async {
     try {
-      if(student == null){
+      if (student == null) {
         throw Exception('Student is null');
       }
       isLoading(true);
-      final result = await getStudentCoursesUseCase.execute(student!.studentDepartment); 
-      
+      final result =
+          await getStudentCoursesUseCase.execute(student!.studentDepartment);
+
       result.fold(
         (failure) {
-          Get.snackbar('Error', failure.toString(),
+          Get.snackbar('Error', failure.failure.toString(),
               snackPosition: SnackPosition.BOTTOM,
               backgroundColor: Colors.red,
               colorText: Colors.white);
@@ -62,12 +63,11 @@ class StudentAttendanceController extends GetxController {
     try {
       isLoading(true);
       final params = GetStudentAttendanceParams(
-        studentId: student!.studentRollNo,
         courseId: selectedCourse.value!.courseName,
       );
 
       final result = await getStudentAttendanceUseCase.execute(params);
-      
+
       result.fold(
         (failure) {
           Get.snackbar('Error', failure.toString(),
