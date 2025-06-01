@@ -45,14 +45,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       // 1. Check if admin (based on UID)
       final adminDoc = await _firestore.collection('admins').doc(uid).get();
-      if (adminDoc.exists) return 'admin';
+      if (adminDoc.exists) {
+        return 'admin';
+      }
 
       if (userRole.contains('student')) return 'studentDashboard';
 
       if (userRole.contains('teacher')) return 'teacherDashboard';
 
       // If no role matched
-      return 'admin';
+      throw 'Unknown User, No Data matched';
     } catch (e) {
       print('login error: $e');
       throw e;

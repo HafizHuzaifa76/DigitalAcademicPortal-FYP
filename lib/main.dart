@@ -15,6 +15,12 @@ import 'package:digital_academic_portal/features/administrator_panel/shared/time
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SectionTimeTablePage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SemesterTimeTablePage.dart';
 import 'package:digital_academic_portal/features/auth/presentation/pages/LoginPage.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_attendance/presentation/bindings/StudentAttendanceBindings.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_calendar_events/presentation/bindings/StudentCalendarEventBinding.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_calendar_events/presentation/pages/StudentCalendarPage.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_courses/presentation/pages/StudentCoursesPage.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_noticeboard/presentation/pages/StudentNoticeBoardPage.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/students_Diary/presentation/bindings/StudentDiaryBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/bindings/TeacherPanelBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/pages/TeacherDashboardPage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_attendance/presentation/bindings/TeacherAttendanceBinding.dart';
@@ -28,7 +34,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:digital_academic_portal/features/student_panel/shared/student_calendar_events/presentation/pages/Stu_CalendarEventPage.dart';
 import 'features/administrator_panel/shared/courses/presentation/pages/DepartmentCoursePage.dart';
 import 'features/administrator_panel/shared/courses/presentation/pages/SemesterCoursePage.dart';
 import 'features/administrator_panel/shared/departments/presentation/bindings/DepartmentBindings.dart';
@@ -37,16 +42,17 @@ import 'features/administrator_panel/shared/noticeboard/presentation/bindings/No
 import 'features/administrator_panel/shared/sections/presentation/pages/SectionListPage.dart';
 import 'features/administrator_panel/shared/student/presentation/pages/AllStudentsPage.dart';
 import 'features/auth/presentation/bindings/AuthBinding.dart';
+import 'features/student_panel/presentation/bindings/StudentPanelBinding.dart';
 import 'features/student_panel/presentation/pages/StudentPanelDashboardPage.dart';
 import 'features/student_panel/shared/student_assignment/presentation/pages/Stu_Assignments.dart';
-import 'features/student_panel/shared/student_attendance/presentation/pages/Stu_Attendance.dart';
+import 'features/student_panel/shared/student_attendance/presentation/pages/StudentAttendancePage.dart';
 import 'features/student_panel/shared/student_chatbot/presentation/pages/Stu_ChatBot.dart';
-import 'features/student_panel/shared/student_courses/presentation/pages/Stu_AllCourses.dart';
-import 'features/student_panel/shared/student_grades/presentation/pages/Stu_GradesScreen.dart';
-import 'features/student_panel/shared/student_noticeboard/presentation/pages/Stu_MainNoticeBoardPage.dart';
+import 'features/student_panel/shared/student_courses/presentation/bindings/StudentCoursesBinding.dart';
+import 'features/student_panel/shared/student_grades/presentation/pages/StudentGradePage.dart';
+import 'features/student_panel/shared/student_grades/presentation/bindings/StudentGradeBindings.dart';
 import 'features/student_panel/shared/student_report/presentation/pages/Stu_Reports.dart';
 import 'features/student_panel/shared/student_timetable/presentation/pages/Stu_TimeTablePage.dart';
-import 'features/student_panel/shared/students_Diary/presentation/pages/Stu_Diary.dart';
+import 'features/student_panel/shared/students_Diary/presentation/pages/StudentDiaryPage.dart';
 import 'features/teacher_panel/shared/teacher_assignment/presentation/pages/Tch_Assignment.dart';
 import 'features/teacher_panel/shared/teacher_attendance/presentation/pages/TeacherAttendancePage.dart';
 import 'features/teacher_panel/shared/teacher_calendar_events/presentation/pages/Tch_CalendarEventPage.dart';
@@ -145,10 +151,9 @@ class MyApp extends StatelessWidget {
           binding: TeacherPanelBinding(),
         ),
         GetPage(
-          name: '/studentDashboard',
-          page: () => const StudentPortalDashboardPage(),
-          // binding: DepartmentBinding()
-        ),
+            name: '/studentDashboard',
+            page: () => const StudentPortalDashboardPage(),
+            binding: StudentPanelBinding()),
         GetPage(
             name: '/departments',
             page: () => const DepartmentPage(),
@@ -214,9 +219,9 @@ class MyApp extends StatelessWidget {
           binding: NoticeBoardBinding(),
         ),
         GetPage(
-          name: '/student_NoticeBoard',
-          page: () => const Stu_MainNoticeBoardPage(),
-          //binding: NoticeBoardBinding(),
+          name: '/studentNoticeBoard',
+          page: () => const StudentNoticeBoardPage(),
+          // binding: StudenNotiBoBin(),
         ),
         GetPage(
           name: '/calendarPage',
@@ -241,8 +246,8 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/student_calendarPage',
-          page: () => const Stu_CalendarScreen(),
-          //binding: CalendarEventBinding(),
+          page: () => const StudentCalendarPage(),
+          binding: StudentCalendarEventBinding(),
         ),
         GetPage(
           name: '/student_timetablePage',
@@ -251,8 +256,8 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/student_gradesScreen',
-          page: () => const GradeScreen(),
-          //binding: CalendarEventBinding(),
+          page: () => const StudentGradePage(),
+          binding: StudentGradeBinding(),
         ),
         GetPage(
           name: '/pendingAssignment',
@@ -265,19 +270,23 @@ class MyApp extends StatelessWidget {
           //binding: CalendarEventBinding(),
         ),
         GetPage(
-          name: '/student_allCourses',
-          page: () => const Stu_AllCourses(),
-          //binding: CalendarEventBinding(),
+          name: '/studentCoursesPage',
+          page: () =>
+              StudentCoursesPage(studentDept: Get.arguments['studentDept']),
+          binding: StudentCoursesBinding(),
         ),
         GetPage(
           name: '/student_attendance',
-          page: () => const Stu_Attendance(),
-          //binding: CalendarEventBinding(),
+          page: () => const StudentAttendancePage(),
+          binding: StudentAttendanceBinding(),
         ),
         GetPage(
-          name: '/student_diary',
-          page: () => Stu_Diary(),
-          //binding: CalendarEventBinding(),
+          name: '/studentDiary',
+          page: () => StudentDiaryPage(
+            deptName: Get.arguments['deptName'],
+            studentRollNo: Get.arguments['studentRollNo'],
+          ),
+          binding: StudentDiaryBinding(),
         ),
         GetPage(
           name: '/Stu_report',
@@ -319,7 +328,9 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/teacherAttendancePage',
-          page: () => const TeacherAttendancePage(teacherDept: '',),
+          page: () => TeacherAttendancePage(
+            teacherDept: Get.arguments['teacherDept'],
+          ),
           binding: TeacherAttendanceBinding(),
         ),
       ],

@@ -3,8 +3,7 @@ import '../../../../../../core/usecases/UseCase.dart';
 import '../entities/TeacherCourse.dart';
 import '../repositories/TeacherCourseRepository.dart';
 
-class FetchAllTeacherCoursesUseCase
-    implements UseCase<List<TeacherCourse>, String> {
+class FetchAllTeacherCoursesUseCase implements UseCase<List<TeacherCourse>, String> {
   final TeacherCourseRepository repository;
 
   FetchAllTeacherCoursesUseCase(this.repository);
