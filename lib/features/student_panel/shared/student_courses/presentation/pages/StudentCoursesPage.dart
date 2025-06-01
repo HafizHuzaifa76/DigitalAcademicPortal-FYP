@@ -2,8 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/StudentCoursesController.dart';
 
-class StudentCoursesPage extends GetView<StudentCoursesController> {
-  const StudentCoursesPage({Key? key}) : super(key: key);
+class StudentCoursesPage extends StatefulWidget {
+  final String studentDept;
+  const StudentCoursesPage({required this.studentDept, Key? key}) : super(key: key);
+
+  @override
+  State<StudentCoursesPage> createState() => _StudentCoursesPageState();
+}
+
+class _StudentCoursesPageState extends State<StudentCoursesPage> {
+  final StudentCoursesController controller = Get.find();
+
+  @override
+  void initState() {
+    controller.fetchStudentCourses(widget.studentDept);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -10,20 +10,37 @@ class StudentCourseModel extends StudentCourse {
     required super.courseCreditHours,
     required super.courseSection,
     required super.teacherName,
-    required super.teacherEmail,
+    required super.teacherID,
   });
 
-  factory StudentCourseModel.fromMap(Map<String, dynamic> map) {
+  factory StudentCourseModel.fromMap(
+    Map<String, dynamic> courseMap,
+    Map<String, dynamic> sectionMap,
+  ) {
     return StudentCourseModel(
-      courseCode: map['courseCode'] as String,
-      courseName: map['courseName'] as String,
-      courseDept: map['courseDept'] as String,
-      courseType: map['courseType'] as String,
-      courseSemester: map['courseSemester'] as String,
-      courseCreditHours: map['courseCreditHours'].toInt(),
-      courseSection: map['courseSection'] as String,
-      teacherName: map['teacherName'] as String,
-      teacherEmail: map['teacherEmail'] as String,
+      courseCode: courseMap['courseCode'] as String,
+      courseName: courseMap['courseName'] as String,
+      courseDept: courseMap['courseDept'] as String,
+      courseSemester: courseMap['courseSemester'] as String,
+      courseCreditHours: courseMap['courseCreditHours'].toInt(),
+      courseType: courseMap['courseType'] as String,
+      courseSection: (sectionMap['sectionName'] ?? sectionMap['courseSection']) as String,
+      teacherName: sectionMap['teacherName'] ?? "No teacher",
+      teacherID: sectionMap['teacherID'] ?? "No teacher ID",
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'courseCode': courseCode,
+      'courseName': courseName,
+      'courseDept': courseDept,
+      'courseSemester': courseSemester,
+      'courseCreditHours': courseCreditHours,
+      'courseType': courseType,
+      'courseSection': courseSection,
+      'teacherName': teacherName,
+      'teacherID': teacherID,
+    };
   }
 }

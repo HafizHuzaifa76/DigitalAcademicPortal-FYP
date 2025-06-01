@@ -11,7 +11,7 @@ class StudentCoursesRepositoryImpl implements StudentCoursesRepository {
   @override
   Future<Either<Fail, List<StudentCourse>>> fetchAllStudentCourses(String studentDept) async {
     try {
-      final courses = await remoteDataSource.fetchAllStudentCourses(studentDept);
+      final courses = await remoteDataSource.getStudentCourses(studentDept);
       return Right(courses);
     } catch (e) {
       return Left(Fail(e.toString()));

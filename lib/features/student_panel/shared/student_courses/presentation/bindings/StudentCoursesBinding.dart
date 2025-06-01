@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import '../../data/datasources/StudentCoursesRemoteDataSource.dart';
 import '../../data/repositories/StudentCoursesRepositoryImpl.dart';
 import '../../domain/repositories/StudentCoursesRepository.dart';
-import '../../domain/usecases/FetchAllStudentCoursesUseCase.dart';
+import '../../domain/usecases/FetchStudentCoursesUseCase.dart';
 import '../controllers/StudentCoursesController.dart';
 
 class StudentCoursesBinding extends Bindings {
@@ -16,7 +16,7 @@ class StudentCoursesBinding extends Bindings {
       () => StudentCoursesRepositoryImpl(Get.find()),
     );
 
-    Get.lazyPut(() => FetchAllStudentCoursesUseCase(Get.find()));
+    Get.lazyPut(() => FetchStudentCoursesUseCase(Get.find()));
 
     Get.lazyPut(() => StudentCoursesController(Get.find()));
   }

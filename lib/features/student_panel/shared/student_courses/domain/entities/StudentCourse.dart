@@ -3,7 +3,7 @@ import 'package:digital_academic_portal/shared/domain/entities/SemesterCourse.da
 class StudentCourse extends SemesterCourse {
   final String courseSection;
   final String teacherName;
-  final String teacherEmail;
+  final String teacherID;
 
   StudentCourse({
     required super.courseCode,
@@ -14,6 +14,6 @@ class StudentCourse extends SemesterCourse {
     required super.courseCreditHours,
     required this.courseSection,
     required this.teacherName,
-    required this.teacherEmail,
+    required this.teacherID,
   });
 }

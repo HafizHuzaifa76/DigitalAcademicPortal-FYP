@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../core/utils/Utils.dart';
 import '../../../../shared/domain/entities/Teacher.dart';
 import '../../domain/usecases/GetTeacherPanelProfile.dart';
 
@@ -16,7 +17,7 @@ class TeacherDashboardController extends GetxController {
     
     result.fold(
       (failure) {
-        Get.snackbar('Error', failure.toString());
+        Utils().showErrorSnackBar('Error', failure.toString());
       },
       (teacherData) {
         teacher.value = teacherData;

@@ -4,9 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../auth/presentation/pages/LoginPage.dart';
+import '../../../../shared/domain/entities/Student.dart';
+import '../controller/StudentPanelController.dart';
 
 class StudentPortalDashboardPage extends StatefulWidget {
+  static Student? studentProfile;
   const StudentPortalDashboardPage({super.key});
 
   @override
@@ -16,10 +18,13 @@ class StudentPortalDashboardPage extends StatefulWidget {
 
 class StudentPortalDashboardPageState
     extends State<StudentPortalDashboardPage> {
+  final StudentDashboardController controller = Get.find();
+
   int count = 0;
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       drawer: const StudentDrawer(),
       body: Center(
@@ -328,7 +333,12 @@ class StudentPortalDashboardPageState
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/student_allCourses'),
+                          onPressed: () =>
+                              Get.toNamed('/studentCoursesPage', arguments: {
+                            'studentDept':
+                                controller.student.value?.studentDepartment ??
+                                    ''
+                          }),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -464,7 +474,14 @@ class StudentPortalDashboardPageState
                                 padding: const WidgetStatePropertyAll(
                                     EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 5))),
-                            onPressed: () => Get.toNamed('/student_diary'),
+                            onPressed: () =>
+                                Get.toNamed('/studentDiary', arguments: {
+                              'deptName':
+                                  controller.student.value?.studentDepartment ??
+                                      '',
+                              'studentRollNo':
+                                  controller.student.value?.studentRollNo
+                            }),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [

@@ -1,12 +1,23 @@
-
 import '../../domain/entities/Student.dart';
 
-class StudentModel extends Student{
+class StudentModel extends Student {
+  StudentModel(
+      {required super.studentRollNo,
+      required super.studentName,
+      required super.fatherName,
+      required super.studentCNIC,
+      required super.studentContactNo,
+      required super.studentEmail,
+      required super.studentGender,
+      required super.studentAddress,
+      required super.studentDepartment,
+      required super.studentSemester,
+      required super.studentSection,
+      required super.studentCGPA,
+      required super.studentShift,
+      required super.studentAcademicYear});
 
-  StudentModel({required super.studentRollNo, required super.studentName, required super.fatherName, required super.studentCNIC, required super.studentContactNo, required super.studentEmail, required super.studentGender, required super.studentAddress, required super.studentDepartment, required super.studentSemester, required super.studentSection, required super.studentCGPA, required super.studentShift, required super.studentAcademicYear});
-
-
-  factory StudentModel.fromStudent(Student student){
+  factory StudentModel.fromStudent(Student student) {
     return StudentModel(
         studentRollNo: student.studentRollNo,
         studentName: student.studentName,
@@ -21,8 +32,7 @@ class StudentModel extends Student{
         studentSection: student.studentSection,
         studentCGPA: student.studentCGPA,
         studentShift: student.studentShift,
-        studentAcademicYear: student.studentAcademicYear
-    );
+        studentAcademicYear: student.studentAcademicYear);
   }
 
   Map<String, dynamic> toMap() {
@@ -59,7 +69,7 @@ class StudentModel extends Student{
       studentShift: map['studentShift'] as String,
       studentAcademicYear: map['studentAcademicYear'] as String,
       studentSection: map['studentSection'] as String,
-      studentCGPA: map['studentCGPA'] as double,
+      studentCGPA: map['studentCGPA'].toDouble(),
     );
   }
 }

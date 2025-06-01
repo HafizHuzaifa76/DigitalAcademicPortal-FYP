@@ -1,10 +1,10 @@
 import 'package:digital_academic_portal/core/utils/Utils.dart';
 import 'package:get/get.dart';
 import '../../domain/entities/StudentCourse.dart';
-import '../../domain/usecases/FetchAllStudentCoursesUseCase.dart';
+import '../../domain/usecases/FetchStudentCoursesUseCase.dart';
 
 class StudentCoursesController extends GetxController {
-  final FetchAllStudentCoursesUseCase fetchAllStudentCoursesUseCase;
+  final FetchStudentCoursesUseCase fetchAllStudentCoursesUseCase;
   final RxList<StudentCourse> coursesList = <StudentCourse>[].obs;
   final RxBool isLoading = false.obs;
 
@@ -14,7 +14,8 @@ class StudentCoursesController extends GetxController {
     isLoading.value = true;
     final result = await fetchAllStudentCoursesUseCase.execute(studentDept);
     result.fold(
-      (failure) => Utils().showErrorSnackBar('Error', failure.toString()),
+      (failure) =>
+          Utils().showErrorSnackBar('Error', failure.failure.toString()),
       (courses) => coursesList.value = courses,
     );
     isLoading.value = false;
