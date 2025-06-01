@@ -1,10 +1,16 @@
-
 import 'package:digital_academic_portal/features/administrator_panel/shared/departments/domain/entities/Semester.dart';
 
-class SemesterModel extends Semester{
-  SemesterModel({required super.semesterName, required super.sectionLimit, required super.totalCourses, required super.numOfCourses, required super.numOfStudents, required super.numOfTeachers, required super.numOfElectiveCourses});
+class SemesterModel extends Semester {
+  SemesterModel(
+      {required super.semesterName,
+      required super.sectionLimit,
+      required super.totalCourses,
+      required super.numOfCourses,
+      required super.numOfStudents,
+      required super.numOfTeachers,
+      required super.numOfElectiveCourses});
 
-  factory SemesterModel.fromSemester(Semester semester){
+  factory SemesterModel.fromSemester(Semester semester) {
     return SemesterModel(
       semesterName: semester.semesterName,
       sectionLimit: semester.sectionLimit,
@@ -31,12 +37,12 @@ class SemesterModel extends Semester{
   factory SemesterModel.fromMap(Map<String, dynamic> map) {
     return SemesterModel(
       semesterName: map['semesterName'] as String,
-      sectionLimit: map['sectionLimit'] as int,
-      totalCourses: map['totalCourses'] as int,
-      numOfCourses: map['numOfCourses'] as int,
-      numOfElectiveCourses: map['numOfElectiveCourses'] as int,
-      numOfStudents: map['numOfStudents'] as int,
-      numOfTeachers: map['numOfTeachers'] as int,
+      sectionLimit: map['sectionLimit'].toInt(),
+      totalCourses: map['totalCourses'].toInt(),
+      numOfCourses: map['numOfCourses'].toInt(),
+      numOfElectiveCourses: map['numOfElectiveCourses'].toInt(),
+      numOfStudents: map['numOfStudents'].toInt(),
+      numOfTeachers: map['numOfTeachers'].toInt(),
     );
   }
 }

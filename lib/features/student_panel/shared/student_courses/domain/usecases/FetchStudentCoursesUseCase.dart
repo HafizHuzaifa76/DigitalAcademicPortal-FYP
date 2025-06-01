@@ -3,10 +3,11 @@ import '../../../../../../core/usecases/UseCase.dart';
 import '../entities/StudentCourse.dart';
 import '../repositories/StudentCoursesRepository.dart';
 
-class FetchAllStudentCoursesUseCase implements UseCase<List<StudentCourse>, String> {
+class FetchStudentCoursesUseCase
+    implements UseCase<List<StudentCourse>, String> {
   final StudentCoursesRepository repository;
 
-  FetchAllStudentCoursesUseCase(this.repository);
+  FetchStudentCoursesUseCase(this.repository);
 
   @override
   Future<Either<Fail, List<StudentCourse>>> execute(String studentDept) async {

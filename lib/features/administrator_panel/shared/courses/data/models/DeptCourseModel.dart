@@ -17,7 +17,7 @@ class DeptCourseModel extends DepartmentCourse{
       courseCode: map['courseCode'] as String,
       courseName: map['courseName'] as String,
       courseDept: map['courseDept'] as String,
-      courseCreditHours: map['courseCreditHours'] as int,
+      courseCreditHours: map['courseCreditHours'].toInt(),
     );
   }
 
