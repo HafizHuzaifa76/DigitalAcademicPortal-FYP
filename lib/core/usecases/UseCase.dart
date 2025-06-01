@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/courses/domain/entities/DepartmentCourse.dart';
 import 'package:digital_academic_portal/shared/domain/entities/Teacher.dart';
 
+import '../../features/student_panel/shared/students_Diary/domain/entities/Note.dart';
 import '../../shared/domain/entities/SemesterCourse.dart';
 import '../../features/administrator_panel/shared/departments/domain/entities/Semester.dart';
 import '../../features/administrator_panel/shared/sections/domain/entities/Section.dart';
@@ -10,6 +11,15 @@ import '../../shared/domain/entities/TimeTable.dart';
 
 abstract class UseCase<Type, Params> {
   Future<Either<Fail, Type>> execute(Params params);
+}
+
+class NoteParams {
+  final String deptName;
+  final String studentRollNo;
+  Note? note;
+
+  NoteParams({required this.deptName, required this.studentRollNo, required this.note });
+
 }
 
 class CourseParams {
