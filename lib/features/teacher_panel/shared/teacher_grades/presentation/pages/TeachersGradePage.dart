@@ -1,240 +1,252 @@
 import 'package:flutter/material.dart';
+import 'CourseAssignmentsPage.dart';
+import '../../../teacher_grades/domain/entities/Course.dart';
 
-class TeachersGradeScreen extends StatefulWidget {
-  const TeachersGradeScreen({super.key});
+class TeachersGradeScreen extends StatelessWidget {
+  TeachersGradeScreen({super.key});
 
-  @override
-  State<TeachersGradeScreen> createState() => _TeachersGradeScreenState();
-}
-
-class _TeachersGradeScreenState extends State<TeachersGradeScreen> {
-  String selectedSubject = 'CS-4201-Data Structures';
-  String selectedStudent = 'Ahmed Khan';
-
-  final List<String> students = [
-    'Ahmed Khan', 'Ali Raza', 'Fatima Noor', 'Hassan Ali', 'Sara Sheikh',
-    'Zainab Ali', 'Usman Tariq', 'Ayesha Khan', 'Bilal Ahmad', 'Hina Malik',
-    'Rizwan Jutt', 'Mariam Shah', 'Asad Mehmood', 'Komal Niazi', 'Tariq Bashir',
-    'Areeba Siddiq', 'Saad Qureshi', 'Lubna Akhtar', 'Imran Aslam', 'Sana Mir',
-    'Talha Zubair', 'Mehwish Nawaz', 'Kashif Raza', 'Nida Ahmed', 'Fawad Hussain',
+  // Sample course data
+  final List<Course> courses = [
+    Course(
+      id: '1',
+      courseCode: 'ASE',
+      sectionClass: 'A4',
+      teacherName: 'Sabin Amjad',
+      teacherId: 'T001',
+      studentCount: 30,
+      semester: 'Fall 2024',
+    ),
+    Course(
+      id: '2',
+      courseCode: 'SQA',
+      sectionClass: 'A1',
+      teacherName: 'Sabin Amjad',
+      teacherId: 'T001',
+      studentCount: 35,
+      semester: 'Fall 2024',
+    ),
+    Course(
+      id: '3',
+      courseCode: 'TIERS Limited Summer Internship',
+      sectionClass: 'Mobile App Development',
+      teacherName: 'Instructor Name',
+      teacherId: 'T003',
+      studentCount: 22,
+      semester: 'Summer 2024',
+    ),
+    Course(
+      id: '4',
+      courseCode: 'Mobile App Development',
+      sectionClass: 'A1 & A3',
+      teacherName: 'Hassaan Ahmed',
+      teacherId: 'T002',
+      studentCount: 40,
+      semester: 'Fall 2024',
+    ),
+    Course(
+      id: '5',
+      courseCode: 'Mobile development',
+      sectionClass: 'Mobile App Dev',
+      teacherName: 'Instructor Name',
+      teacherId: 'T003',
+      studentCount: 25,
+      semester: 'Fall 2024',
+    ),
   ];
-
-  final List<String> subjects = [
-    'CS-4201-Data Structures',
-    'CS-4202-OOP',
-    'CS-4203-DBMS',
-    'CS-4204-OS',
-    'CS-4205-Entrepreneurship',
-  ];
-
-  final Map<String, List<Map<String, dynamic>>> gradeSections = {
-    'Quizzes': [
-      {'title': 'Quiz 1', 'total': 10, 'obtained': 0},
-    ],
-    'Assignments': [
-      {'title': 'Assignment 1', 'total': 20, 'obtained': 0},
-    ],
-    'Presentations': [
-      {'title': 'Presentation 1', 'total': 20, 'obtained': 0},
-    ],
-    'Midterm': [
-      {'title': 'Midterm', 'total': 30, 'obtained': 0},
-    ],
-    'Final': [
-      {'title': 'Final Exam', 'total': 50, 'obtained': 0},
-    ],
-  };
-
-  void _editEntry(String section, int index) {
-    final entry = gradeSections[section]![index];
-    final titleController = TextEditingController(text: entry['title']);
-    final totalController = TextEditingController(text: entry['total'].toString());
-    final obtainedController = TextEditingController(text: entry['obtained'].toString());
-
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Edit Grade Entry'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
-            TextField(controller: totalController, decoration: const InputDecoration(labelText: 'Total Marks'), keyboardType: TextInputType.number),
-            TextField(controller: obtainedController, decoration: const InputDecoration(labelText: 'Obtained Marks'), keyboardType: TextInputType.number),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              setState(() {
-                gradeSections[section]![index] = {
-                  'title': titleController.text,
-                  'total': int.tryParse(totalController.text) ?? 0,
-                  'obtained': int.tryParse(obtainedController.text) ?? 0,
-                };
-              });
-              Navigator.pop(context);
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _addEntry(String section) {
-    final titleController = TextEditingController();
-    final totalController = TextEditingController();
-    final obtainedController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Add Grade Entry'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
-            TextField(controller: totalController, decoration: const InputDecoration(labelText: 'Total Marks'), keyboardType: TextInputType.number),
-            TextField(controller: obtainedController, decoration: const InputDecoration(labelText: 'Obtained Marks'), keyboardType: TextInputType.number),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              setState(() {
-                gradeSections[section]!.add({
-                  'title': titleController.text,
-                  'total': int.tryParse(totalController.text) ?? 0,
-                  'obtained': int.tryParse(obtainedController.text) ?? 0,
-                });
-              });
-              Navigator.pop(context);
-            },
-            child: const Text('Add'),
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    int totalMarks = 0;
-    int obtainedMarks = 0;
-
-    gradeSections.forEach((_, entries) {
-      for (var entry in entries) {
-        totalMarks += entry['total'] as int;
-        obtainedMarks += entry['obtained'] as int;
-      }
-    });
-
-    double percentage = totalMarks > 0 ? (obtainedMarks / totalMarks) * 100 : 0;
-
     return Scaffold(
+      backgroundColor: const Color(0xFF121212),
       appBar: AppBar(
-        title: const Text('Teacher Grading'),
-        backgroundColor: const Color(0xFF00796B),
+        title: const Text(
+          'My Courses',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: const Color(0xFF1F1F1F),
+        foregroundColor: Colors.white,
+        elevation: 0,
       ),
-      backgroundColor: const Color(0xFFE8F5E9),
       body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
           children: [
-            DropdownButton<String>(
-              value: selectedSubject,
-              isExpanded: true,
-              items: subjects.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-              onChanged: (val) => setState(() => selectedSubject = val!),
-            ),
-            const SizedBox(height: 10),
-            DropdownButton<String>(
-              value: selectedStudent,
-              isExpanded: true,
-              items: students.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-              onChanged: (val) => setState(() => selectedStudent = val!),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: ListView(
-                children: gradeSections.entries.map((section) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(section.key, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                          IconButton(
-                            icon: const Icon(Icons.add_circle_outline),
-                            onPressed: () => _addEntry(section.key),
-                          )
-                        ],
-                      ),
-                      Table(
-                        border: TableBorder.all(color: Colors.grey),
-                        columnWidths: const {
-                          0: FlexColumnWidth(3),
-                          1: FlexColumnWidth(2),
-                          2: FlexColumnWidth(2),
-                          3: FlexColumnWidth(2),
-                        },
-                        children: [
-                          const TableRow(
-                            decoration: BoxDecoration(color: Color(0xFFE0F2F1)),
-                            children: [
-                              Padding(padding: EdgeInsets.all(8), child: Text('Title', style: TextStyle(fontWeight: FontWeight.bold))),
-                              Padding(padding: EdgeInsets.all(8), child: Text('Total', style: TextStyle(fontWeight: FontWeight.bold))),
-                              Padding(padding: EdgeInsets.all(8), child: Text('Obtained', style: TextStyle(fontWeight: FontWeight.bold))),
-                              Padding(padding: EdgeInsets.all(8), child: Text('Actions', style: TextStyle(fontWeight: FontWeight.bold))),
-                            ],
-                          ),
-                          ...section.value.asMap().entries.map((entry) {
-                            int idx = entry.key;
-                            var grade = entry.value;
-                            return TableRow(
-                              children: [
-                                Padding(padding: const EdgeInsets.all(8), child: Text(grade['title'])),
-                                Padding(padding: const EdgeInsets.all(8), child: Text('${grade['total']}')),
-                                Padding(padding: const EdgeInsets.all(8), child: Text('${grade['obtained']}')),
-                                Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child: Row(
-                                    children: [
-                                      IconButton(onPressed: () => _editEntry(section.key, idx), icon: const Icon(Icons.edit, size: 20)),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            );
-                          })
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-                  );
-                }).toList(),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1,
+                childAspectRatio: 2.3,
+                mainAxisSpacing: 12,
               ),
-            ),
-            Text('Total: $totalMarks | Obtained: $obtainedMarks | Percentage: ${percentage.toStringAsFixed(2)}%', style: const TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Grades saved successfully')),
+              itemCount: courses.length,
+              itemBuilder: (context, index) {
+                final course = courses[index];
+                return _buildCourseCard(
+                  context,
+                  course,
+                  gradients[index % gradients.length],
                 );
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                minimumSize: const Size.fromHeight(50),
-              ),
-              child: const Text('Save Grades', style: TextStyle(color: Colors.white, fontSize: 16)),
             ),
           ],
         ),
       ),
     );
   }
+
+  Widget _buildCourseCard(
+    BuildContext context,
+    Course course,
+    LinearGradient gradient,
+  ) {
+    return Card(
+      elevation: 4,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CourseAssignmentsPage(
+                courseId: course.id,
+                courseCode: course.courseCode,
+                sectionClass: course.sectionClass,
+              ),
+            ),
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(gradient: gradient),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          course.courseCode,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          course.sectionClass,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    _getIconForCourse(course.courseCode),
+                    color: Colors.white.withOpacity(0.7),
+                    size: 28,
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.person,
+                        color: Colors.white.withOpacity(0.7),
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        "${course.studentCount} students",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withOpacity(0.9),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.black26,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Text(
+                      'View',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  IconData _getIconForCourse(String courseCode) {
+    if (courseCode.contains('Mobile')) {
+      return Icons.phone_android;
+    } else if (courseCode.contains('ASE')) {
+      return Icons.architecture;
+    } else if (courseCode.contains('SQA')) {
+      return Icons.verified;
+    } else if (courseCode.contains('TIERS')) {
+      return Icons.business;
+    } else {
+      return Icons.code;
+    }
+  }
+
+  // Gradient presets
+  final List<LinearGradient> gradients = [
+    const LinearGradient(
+      colors: [Color(0xFF303F9F), Color(0xFF5C6BC0)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    const LinearGradient(
+      colors: [Color(0xFF512DA8), Color(0xFF7E57C2)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    const LinearGradient(
+      colors: [Color(0xFF0097A7), Color(0xFF26C6DA)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    const LinearGradient(
+      colors: [Color(0xFF00796B), Color(0xFF26A69A)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    const LinearGradient(
+      colors: [Color(0xFF455A64), Color(0xFF78909C)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+  ];
 }
