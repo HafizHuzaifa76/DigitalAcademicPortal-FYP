@@ -27,6 +27,7 @@ import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_at
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_calendar_events/presentation/bindings/TeacherCalendarEventBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/bindings/TeacherCourseBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/pages/TeacherCoursesPage.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_grades/presentation/pages/TeachersGradePage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_timetable/presentation/bindings/TeacherTimeTableBinding.dart';
 import 'package:digital_academic_portal/shared/presentation/pages/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -262,7 +263,7 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/pendingAssignment',
           page: () => AssignmentPage(),
-          //binding: CalendarEventBinding(),
+          //binding: ,
         ),
         GetPage(
           name: '/Stu_ChatBot',
@@ -325,6 +326,11 @@ class MyApp extends StatelessWidget {
           page: () =>
               TeacherCoursesPage(teacherDept: Get.arguments['teacherDept']),
           binding: TeacherCourseBinding(),
+        ),
+        GetPage(
+          name: '/teacherGradePage',
+          page: () =>  TeachersGradeScreen(),
+         // binding: ,
         ),
         GetPage(
           name: '/teacherAttendancePage',
@@ -399,3 +405,4 @@ class DefaultFirebaseOptions {
       appId: "1:849792758725:web:1239caff45159a088911ac",
       measurementId: "G-YX93SV1GFK");
 }
+

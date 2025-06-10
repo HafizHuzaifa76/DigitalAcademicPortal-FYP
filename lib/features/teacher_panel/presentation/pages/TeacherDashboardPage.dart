@@ -469,7 +469,53 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                         ),
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                  Theme.of(context).primaryColor),
+                              fixedSize: WidgetStatePropertyAll(
+                                  Size(screenSize.width * .3, 100)),
+                              shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              padding: const WidgetStatePropertyAll(
+                                  EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 5))),
+                          // onPressed: () => Get.to(const TableEventsExample()),
+                          onPressed: () {
+                            if (controller.teacher.value != null) {
+                              Get.toNamed(
+                                '/teacherGradePage',
+                              );
 
+                            } else {
+                              Utils().showErrorSnackBar('Error',
+                                  'Teacher data not loaded. Please wait or refresh.');
+                            }
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset('assets/images/grades.png',
+                                  height: 50, width: 60),
+                              const SizedBox(height: 7),
+                              AutoSizeText(
+                                'Assign Grades',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColorDark,
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.center,
                     //   children: [

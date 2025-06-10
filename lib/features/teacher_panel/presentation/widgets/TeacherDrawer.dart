@@ -60,7 +60,7 @@ class TeacherDrawer extends StatelessWidget {
             leading: Image.asset('assets/images/attendance2.png', height: 30, width: 30),
             title: Text('Attendance', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
             onTap: () {
-              Get.toNamed('/teacher_attendance');
+              Get.toNamed('/teacherAttendancePage');
             },
           ),
           const Divider(),
@@ -87,11 +87,18 @@ class TeacherDrawer extends StatelessWidget {
             leading: Image.asset('assets/images/course_icon.png', height: 30, width: 30),
             title: Text('Courses', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
             onTap: () {
-              Get.toNamed('/teacher_allCourses');
+              Get.toNamed('/teacherCoursesPage');
             },
           ),
           const Divider(),
-
+          ListTile(
+            leading: Image.asset('assets/images/grades.png', height: 30, width: 30),
+            title: Text('Assign Grades', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
+            onTap: () {
+              Get.toNamed('/teacherGradePage');
+            },
+          ),
+          const Divider(),
           ListTile(
             leading: Image.asset('assets/images/noticeboard_icon.png', height: 30, width: 30),
             title: Text('Notice Board', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
