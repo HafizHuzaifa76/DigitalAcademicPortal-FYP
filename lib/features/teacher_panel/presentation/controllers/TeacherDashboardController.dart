@@ -1,3 +1,4 @@
+import 'package:digital_academic_portal/features/teacher_panel/presentation/pages/TeacherDashboardPage.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/utils/Utils.dart';
@@ -21,6 +22,7 @@ class TeacherDashboardController extends GetxController {
       },
       (teacherData) {
         teacher.value = teacherData;
+        TeacherDashboardPage.teacherProfile = teacherData;
         print(teacherData.teacherCNIC);
         print(teacherData.teacherEmail);
         print(teacherData.toString());

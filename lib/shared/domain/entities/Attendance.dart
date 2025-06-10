@@ -1,4 +1,4 @@
-class StudentAttendance {
+class Attendance {
   final String id;
   final String course;
   final String studentId;
@@ -6,7 +6,7 @@ class StudentAttendance {
   final bool isPresent;
   final String? remarks;
 
-  StudentAttendance({
+  Attendance({
     required this.id,
     required this.course,
     required this.studentId,

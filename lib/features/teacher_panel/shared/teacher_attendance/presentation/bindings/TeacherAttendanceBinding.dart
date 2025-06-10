@@ -6,7 +6,7 @@ import '../../../teacher_courses/domain/usecases/FetchAllTeacherCoursesUseCase.d
 import '../../data/datasources/TeacherAttendanceRemoteDataSource.dart';
 import '../../data/repositories/TeacherAttendanceRepositoryImpl.dart';
 import '../../domain/repositories/TeacherAttendanceRepository.dart';
-import '../../domain/usecases/GetAttendanceForDateUseCase.dart';
+import '../../domain/usecases/GetCourseAttendanceUseCase.dart';
 import '../../domain/usecases/GetTeacherCoursesUseCase.dart';
 import '../../domain/usecases/MarkAttendanceUseCase.dart';
 import '../controllers/TeacherAttendanceController.dart';
@@ -35,13 +35,13 @@ class TeacherAttendanceBinding extends Bindings {
     );
 
     Get.lazyPut(() => GetTeacherCoursesUseCase(Get.find()));
-    Get.lazyPut(() => GetAttendanceForDateUseCase(Get.find()));
+    Get.lazyPut(() => GetCourseAttendanceUseCase(Get.find()));
     Get.lazyPut(() => MarkAttendanceUseCase(Get.find()));
 
     // Controller
     Get.lazyPut(() => TeacherAttendanceController(
           getTeacherCoursesUseCase: Get.find(),
-          getAttendanceForDateUseCase: Get.find(),
+          getCourseAttendanceUseCase: Get.find(),
           markAttendanceUseCase: Get.find(),
         ));
   }

@@ -1,15 +1,29 @@
 import 'package:dartz/dartz.dart';
-import '../../../../../../core/usecases/UseCase.dart';
-import '../entities/TeacherAttendance.dart';
+import '../../../../../../shared/domain/entities/Attendance.dart';
 import '../repositories/TeacherAttendanceRepository.dart';
 
-class MarkAttendanceUseCase implements UseCase<void, List<TeacherAttendance>> {
+class MarkAttendanceParams {
+  final String semester;
+  final String section;
+  final List<Attendance> attendanceList;
+
+  MarkAttendanceParams({
+    required this.semester,
+    required this.section,
+    required this.attendanceList,
+  });
+}
+
+class MarkAttendanceUseCase {
   final TeacherAttendanceRepository repository;
 
   MarkAttendanceUseCase(this.repository);
 
-  @override
-  Future<Either<Fail, void>> execute(List<TeacherAttendance> params) async {
-    return await repository.markAttendance(params);
+  Future<Either<Fail, void>> execute(MarkAttendanceParams params) async {
+    return await repository.markAttendance(
+      params.semester,
+      params.section,
+      params.attendanceList,
+    );
   }
 }

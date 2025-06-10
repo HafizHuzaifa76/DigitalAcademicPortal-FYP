@@ -1,32 +1,29 @@
-import '../../domain/entities/TeacherAttendance.dart';
+import '../../domain/entities/Attendance.dart';
 
-class TeacherAttendanceModel extends TeacherAttendance {
-  TeacherAttendanceModel({
+class AttendanceModel extends Attendance {
+  AttendanceModel({
     required String id,
-    required String courseId,
+    required String course,
     required String studentId,
     required DateTime date,
     required bool isPresent,
-    required String courseSection,
     String? remarks,
   }) : super(
           id: id,
-          courseId: courseId,
+          course: course,
           studentId: studentId,
           date: date,
           isPresent: isPresent,
-          courseSection: courseSection,
           remarks: remarks,
         );
 
-  factory TeacherAttendanceModel.fromMap(Map<String, dynamic> map) {
-    return TeacherAttendanceModel(
+  factory AttendanceModel.fromMap(Map<String, dynamic> map) {
+    return AttendanceModel(
       id: map['id'] as String,
-      courseId: map['courseId'] as String,
+      course: map['courseId'] as String,
       studentId: map['studentId'] as String,
       date: DateTime.parse(map['date'] as String),
       isPresent: map['isPresent'] as bool,
-      courseSection: map['courseSection'] as String,
       remarks: map['remarks'] as String?,
     );
   }
@@ -34,11 +31,10 @@ class TeacherAttendanceModel extends TeacherAttendance {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'courseId': courseId,
+      'courseId': course,
       'studentId': studentId,
       'date': date.toIso8601String(),
       'isPresent': isPresent,
-      'courseSection': courseSection,
       'remarks': remarks,
     };
   }
