@@ -1,27 +1,34 @@
 import 'package:dartz/dartz.dart';
 import '../../domain/repositories/TeacherAttendanceRepository.dart';
 import '../datasources/TeacherAttendanceRemoteDataSource.dart';
-import '../../domain/entities/TeacherAttendance.dart';
-import '../models/TeacherAttendanceModel.dart';
+import '../../../../../../shared/domain/entities/Attendance.dart';
+import '../../../../../../shared/data/models/AttendanceModel.dart';
 
 class TeacherAttendanceRepositoryImpl implements TeacherAttendanceRepository {
   final TeacherAttendanceRemoteDataSource remoteDataSource;
 
   TeacherAttendanceRepositoryImpl(this.remoteDataSource);
 
-  @override
-  Future<Either<Fail, List<TeacherAttendance>>> getTeacherAttendance() async {
-    // Implementation will go here
-    throw UnimplementedError();
-  }
 
   @override
-  Future<Either<Fail, List<TeacherAttendance>>> getAttendanceForDate(
-      String courseId, String courseSection, DateTime date) async {
+  Future<Either<Fail, Map<String, List<Attendance>>>> getCourseAttendance(
+    String semester,
+    String section,
+    String courseId,
+    List<dynamic> studentIds,
+  ) async {
     try {
-      final result = await remoteDataSource.getAttendanceForDate(
-          courseId, courseSection, date);
-      return Right(result);
+      final result = await remoteDataSource.getCourseAttendance(
+          semester, section, courseId);
+
+      // Convert AttendanceModel to Attendance for each date
+      final Map<String, List<Attendance>> convertedMap = {};
+      result.forEach((date, modelList) {
+        convertedMap[date] =
+            modelList.map((model) => model as Attendance).toList();
+      });
+
+      return Right(convertedMap);
     } catch (e) {
       return Left(Fail(e.toString()));
     }
@@ -29,19 +36,22 @@ class TeacherAttendanceRepositoryImpl implements TeacherAttendanceRepository {
 
   @override
   Future<Either<Fail, void>> markAttendance(
-      List<TeacherAttendance> attendanceList) async {
+    String semester,
+    String section,
+    List<Attendance> attendanceList,
+  ) async {
     try {
-      await remoteDataSource.markAttendance(attendanceList
-          .map((e) => TeacherAttendanceModel(
-                id: e.id,
-                courseId: e.courseId,
-                studentId: e.studentId,
-                date: e.date,
-                isPresent: e.isPresent,
-                courseSection: e.courseSection,
-                remarks: e.remarks,
+      final modelList = attendanceList
+          .map((attendance) => AttendanceModel(
+                id: attendance.id,
+                course: attendance.course,
+                studentId: attendance.studentId,
+                date: attendance.date,
+                isPresent: attendance.isPresent,
+                remarks: attendance.remarks,
               ))
-          .toList());
+          .toList();
+      await remoteDataSource.markAttendance(semester, section, modelList);
       return const Right(null);
     } catch (e) {
       return Left(Fail(e.toString()));

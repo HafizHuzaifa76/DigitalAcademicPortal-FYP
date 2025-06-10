@@ -1,8 +1,7 @@
 import 'package:dartz/dartz.dart';
-import '../entities/StudentAttendance.dart';
+import '../../../../../../shared/domain/entities/Attendance.dart';
 
 abstract class StudentAttendanceRepository {
-  Future<Either<Fail, List<StudentAttendance>>> getStudentAttendance(
-      String courseId);
-  Future<Either<Fail, List<StudentAttendance>>> getAllAttendance();
+  Future<Either<Fail, List<Attendance>>> getStudentAttendance(String courseId);
+  Future<Either<Fail, List<Attendance>>> getAllAttendance();
 }

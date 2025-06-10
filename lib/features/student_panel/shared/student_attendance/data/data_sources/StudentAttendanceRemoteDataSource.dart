@@ -1,10 +1,10 @@
 import 'package:digital_academic_portal/features/student_panel/presentation/pages/StudentPanelDashboardPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/StudentAttendanceModel.dart';
+import '../../../../../../shared/data/models/AttendanceModel.dart';
 
 abstract class StudentAttendanceRemoteDataSource {
-  Future<List<StudentAttendanceModel>> getStudentAttendance(String courseId);
-  Future<List<StudentAttendanceModel>> getAllAttendance();
+  Future<List<AttendanceModel>> getStudentAttendance(String courseId);
+  Future<List<AttendanceModel>> getAllAttendance();
 }
 
 class StudentAttendanceRemoteDataSourceImpl
@@ -13,8 +13,7 @@ class StudentAttendanceRemoteDataSourceImpl
   var student = StudentPortalDashboardPage.studentProfile;
 
   @override
-  Future<List<StudentAttendanceModel>> getStudentAttendance(
-      String courseId) async {
+  Future<List<AttendanceModel>> getStudentAttendance(String courseId) async {
     if (student == null) throw Exception('Student data not match');
 
     var studentId = student!.studentRollNo;
@@ -31,12 +30,12 @@ class StudentAttendanceRemoteDataSourceImpl
         .get();
 
     return querySnapshot.docs
-        .map((doc) => StudentAttendanceModel.fromMap(doc.data()))
+        .map((doc) => AttendanceModel.fromMap(doc.data()))
         .toList();
   }
 
   @override
-  Future<List<StudentAttendanceModel>> getAllAttendance() async {
+  Future<List<AttendanceModel>> getAllAttendance() async {
     if (student == null) throw Exception('Student data not match');
 
     var studentId = student!.studentRollNo;
@@ -51,7 +50,7 @@ class StudentAttendanceRemoteDataSourceImpl
         .get();
 
     return querySnapshot.docs
-        .map((doc) => StudentAttendanceModel.fromMap(doc.data()))
+        .map((doc) => AttendanceModel.fromMap(doc.data()))
         .toList();
   }
 }
