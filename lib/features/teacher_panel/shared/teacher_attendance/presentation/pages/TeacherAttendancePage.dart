@@ -398,12 +398,24 @@ class TeacherAttendanceMarkingPage extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          controller.markAttendance();
-        },
-        label: const Text('Save Attendance'),
-        icon: const Icon(Icons.save),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(1),
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+        ),
+        child: ElevatedButton(
+          onPressed: () {
+            controller.markAttendance();
+          },
+          child: const Text(
+            'Save Attendance',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ),
     );
   }
