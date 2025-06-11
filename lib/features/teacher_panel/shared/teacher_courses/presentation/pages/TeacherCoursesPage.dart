@@ -22,8 +22,12 @@ class _TeacherCoursesPageState extends State<TeacherCoursesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('My Courses'),
+        title: const Text(
+          'My Courses',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -34,18 +38,138 @@ class _TeacherCoursesPageState extends State<TeacherCoursesPage> {
           return const Center(child: Text('No courses assigned'));
         }
         
-        return ListView.builder(
-          itemCount: controller.coursesList.length,
-          itemBuilder: (context, index) {
-            final course = controller.coursesList[index];
-            return ListTile(
-              title: Text(course.courseName),
-              subtitle: Text('${course.courseCode} - Section ${course.courseSection}'),
-              trailing: Text(course.courseSemester),
-            );
-          },
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            children: [
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                  childAspectRatio: 2.3,
+                  mainAxisSpacing: 12,
+                ),
+                itemCount: controller.coursesList.length,
+                itemBuilder: (context, index) {
+                  final course = controller.coursesList[index];
+                  return _buildCourseCard(course);
+                },
+              ),
+            ],
+          ),
         );
       }),
     );
+  }
+
+  Widget _buildCourseCard(course) {
+    return Card(
+      elevation: 4,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      clipBehavior: Clip.antiAlias,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Get.theme.primaryColor,
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        course.courseName,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Section: ${course.courseSection}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  _getIconForCourse(course.courseName),
+                  color: Colors.white.withOpacity(0.7),
+                  size: 28,
+                ),
+              ],
+            ),
+            const Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.calendar_today,
+                      color: Colors.white.withOpacity(0.7),
+                      size: 16,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      course.courseSemester,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white.withOpacity(0.9),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.black26,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    course.courseCode,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  IconData _getIconForCourse(String courseName) {
+    if (courseName.toLowerCase().contains('mobile')) {
+      return Icons.phone_android;
+    } else if (courseName.toLowerCase().contains('web')) {
+      return Icons.web;
+    } else if (courseName.toLowerCase().contains('database')) {
+      return Icons.storage;
+    } else if (courseName.toLowerCase().contains('programming')) {
+      return Icons.code;
+    } else {
+      return Icons.book;
+    }
   }
 }

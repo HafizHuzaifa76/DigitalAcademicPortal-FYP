@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'StudentGradingPage.dart';
 import '../../domain/entities/Assignment.dart';
 
@@ -52,10 +53,10 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              backgroundColor: const Color(0xFF2D2D2D),
-              title: const Text(
+              backgroundColor: Colors.white,
+              title: Text(
                 'Create New Assignment/Quiz',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Get.theme.primaryColor),
               ),
               content: SingleChildScrollView(
                 child: Column(
@@ -63,33 +64,33 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
                   children: [
                     TextField(
                       controller: titleController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
+                      style: TextStyle(color: Get.theme.primaryColor),
+                      decoration: InputDecoration(
                         labelText: 'Title',
-                        labelStyle: TextStyle(color: Colors.white70),
-                        border: OutlineInputBorder(),
+                        labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
+                        border: const OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white30),
+                          borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Get.theme.primaryColor),
                         ),
                       ),
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
                       value: selectedType,
-                      dropdownColor: const Color(0xFF3D3D3D),
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
+                      dropdownColor: Colors.white,
+                      style: TextStyle(color: Get.theme.primaryColor),
+                      decoration: InputDecoration(
                         labelText: 'Type',
-                        labelStyle: TextStyle(color: Colors.white70),
-                        border: OutlineInputBorder(),
+                        labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
+                        border: const OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white30),
+                          borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Get.theme.primaryColor),
                         ),
                       ),
                       items: const [
@@ -117,16 +118,16 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
                     const SizedBox(height: 16),
                     TextField(
                       controller: marksController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
+                      style: TextStyle(color: Get.theme.primaryColor),
+                      decoration: InputDecoration(
                         labelText: 'Total Marks',
-                        labelStyle: TextStyle(color: Colors.white70),
-                        border: OutlineInputBorder(),
+                        labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
+                        border: const OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white30),
+                          borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Get.theme.primaryColor),
                         ),
                       ),
                       keyboardType: TextInputType.number,
@@ -137,7 +138,7 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
+                  child: Text('Cancel', style: TextStyle(color: Get.theme.primaryColor)),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -159,9 +160,9 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Get.theme.primaryColor,
                   ),
-                  child: const Text('Create'),
+                  child: const Text('Create', style: TextStyle(color: Colors.white)),
                 ),
               ],
             );
@@ -183,10 +184,10 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              backgroundColor: const Color(0xFF2D2D2D),
-              title: const Text(
+              backgroundColor: Colors.white,
+              title: Text(
                 'Edit Assignment/Quiz',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Get.theme.primaryColor),
               ),
               content: SingleChildScrollView(
                 child: Column(
@@ -194,33 +195,33 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
                   children: [
                     TextField(
                       controller: titleController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
+                      style: TextStyle(color: Get.theme.primaryColor),
+                      decoration: InputDecoration(
                         labelText: 'Title',
-                        labelStyle: TextStyle(color: Colors.white70),
-                        border: OutlineInputBorder(),
+                        labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
+                        border: const OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white30),
+                          borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Get.theme.primaryColor),
                         ),
                       ),
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
                       value: selectedType,
-                      dropdownColor: const Color(0xFF3D3D3D),
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
+                      dropdownColor: Colors.white,
+                      style: TextStyle(color: Get.theme.primaryColor),
+                      decoration: InputDecoration(
                         labelText: 'Type',
-                        labelStyle: TextStyle(color: Colors.white70),
-                        border: OutlineInputBorder(),
+                        labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
+                        border: const OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white30),
+                          borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Get.theme.primaryColor),
                         ),
                       ),
                       items: const [
@@ -248,16 +249,16 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
                     const SizedBox(height: 16),
                     TextField(
                       controller: marksController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
+                      style: TextStyle(color: Get.theme.primaryColor),
+                      decoration: InputDecoration(
                         labelText: 'Total Marks',
-                        labelStyle: TextStyle(color: Colors.white70),
-                        border: OutlineInputBorder(),
+                        labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
+                        border: const OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white30),
+                          borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Get.theme.primaryColor),
                         ),
                       ),
                       keyboardType: TextInputType.number,
@@ -268,7 +269,7 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
+                  child: Text('Cancel', style: TextStyle(color: Get.theme.primaryColor)),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -286,9 +287,9 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Get.theme.primaryColor,
                   ),
-                  child: const Text('Save'),
+                  child: const Text('Save', style: TextStyle(color: Colors.white)),
                 ),
               ],
             );
@@ -301,13 +302,13 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
   void _showOptions(int index) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF2D2D2D),
+      backgroundColor: Colors.white,
       builder: (context) {
         return Wrap(
           children: [
             ListTile(
-              leading: const Icon(Icons.edit, color: Colors.white),
-              title: const Text('Edit', style: TextStyle(color: Colors.white)),
+              leading: Icon(Icons.edit, color: Get.theme.primaryColor),
+              title: Text('Edit', style: TextStyle(color: Get.theme.primaryColor)),
               onTap: () {
                 Navigator.pop(context);
                 _editAssignment(index);
@@ -331,19 +332,19 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF2D2D2D),
-        title: const Text(
+        backgroundColor: Colors.white,
+        title: Text(
           'Delete Assignment',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Get.theme.primaryColor),
         ),
         content: Text(
           'Are you sure you want to delete "${assignments[index].title}"?',
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Get.theme.primaryColorDark),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel', style: TextStyle(color: Get.theme.primaryColor)),
           ),
           TextButton(
             onPressed: () {
@@ -362,7 +363,7 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,26 +375,23 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
             ),
           ],
         ),
-        backgroundColor: const Color(0xFF1F1F1F),
-        foregroundColor: Colors.white,
-        elevation: 0,
       ),
       body: assignments.isEmpty 
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     'No assignments or quizzes yet',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    style: TextStyle(fontSize: 18, color: Get.theme.primaryColor.withOpacity(0.6)),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _addNewAssignment,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Get.theme.primaryColor,
                     ),
-                    child: const Text('Create New'),
+                    child: const Text('Create New', style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),
@@ -405,7 +403,8 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
                 final assignment = assignments[index];
                 return Card(
                   margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                  color: const Color(0xFF2D2D2D),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  elevation: 2,
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
@@ -432,7 +431,7 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
                                     : assignment.type == 'Presentation'
                                         ? Icons.slideshow
                                         : Icons.assignment,
-                                color: Colors.blue,
+                                color: Get.theme.primaryColor,
                               ),
                               const SizedBox(width: 12),
                               Expanded(
@@ -441,10 +440,10 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
                                   children: [
                                     Text(
                                       assignment.title,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
-                                        color: Colors.white,
+                                        color: Get.theme.primaryColor,
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -453,27 +452,27 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
                                       'Posted ${assignment.date}${assignment.edited != null ? ' (Edited ${assignment.edited})' : ''}',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: Colors.grey[400],
+                                        color: Get.theme.primaryColorDark,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.more_vert, color: Colors.white),
+                                icon: Icon(Icons.more_vert, color: Get.theme.primaryColor),
                                 onPressed: () => _showOptions(index),
                               ),
                             ],
                           ),
-                          const Divider(color: Colors.grey),
+                          const Divider(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 'Total Points: ${assignment.totalMarks}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: Get.theme.primaryColorDark,
                                 ),
                               ),
                               TextButton(
@@ -489,7 +488,7 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
                                     ),
                                   );
                                 },
-                                child: const Text('GRADE'),
+                                child: Text('GRADE', style: TextStyle(color: Get.theme.primaryColor)),
                               ),
                             ],
                           ),
@@ -502,8 +501,8 @@ class _CourseAssignmentsPageState extends State<CourseAssignmentsPage> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addNewAssignment,
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add),
+        backgroundColor: Get.theme.primaryColor,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
