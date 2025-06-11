@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../domain/entities/Student.dart';
 import '../../domain/entities/TeacherGrade.dart';
 
@@ -191,9 +192,11 @@ class _StudentGradingPageState extends State<StudentGradingPage> {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Grades saved successfully')),
+      SnackBar(
+        content: const Text('Grades saved successfully'),
+        backgroundColor: Get.theme.primaryColor,
+      ),
     );
-    Navigator.pop(context);
   }
 
   @override
@@ -201,34 +204,16 @@ class _StudentGradingPageState extends State<StudentGradingPage> {
     int turnedIn = students.where((s) => s.obtainedMarks != null && s.obtainedMarks! > 0).length;
     
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           widget.title,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF1F1F1F),
-        foregroundColor: Colors.white,
-        elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.share, color: Colors.white),
-            onPressed: () {},
-          ),
-          PopupMenuButton(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
-            color: const Color(0xFF2D2D2D),
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'download',
-                child: Text('Download', style: TextStyle(color: Colors.white)),
-              ),
-              const PopupMenuItem(
-                value: 'copy',
-                child: Text('Copy link', style: TextStyle(color: Colors.white)),
-              ),
-            ],
+            icon: const Icon(Icons.save, color: Colors.white),
+            onPressed: _saveGrades,
           ),
         ],
       ),
@@ -237,29 +222,29 @@ class _StudentGradingPageState extends State<StudentGradingPage> {
           children: [
             Container(
               padding: const EdgeInsets.all(12),
-              color: const Color(0xFF1F1F1F),
+              color: Get.theme.primaryColor.withOpacity(0.1),
               child: Row(
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFF2D2D2D),
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: Colors.grey.shade700),
+                      border: Border.all(color: Get.theme.primaryColor.withOpacity(0.3)),
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     child: PopupMenuButton<String>(
-                      color: const Color(0xFF3D3D3D),
+                      color: Colors.white,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
                             '${widget.totalMarks} points',
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: Get.theme.primaryColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const Icon(Icons.arrow_drop_down, color: Colors.white),
+                          Icon(Icons.arrow_drop_down, color: Get.theme.primaryColor),
                         ],
                       ),
                       itemBuilder: (context) => [
@@ -267,16 +252,16 @@ class _StudentGradingPageState extends State<StudentGradingPage> {
                           value: '${widget.totalMarks}',
                           child: Text(
                             '${widget.totalMarks} points',
-                            style: const TextStyle(color: Colors.white),
+                            style: TextStyle(color: Get.theme.primaryColor),
                           ),
                         ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: '50',
-                          child: Text('50 points', style: TextStyle(color: Colors.white)),
+                          child: Text('50 points', style: TextStyle(color: Get.theme.primaryColor)),
                         ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: '25',
-                          child: Text('25 points', style: TextStyle(color: Colors.white)),
+                          child: Text('25 points', style: TextStyle(color: Get.theme.primaryColor)),
                         ),
                       ],
                     ),
@@ -285,26 +270,26 @@ class _StudentGradingPageState extends State<StudentGradingPage> {
               ),
             ),
             Container(
-              color: const Color(0xFF212121),
+              color: Get.theme.primaryColor.withOpacity(0.05),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
-                  const Text(
+                  Text(
                     'Instructions',
-                    style: TextStyle(color: Colors.white60),
+                    style: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
                   ),
                   const Spacer(),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Student Work',
-                        style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Get.theme.primaryColor, fontWeight: FontWeight.bold),
                       ),
                       Container(
                         height: 2,
                         width: 100,
-                        color: Colors.blue,
+                        color: Get.theme.primaryColor,
                         margin: const EdgeInsets.only(top: 4),
                       ),
                     ],
@@ -318,30 +303,30 @@ class _StudentGradingPageState extends State<StudentGradingPage> {
                 children: [
                   Text(
                     '$turnedIn',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Get.theme.primaryColor,
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Text(
+                  Text(
                     'Turned in',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Get.theme.primaryColorDark),
                   ),
                   const Spacer(),
                   Text(
                     '${students.length}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Get.theme.primaryColor,
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Text(
+                  Text(
                     'Assigned',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Get.theme.primaryColorDark),
                   ),
                 ],
               ),
@@ -354,27 +339,27 @@ class _StudentGradingPageState extends State<StudentGradingPage> {
                     child: Text(
                       'Submissions closed Aug 24, 2024, 11:59 PM',
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.white70),
+                      style: TextStyle(color: Get.theme.primaryColorDark),
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.white),
+                    icon: Icon(Icons.edit, color: Get.theme.primaryColor),
                     onPressed: () {},
                   ),
                 ],
               ),
             ),
-            const Divider(color: Color(0xFF3D3D3D)),
+            Divider(color: Get.theme.primaryColor.withOpacity(0.2)),
             ListTile(
-              tileColor: const Color(0xFF1F1F1F),
+              tileColor: Get.theme.primaryColor.withOpacity(0.05),
               leading: Checkbox(
                 value: _areAllStudentsSelected,
-                checkColor: Colors.black,
+                checkColor: Colors.white,
                 fillColor: MaterialStateProperty.resolveWith((states) {
                   if (states.contains(MaterialState.selected)) {
-                    return Colors.blue;
+                    return Get.theme.primaryColor;
                   }
-                  return Colors.grey;
+                  return Get.theme.primaryColor.withOpacity(0.3);
                 }),
                 onChanged: (value) {
                   setState(() {
@@ -388,27 +373,27 @@ class _StudentGradingPageState extends State<StudentGradingPage> {
               title: Row(
                 children: [
                   CircleAvatar(
-                    backgroundColor: Colors.blue.shade200,
+                    backgroundColor: Get.theme.primaryColorDark,
                     child: const Icon(Icons.people, color: Colors.white),
                   ),
                   const SizedBox(width: 16),
-                  const Text(
+                  Text(
                     'All students',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(fontWeight: FontWeight.bold, color: Get.theme.primaryColor),
                   ),
                 ],
               ),
             ),
             Container(
-              color: const Color(0xFF1F1F1F),
+              color: Get.theme.primaryColor.withOpacity(0.05),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: const Row(
+              child: Row(
                 children: [
-                  SizedBox(width: 72),
+                  const SizedBox(width: 72),
                   Text(
                     'ASSIGNED',
                     style: TextStyle(
-                      color: Colors.grey,
+                      color: Get.theme.primaryColorDark,
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
@@ -422,18 +407,21 @@ class _StudentGradingPageState extends State<StudentGradingPage> {
                 itemCount: students.length,
                 itemBuilder: (context, index) {
                   final student = students[index];
+                  
                   return Container(
-                    color: index % 2 == 0 ? const Color(0xFF1A1A1A) : const Color(0xFF212121),
+                    color: index % 2 == 0 
+                      ? Colors.white 
+                      : Get.theme.primaryColor.withOpacity(0.03),
                     child: ListTile(
                       dense: true,
                       leading: Checkbox(
                         value: student.isSelected,
-                        checkColor: Colors.black,
+                        checkColor: Colors.white,
                         fillColor: MaterialStateProperty.resolveWith((states) {
                           if (states.contains(MaterialState.selected)) {
-                            return Colors.blue;
+                            return Get.theme.primaryColor;
                           }
-                          return Colors.grey;
+                          return Get.theme.primaryColor.withOpacity(0.3);
                         }),
                         onChanged: (value) {
                           setState(() {
@@ -446,7 +434,7 @@ class _StudentGradingPageState extends State<StudentGradingPage> {
                         children: [
                           CircleAvatar(
                             radius: 16,
-                            backgroundColor: Colors.primaries[index % Colors.primaries.length],
+                            backgroundColor: Get.theme.primaryColorDark,
                             child: Text(
                               student.name.substring(0, 1),
                               style: const TextStyle(
@@ -459,9 +447,9 @@ class _StudentGradingPageState extends State<StudentGradingPage> {
                           Expanded(
                             child: Text(
                               student.name,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                color: Colors.white,
+                                color: Get.theme.primaryColor,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -472,20 +460,20 @@ class _StudentGradingPageState extends State<StudentGradingPage> {
                             constraints: const BoxConstraints(maxWidth: 70),
                             child: TextField(
                               keyboardType: TextInputType.number,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: const InputDecoration(
+                              style: TextStyle(color: Get.theme.primaryColor),
+                              decoration: InputDecoration(
                                 hintText: 'Points',
-                                hintStyle: TextStyle(color: Colors.grey),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                border: OutlineInputBorder(),
+                                hintStyle: TextStyle(color: Get.theme.primaryColorDark.withOpacity(0.5)),
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                border: const OutlineInputBorder(),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
+                                  borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.3)),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue),
+                                  borderSide: BorderSide(color: Get.theme.primaryColor),
                                 ),
                                 isDense: true,
-                                fillColor: Color(0xFF2D2D2D),
+                                fillColor: Colors.white,
                                 filled: true,
                               ),
                               onChanged: (value) {
@@ -503,12 +491,12 @@ class _StudentGradingPageState extends State<StudentGradingPage> {
               ),
             ),
             Container(
-              color: const Color(0xFF1F1F1F),
+              color: Get.theme.primaryColor.withOpacity(0.05),
               padding: const EdgeInsets.all(16),
               child: ElevatedButton(
                 onPressed: _saveGrades,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Get.theme.primaryColor,
                   minimumSize: const Size.fromHeight(50),
                 ),
                 child: const Text(

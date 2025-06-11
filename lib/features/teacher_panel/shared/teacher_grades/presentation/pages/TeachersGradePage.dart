@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'CourseAssignmentsPage.dart';
 import '../../../teacher_grades/domain/entities/Course.dart';
 
@@ -57,15 +58,12 @@ class TeachersGradeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
           'My Courses',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF1F1F1F),
-        foregroundColor: Colors.white,
-        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -85,7 +83,7 @@ class TeachersGradeScreen extends StatelessWidget {
                 return _buildCourseCard(
                   context,
                   course,
-                  gradients[index % gradients.length],
+                  Get.theme.primaryColor,
                 );
               },
             ),
@@ -98,7 +96,7 @@ class TeachersGradeScreen extends StatelessWidget {
   Widget _buildCourseCard(
     BuildContext context,
     Course course,
-    LinearGradient gradient,
+    Color themeColor,
   ) {
     return Card(
       elevation: 4,
@@ -119,7 +117,9 @@ class TeachersGradeScreen extends StatelessWidget {
           );
         },
         child: Container(
-          decoration: BoxDecoration(gradient: gradient),
+          decoration: BoxDecoration(
+            color: Get.theme.primaryColor,
+          ),
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,33 +220,4 @@ class TeachersGradeScreen extends StatelessWidget {
       return Icons.code;
     }
   }
-
-  // Gradient presets
-  final List<LinearGradient> gradients = [
-    const LinearGradient(
-      colors: [Color(0xFF303F9F), Color(0xFF5C6BC0)],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    ),
-    const LinearGradient(
-      colors: [Color(0xFF512DA8), Color(0xFF7E57C2)],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    ),
-    const LinearGradient(
-      colors: [Color(0xFF0097A7), Color(0xFF26C6DA)],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    ),
-    const LinearGradient(
-      colors: [Color(0xFF00796B), Color(0xFF26A69A)],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    ),
-    const LinearGradient(
-      colors: [Color(0xFF455A64), Color(0xFF78909C)],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    ),
-  ];
 }
