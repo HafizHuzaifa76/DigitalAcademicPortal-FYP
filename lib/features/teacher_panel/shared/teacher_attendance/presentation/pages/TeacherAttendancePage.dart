@@ -68,12 +68,14 @@ class _TeacherAttendancePageState extends State<TeacherAttendancePage> {
                   return Card(
                     elevation: 4,
                     margin: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
                     clipBehavior: Clip.antiAlias,
                     child: InkWell(
                       onTap: () {
                         controller.updateSelectedCourse(course);
-                        Get.to(() => TeacherAttendanceMarkingPage(course: course));
+                        Get.to(
+                            () => TeacherAttendanceMarkingPage(course: course));
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -87,7 +89,8 @@ class _TeacherAttendancePageState extends State<TeacherAttendancePage> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         course.courseName,
@@ -143,7 +146,8 @@ class _TeacherAttendancePageState extends State<TeacherAttendancePage> {
                                   ],
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
                                     color: Colors.black26,
                                     borderRadius: BorderRadius.circular(12),
@@ -242,7 +246,7 @@ class TeacherAttendanceMarkingPage extends StatelessWidget {
         children: [
           // Date Picker Button
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
             child: Row(
               children: [
                 Expanded(
@@ -296,7 +300,7 @@ class TeacherAttendanceMarkingPage extends StatelessWidget {
           // Statistics Component
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               color: Get.theme.primaryColor,
               borderRadius: BorderRadius.circular(12),
@@ -313,7 +317,7 @@ class TeacherAttendanceMarkingPage extends StatelessWidget {
                 children: [
                   _buildStatItem(
                     count: presentCount,
-                    label: 'Present',
+                    label: 'Presents',
                     icon: Icons.check_circle_outline,
                     color: Colors.white,
                   ),
@@ -324,7 +328,7 @@ class TeacherAttendanceMarkingPage extends StatelessWidget {
                   ),
                   _buildStatItem(
                     count: absentCount,
-                    label: 'Absent',
+                    label: 'Absents',
                     icon: Icons.cancel_outlined,
                     color: Colors.white,
                   ),
@@ -358,7 +362,7 @@ class TeacherAttendanceMarkingPage extends StatelessWidget {
               return Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5),
                     child: Obx(() => Text(
                           controller.isExistingAttendance.value
                               ? 'Editing existing attendance for ${DateFormat('dd-MMM-yyyy').format(controller.selectedDate.value)}'
@@ -431,7 +435,7 @@ class TeacherAttendanceMarkingPage extends StatelessWidget {
         Icon(icon, color: color, size: 24),
         const SizedBox(width: 8),
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               count.toString(),
