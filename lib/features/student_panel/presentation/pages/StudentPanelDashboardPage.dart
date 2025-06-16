@@ -268,7 +268,9 @@ class StudentPortalDashboardPageState
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
                           onPressed: () =>
-                              Get.toNamed('/student_timetablePage'),
+                              Get.toNamed('/student_timetablePage', arguments: {
+                                'studentDept': controller.student.value?.studentDepartment ?? ''
+                              }),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
