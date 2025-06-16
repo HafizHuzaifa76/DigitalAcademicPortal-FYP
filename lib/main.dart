@@ -252,8 +252,10 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/student_timetablePage',
-          page: () => const Stu_TimeTablePage(),
-          //binding: CalendarEventBinding(),
+          page: () => Stu_TimeTablePage(
+            studentDept: Get.arguments['studentDept'] ?? '',
+          ),
+          binding: StudentCoursesBinding(),
         ),
         GetPage(
           name: '/student_gradesScreen',
