@@ -45,7 +45,7 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   flutter_easyloading: ^3.0.5
   lottie: ^3.1.2
-  file_picker: ^8.0.5
+  file_picker: ^10.2.0
   excel: ^4.0.6
   image_picker: ^1.1.2
   table_calendar: ^3.2.0
@@ -58,6 +58,13 @@ dependencies:
   printing: ^5.10.4
 
   shared_preferences: ^2.2.2 # or the latest version
+  mime: ^2.0.0
+  http_parser: ^4.1.2
+  firebase_messaging: ^15.2.7
+  googleapis: ^14.0.0
+  googleapis_auth: ^2.0.0
+  intl: ^0.20.2
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
