@@ -19,7 +19,6 @@ class _TeacherAssignmentPortalState extends State<TeacherAssignmentPortal> {
   List<Map<String, String>> previousAssignments = [
     {
       'title': 'Binary Trees',
-      'instructions': 'Implement tree traversals in Java.',
       'dueDate': '2025-04-25',
       'marks': '20',
       'file': 'binary_tree_assignment.pdf',

@@ -21,10 +21,16 @@ A few resources to get you started if this is your first Flutter project:
     Email: ali.khan@gmail.com
     Password: 35201-1234567-8
 
+    Email: sana.malik@gmail.com
+    Password: 37405-5566778-9
+
 ## Student Credentials:
 
     Email: alikhan@gmail.com
     Password: 3950132498705
+
+    Email: muneebiqbal@gmail.com
+    Password: 5977690730876
 
     Email: ahmed12@gmail.com
     Password: 42101-1234567-9
