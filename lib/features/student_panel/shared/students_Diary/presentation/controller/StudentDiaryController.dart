@@ -25,6 +25,11 @@ class StudentDiaryController extends GetxController {
   RxList<Note> notes = <Note>[].obs;
   RxList<Note> filteredNotes = <Note>[].obs;
   TextEditingController searchController = TextEditingController();
+  
+  // Filter and sort state
+  RxString currentFilter = 'All'.obs;
+  RxString currentSort = 'Date Created'.obs;
+  RxBool sortAscending = true.obs;
 
   String deptName = '';
   String rollNo = '';
@@ -43,11 +48,60 @@ class StudentDiaryController extends GetxController {
 
   void filterNotes() {
     final query = searchController.text.toLowerCase();
-    filteredNotes.value = notes
-        .where((note) =>
-            note.title.toLowerCase().contains(query) ||
-            note.content.toLowerCase().contains(query))
-        .toList();
+    var filtered = notes.where((note) =>
+        note.title.toLowerCase().contains(query) ||
+        note.content.toLowerCase().contains(query));
+
+    // Apply category filter
+    if (currentFilter.value != 'All') {
+      if (currentFilter.value == 'Completed') {
+        filtered = filtered.where((note) => note.isCompleted);
+      } else if (currentFilter.value == 'Pending') {
+        filtered = filtered.where((note) => !note.isCompleted);
+      } else if (currentFilter.value.contains('Priority')) {
+        final priority = currentFilter.value.split(' ')[0].toLowerCase();
+        filtered = filtered.where((note) => 
+          note.priority?.toLowerCase() == priority);
+      }
+    }
+
+    // Apply sorting
+    final sorted = filtered.toList();
+    switch (currentSort.value) {
+      case 'Date Created':
+        sorted.sort((a, b) => sortAscending.value
+            ? a.dateTime.compareTo(b.dateTime)
+            : b.dateTime.compareTo(a.dateTime));
+        break;
+      case 'Priority':
+        sorted.sort((a, b) {
+          final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
+          final aPriority = priorityOrder[a.priority?.toLowerCase() ?? 'medium'] ?? 1;
+          final bPriority = priorityOrder[b.priority?.toLowerCase() ?? 'medium'] ?? 1;
+          return sortAscending.value
+              ? aPriority.compareTo(bPriority)
+              : bPriority.compareTo(aPriority);
+        });
+        break;
+      case 'Title':
+        sorted.sort((a, b) => sortAscending.value
+            ? a.title.compareTo(b.title)
+            : b.title.compareTo(a.title));
+        break;
+    }
+
+    filteredNotes.value = sorted;
+  }
+
+  void setFilter(String filter) {
+    currentFilter.value = filter;
+    filterNotes();
+  }
+
+  void setSort(String sort, {bool ascending = true}) {
+    currentSort.value = sort;
+    sortAscending.value = ascending;
+    filterNotes();
   }
 
   Future<void> loadNotes() async {
@@ -57,7 +111,7 @@ class StudentDiaryController extends GetxController {
       (failure) => Utils().showErrorSnackBar('Error', failure.toString()),
       (data) {
         notes.value = data;
-        filteredNotes.value = List.from(data);
+        filterNotes();
       },
     );
   }
@@ -68,7 +122,7 @@ class StudentDiaryController extends GetxController {
     result.fold(
       (failure) => Utils().showErrorSnackBar('Error', failure.toString()),
       (newNote) {
-        Utils().showErrorSnackBar('Success', 'Note added successfully');
+        Utils().showSuccessSnackBar('Success', 'Note added successfully');
         loadNotes();
       },
     );
@@ -80,7 +134,7 @@ class StudentDiaryController extends GetxController {
     result.fold(
       (failure) => Utils().showErrorSnackBar('Error', failure.toString()),
       (updatedNote) {
-        Utils().showErrorSnackBar('Success', 'Note updated successfully');
+        Utils().showSuccessSnackBar('Success', 'Note updated successfully');
         loadNotes();
       },
     );
@@ -92,7 +146,7 @@ class StudentDiaryController extends GetxController {
     result.fold(
       (failure) => Utils().showErrorSnackBar('Error', failure.toString()),
       (_) {
-        Utils().showErrorSnackBar('Success', 'Note deleted successfully');
+        Utils().showSuccessSnackBar('Success', 'Note deleted successfully');
         loadNotes();
       },
     );
