@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../domain/entities/Student.dart';
-import '../../domain/entities/TeacherGrade.dart';
+import '../controllers/TeacherGradeController.dart';
+import '../../domain/entities/Grade.dart';
+import 'package:digital_academic_portal/core/utils/Utils.dart';
 
 class StudentGradingPage extends StatefulWidget {
-  final String assignmentId;
-  final String title;
-  final int totalMarks;
+  final Grade grade;
 
   const StudentGradingPage({
     super.key,
-    required this.assignmentId,
-    required this.title,
-    required this.totalMarks,
+    required this.grade,
   });
 
   @override
@@ -20,507 +17,245 @@ class StudentGradingPage extends StatefulWidget {
 }
 
 class _StudentGradingPageState extends State<StudentGradingPage> {
-  List<Student> students = [];
-  List<TeacherGrade> grades = [];
-  bool _areAllStudentsSelected = false;
+  final TeacherGradeController controller = Get.find();
+  final Map<String, TextEditingController> gradeControllers = {};
+  final _formKey = GlobalKey<FormState>();
+  final RxBool _hasUnsavedChanges = false.obs;
 
   @override
   void initState() {
     super.initState();
-    _initializeStudents();
-  }
-
-  void _initializeStudents() {
-    // Sample student data
-    students = [
-      Student(
-        id: '1',
-        name: 'Abdul Sami',
-        rollNumber: 'CS-001',
-        email: 'abdul.sami@example.com',
-        enrolledCourseIds: ['1', '2'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '2',
-        name: 'Aleena Mazhar',
-        rollNumber: 'CS-002',
-        email: 'aleena.mazhar@example.com',
-        enrolledCourseIds: ['1', '3'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '3',
-        name: 'Alishaz Imtiaz Ali',
-        rollNumber: 'CS-003',
-        email: 'alishaz.imtiaz@example.com',
-        enrolledCourseIds: ['1', '4'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '4',
-        name: 'Faisal Ilyas',
-        rollNumber: 'CS-004',
-        email: 'faisal.ilyas@example.com',
-        enrolledCourseIds: ['1', '2'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '5',
-        name: 'Ibrar Ahmed',
-        rollNumber: 'CS-005',
-        email: 'ibrar.ahmed@example.com',
-        enrolledCourseIds: ['1', '5'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '6',
-        name: 'Kausar Fatima',
-        rollNumber: 'CS-006',
-        email: 'kausar.fatima@example.com',
-        enrolledCourseIds: ['1', '2'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '7',
-        name: 'Mahnoor Fatima',
-        rollNumber: 'CS-007',
-        email: 'mahnoor.fatima@example.com',
-        enrolledCourseIds: ['1', '3'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '8',
-        name: 'Muhammad Talha',
-        rollNumber: 'CS-008',
-        email: 'muhammad.talha@example.com',
-        enrolledCourseIds: ['1', '4'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '9',
-        name: 'Noor Fatima',
-        rollNumber: 'CS-009',
-        email: 'noor.fatima@example.com',
-        enrolledCourseIds: ['1', '5'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '10',
-        name: 'Omar Khan',
-        rollNumber: 'CS-010',
-        email: 'omar.khan@example.com',
-        enrolledCourseIds: ['1', '2'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '11',
-        name: 'Saad Hussain',
-        rollNumber: 'CS-011',
-        email: 'saad.hussain@example.com',
-        enrolledCourseIds: ['1', '3'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '12',
-        name: 'Sabeen Noor',
-        rollNumber: 'CS-012',
-        email: 'sabeen.noor@example.com',
-        enrolledCourseIds: ['1', '4'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '13',
-        name: 'Usman Ali',
-        rollNumber: 'CS-013',
-        email: 'usman.ali@example.com',
-        enrolledCourseIds: ['1', '5'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '14',
-        name: 'Waqas Ahmed',
-        rollNumber: 'CS-014',
-        email: 'waqas.ahmed@example.com',
-        enrolledCourseIds: ['1', '2'],
-        obtainedMarks: 0,
-      ),
-      Student(
-        id: '15',
-        name: 'Zainab Fatima',
-        rollNumber: 'CS-015',
-        email: 'zainab.fatima@example.com',
-        enrolledCourseIds: ['1', '3'],
-        obtainedMarks: 0,
-      ),
-    ];
-
-    // Initialize any existing grades
-    // This would typically be loaded from a database
-    grades = [];
-  }
-
-  void _saveGrades() {
-    // Create TeacherGrade objects for each student
-    List<TeacherGrade> newGrades = [];
-    
-    for (var student in students) {
-      if (student.obtainedMarks != null && student.obtainedMarks! > 0) {
-        newGrades.add(
-          TeacherGrade(
-            id: DateTime.now().millisecondsSinceEpoch.toString() + student.id,
-            courseId: '1', // Replace with actual course ID
-            courseName: 'Sample Course', // Replace with actual course name
-            sectionClass: 'A1', // Replace with actual section
-            studentId: student.id,
-            studentName: student.name,
-            obtainedMarks: student.obtainedMarks!,
-            totalMarks: widget.totalMarks.toDouble(),
-            category: 'Assignment', // Replace with actual category
-            title: widget.title,
-            date: DateTime.now().toString().split(' ')[0],
-            semester: 'Fall 2024', // Replace with actual semester
-            isSubmitted: true,
-          ),
-        );
-      }
+    // Initialize controllers with student IDs and their marks
+    for (var entry in widget.grade.obtainedMarks.entries) {
+      gradeControllers[entry.key] = TextEditingController(
+        text: _formatNumber(entry.value),
+      );
+      // Add listener to detect changes
+      gradeControllers[entry.key]!.addListener(_onMarksChanged);
     }
+  }
 
-    // Here, you would typically save these grades to a database
-    setState(() {
-      grades = newGrades;
-    });
+  void _onMarksChanged() {
+    if (!_hasUnsavedChanges.value) {
+      _hasUnsavedChanges.value = true;
+    }
+  }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Grades saved successfully'),
-        backgroundColor: Get.theme.primaryColor,
+  Future<bool> _onWillPop() async {
+    if (!_hasUnsavedChanges.value) return true;
+
+    final result = await Get.dialog<bool>(
+      AlertDialog(
+        title: Text(
+          'Unsaved Changes',
+          style: TextStyle(color: Get.theme.primaryColor),
+        ),
+        content: const Text(
+            'You have unsaved changes. Do you want to save them before leaving?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back(result: false); // Don't save
+            },
+            child: Text(
+              'Discard',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Get.back(result: true); // Save
+            },
+            child: Text(
+              'Save',
+              style: TextStyle(color: Get.theme.primaryColor),
+            ),
+          ),
+        ],
       ),
     );
+
+    if (result == null) return false; // User cancelled
+    if (result) {
+      await _saveGrades();
+    }
+    return true;
+  }
+
+  String _formatNumber(dynamic value) {
+    if (value == null) return '0';
+    final num = double.tryParse(value.toString()) ?? 0;
+    return num == num.toInt() ? num.toInt().toString() : num.toString();
+  }
+
+  String? _validateMarks(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Empty';
+    }
+
+    final marks = double.tryParse(value);
+    if (marks == null) {
+      return 'Invalid';
+    }
+
+    if (marks < 0) {
+      return 'Invalid';
+    }
+
+    if (marks > widget.grade.totalMarks) {
+      return 'Limit Exceed';
+    }
+
+    return null;
+  }
+
+  @override
+  void dispose() {
+    for (var controller in gradeControllers.values) {
+      controller.removeListener(_onMarksChanged);
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  Future<void> _saveGrades() async {
+    if (!_formKey.currentState!.validate()) {
+      Utils().showErrorSnackBar('Error', 'Please fix the errors before saving');
+      return;
+    }
+
+    final marks = <String, dynamic>{};
+    for (var entry in gradeControllers.entries) {
+      marks[entry.key] = double.tryParse(entry.value.text) ?? 0;
+    }
+
+    await controller.saveGrades(widget.grade, marks);
+    _hasUnsavedChanges.value = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    int turnedIn = students.where((s) => s.obtainedMarks != null && s.obtainedMarks! > 0).length;
-    
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          widget.title,
-          overflow: TextOverflow.ellipsis,
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save, color: Colors.white),
-            onPressed: _saveGrades,
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(
+            widget.grade.title,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-        ],
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              color: Get.theme.primaryColor.withOpacity(0.1),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: Get.theme.primaryColor.withOpacity(0.3)),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    child: PopupMenuButton<String>(
-                      color: Colors.white,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '${widget.totalMarks} points',
-                            style: TextStyle(
-                              color: Get.theme.primaryColor,
-                              fontWeight: FontWeight.bold,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () async {
+              if (await _onWillPop()) {
+                Get.back();
+              }
+            },
+          ),
+        ),
+        body: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (widget.grade.obtainedMarks.isEmpty) {
+            return const Center(child: Text('No students found'));
+          }
+
+          return Form(
+            key: _formKey,
+            child: ListView.builder(
+              itemCount: widget.grade.obtainedMarks.length,
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              itemBuilder: (context, index) {
+                // Sort the entries by student ID
+                final sortedEntries = widget.grade.obtainedMarks.entries
+                    .toList()
+                  ..sort((a, b) => a.key.compareTo(b.key));
+                final studentId = sortedEntries[index].key;
+                return Card(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  elevation: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor:
+                                  Get.theme.primaryColor.withOpacity(0.1),
+                              child: Text(
+                                studentId[0].toUpperCase(),
+                                style: TextStyle(
+                                  color: Get.theme.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
-                          Icon(Icons.arrow_drop_down, color: Get.theme.primaryColor),
-                        ],
-                      ),
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          value: '${widget.totalMarks}',
-                          child: Text(
-                            '${widget.totalMarks} points',
-                            style: TextStyle(color: Get.theme.primaryColor),
-                          ),
-                        ),
-                        PopupMenuItem(
-                          value: '50',
-                          child: Text('50 points', style: TextStyle(color: Get.theme.primaryColor)),
-                        ),
-                        PopupMenuItem(
-                          value: '25',
-                          child: Text('25 points', style: TextStyle(color: Get.theme.primaryColor)),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    studentId,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Get.theme.primaryColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Student ID',
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(0.7),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 100,
+                              child: TextFormField(
+                                controller: gradeControllers[studentId],
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
+                                validator: _validateMarks,
+                                decoration: InputDecoration(
+                                  hintText: 'Marks',
+                                  suffixText: '/${widget.grade.totalMarks}',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  errorStyle: const TextStyle(fontSize: 10),
+                                ),
+                                onChanged: (value) {
+                                  _formKey.currentState!.validate();
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                ],
-              ),
+                );
+              },
             ),
-            Container(
-              color: Get.theme.primaryColor.withOpacity(0.05),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                children: [
-                  Text(
-                    'Instructions',
-                    style: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
-                  ),
-                  const Spacer(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Student Work',
-                        style: TextStyle(color: Get.theme.primaryColor, fontWeight: FontWeight.bold),
-                      ),
-                      Container(
-                        height: 2,
-                        width: 100,
-                        color: Get.theme.primaryColor,
-                        margin: const EdgeInsets.only(top: 4),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                children: [
-                  Text(
-                    '$turnedIn',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Get.theme.primaryColor,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Turned in',
-                    style: TextStyle(color: Get.theme.primaryColorDark),
-                  ),
-                  const Spacer(),
-                  Text(
-                    '${students.length}',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Get.theme.primaryColor,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Assigned',
-                    style: TextStyle(color: Get.theme.primaryColorDark),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Submissions closed Aug 24, 2024, 11:59 PM',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Get.theme.primaryColorDark),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.edit, color: Get.theme.primaryColor),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
-            Divider(color: Get.theme.primaryColor.withOpacity(0.2)),
-            ListTile(
-              tileColor: Get.theme.primaryColor.withOpacity(0.05),
-              leading: Checkbox(
-                value: _areAllStudentsSelected,
-                checkColor: Colors.white,
-                fillColor: MaterialStateProperty.resolveWith((states) {
-                  if (states.contains(MaterialState.selected)) {
-                    return Get.theme.primaryColor;
-                  }
-                  return Get.theme.primaryColor.withOpacity(0.3);
-                }),
-                onChanged: (value) {
-                  setState(() {
-                    _areAllStudentsSelected = value ?? false;
-                    for (var student in students) {
-                      student.isSelected = _areAllStudentsSelected;
-                    }
-                  });
-                },
-              ),
-              title: Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Get.theme.primaryColorDark,
-                    child: const Icon(Icons.people, color: Colors.white),
-                  ),
-                  const SizedBox(width: 16),
-                  Text(
-                    'All students',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Get.theme.primaryColor),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              color: Get.theme.primaryColor.withOpacity(0.05),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Row(
-                children: [
-                  const SizedBox(width: 72),
-                  Text(
-                    'ASSIGNED',
-                    style: TextStyle(
-                      color: Get.theme.primaryColorDark,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: ListView.builder(
-                itemCount: students.length,
-                itemBuilder: (context, index) {
-                  final student = students[index];
-                  
-                  return Container(
-                    color: index % 2 == 0 
-                      ? Colors.white 
-                      : Get.theme.primaryColor.withOpacity(0.03),
-                    child: ListTile(
-                      dense: true,
-                      leading: Checkbox(
-                        value: student.isSelected,
-                        checkColor: Colors.white,
-                        fillColor: MaterialStateProperty.resolveWith((states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return Get.theme.primaryColor;
-                          }
-                          return Get.theme.primaryColor.withOpacity(0.3);
-                        }),
-                        onChanged: (value) {
-                          setState(() {
-                            student.isSelected = value ?? false;
-                            _updateAllSelectedState();
-                          });
-                        },
-                      ),
-                      title: Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 16,
-                            backgroundColor: Get.theme.primaryColorDark,
-                            child: Text(
-                              student.name.substring(0, 1),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              student.name,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Get.theme.primaryColor,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Container(
-                            width: 70,
-                            height: 36,
-                            constraints: const BoxConstraints(maxWidth: 70),
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              style: TextStyle(color: Get.theme.primaryColor),
-                              decoration: InputDecoration(
-                                hintText: 'Points',
-                                hintStyle: TextStyle(color: Get.theme.primaryColorDark.withOpacity(0.5)),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                border: const OutlineInputBorder(),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.3)),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Get.theme.primaryColor),
-                                ),
-                                isDense: true,
-                                fillColor: Colors.white,
-                                filled: true,
-                              ),
-                              onChanged: (value) {
-                                setState(() {
-                                  student.obtainedMarks = double.tryParse(value);
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Container(
-              color: Get.theme.primaryColor.withOpacity(0.05),
-              padding: const EdgeInsets.all(16),
-              child: ElevatedButton(
-                onPressed: _saveGrades,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Get.theme.primaryColor,
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                child: const Text(
-                  'Save Grades',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-            ),
-          ],
+          );
+        }),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _saveGrades,
+          backgroundColor: Get.theme.primaryColor,
+          child: const Icon(Icons.save, color: Colors.white),
         ),
       ),
     );
   }
-
-  void _updateAllSelectedState() {
-    bool allSelected = true;
-    for (var student in students) {
-      if (student.isSelected == null || student.isSelected == false) {
-        allSelected = false;
-        break;
-      }
-    }
-    setState(() {
-      _areAllStudentsSelected = allSelected;
-    });
-  }
-} 
+}

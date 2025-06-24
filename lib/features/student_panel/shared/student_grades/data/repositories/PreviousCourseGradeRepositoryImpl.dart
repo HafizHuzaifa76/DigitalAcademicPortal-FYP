@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../domain/entities/PreviousCourseGrade.dart';
+import '../../../../../../shared/domain/entities/PreviousCourseGrade.dart';
 import '../../domain/repositories/PreviousCourseGradeRepository.dart';
 import '../data_sources/PreviousCourseGradeRemoteDataSource.dart';
 

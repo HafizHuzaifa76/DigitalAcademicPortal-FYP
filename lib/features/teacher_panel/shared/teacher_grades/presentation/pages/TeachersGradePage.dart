@@ -1,59 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'CourseAssignmentsPage.dart';
-import '../../../teacher_grades/domain/entities/Course.dart';
+import 'CourseGradesPage.dart';
+import '../../../teacher_courses/domain/entities/TeacherCourse.dart';
+import '../controllers/TeacherGradeController.dart';
 
-class TeachersGradeScreen extends StatelessWidget {
-  TeachersGradeScreen({super.key});
+class TeachersGradePage extends StatefulWidget {
+  final String teacherDept;
 
-  // Sample course data
-  final List<Course> courses = [
-    Course(
-      id: '1',
-      courseCode: 'ASE',
-      sectionClass: 'A4',
-      teacherName: 'Sabin Amjad',
-      teacherId: 'T001',
-      studentCount: 30,
-      semester: 'Fall 2024',
-    ),
-    Course(
-      id: '2',
-      courseCode: 'SQA',
-      sectionClass: 'A1',
-      teacherName: 'Sabin Amjad',
-      teacherId: 'T001',
-      studentCount: 35,
-      semester: 'Fall 2024',
-    ),
-    Course(
-      id: '3',
-      courseCode: 'TIERS Limited Summer Internship',
-      sectionClass: 'Mobile App Development',
-      teacherName: 'Instructor Name',
-      teacherId: 'T003',
-      studentCount: 22,
-      semester: 'Summer 2024',
-    ),
-    Course(
-      id: '4',
-      courseCode: 'Mobile App Development',
-      sectionClass: 'A1 & A3',
-      teacherName: 'Hassaan Ahmed',
-      teacherId: 'T002',
-      studentCount: 40,
-      semester: 'Fall 2024',
-    ),
-    Course(
-      id: '5',
-      courseCode: 'Mobile development',
-      sectionClass: 'Mobile App Dev',
-      teacherName: 'Instructor Name',
-      teacherId: 'T003',
-      studentCount: 25,
-      semester: 'Fall 2024',
-    ),
-  ];
+  const TeachersGradePage({super.key, required this.teacherDept});
+
+  @override
+  State<TeachersGradePage> createState() => _TeachersGradePageState();
+}
+
+class _TeachersGradePageState extends State<TeachersGradePage> {
+  final TeacherGradeController controller = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.getTeacherCourses(widget.teacherDept);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,39 +32,41 @@ class TeachersGradeScreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
-                childAspectRatio: 2.3,
-                mainAxisSpacing: 12,
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (controller.coursesList.isEmpty) {
+          return const Center(child: Text('No courses available'));
+        }
+
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            children: [
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                  childAspectRatio: 2.3,
+                  mainAxisSpacing: 12,
+                ),
+                itemCount: controller.coursesList.length,
+                itemBuilder: (context, index) {
+                  final course = controller.coursesList[index];
+                  return _buildCourseCard(context, course);
+                },
               ),
-              itemCount: courses.length,
-              itemBuilder: (context, index) {
-                final course = courses[index];
-                return _buildCourseCard(
-                  context,
-                  course,
-                  Get.theme.primaryColor,
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      }),
     );
   }
 
-  Widget _buildCourseCard(
-    BuildContext context,
-    Course course,
-    Color themeColor,
-  ) {
+  Widget _buildCourseCard(BuildContext context, TeacherCourse course) {
     return Card(
       elevation: 4,
       margin: EdgeInsets.zero,
@@ -105,16 +74,12 @@ class TeachersGradeScreen extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CourseAssignmentsPage(
-                courseId: course.id,
+          controller.updateSelectedCourse(course);
+          Get.to(() => CourseGradesPage(
+                courseId: course.courseName,
                 courseCode: course.courseCode,
-                sectionClass: course.sectionClass,
-              ),
-            ),
-          );
+                sectionClass: course.courseSection,
+              ));
         },
         child: Container(
           decoration: BoxDecoration(
@@ -142,7 +107,7 @@ class TeachersGradeScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          course.sectionClass,
+                          course.courseSection,
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.white,
@@ -154,7 +119,7 @@ class TeachersGradeScreen extends StatelessWidget {
                     ),
                   ),
                   Icon(
-                    _getIconForCourse(course.courseCode),
+                    _getIconForCourse(course.courseName),
                     color: Colors.white.withOpacity(0.7),
                     size: 28,
                   ),
@@ -173,7 +138,7 @@ class TeachersGradeScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        "${course.studentCount} students",
+                        "${course.studentIds.length} students",
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.white.withOpacity(0.9),
@@ -184,7 +149,8 @@ class TeachersGradeScreen extends StatelessWidget {
                     ],
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.black26,
                       borderRadius: BorderRadius.circular(12),
@@ -208,16 +174,16 @@ class TeachersGradeScreen extends StatelessWidget {
   }
 
   IconData _getIconForCourse(String courseCode) {
-    if (courseCode.contains('Mobile')) {
+    if (courseCode.toLowerCase().contains('mobile')) {
       return Icons.phone_android;
-    } else if (courseCode.contains('ASE')) {
-      return Icons.architecture;
-    } else if (courseCode.contains('SQA')) {
-      return Icons.verified;
-    } else if (courseCode.contains('TIERS')) {
-      return Icons.business;
-    } else {
+    } else if (courseCode.toLowerCase().contains('web')) {
+      return Icons.web;
+    } else if (courseCode.toLowerCase().contains('database')) {
+      return Icons.storage;
+    } else if (courseCode.toLowerCase().contains('programming')) {
       return Icons.code;
+    } else {
+      return Icons.book;
     }
   }
 }
