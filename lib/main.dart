@@ -1,3 +1,4 @@
+import 'package:digital_academic_portal/features/administrator_panel/presentation/bindings/AdminDashboardBinding.dart';
 import 'package:digital_academic_portal/features/administrator_panel/presentation/pages/AdministratorDashboardPage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/calendar_events/presentation/bindings/CalendarEventBindings.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/calendar_events/presentation/pages/CalendarEventPage.dart';
@@ -23,6 +24,8 @@ import 'package:digital_academic_portal/features/student_panel/shared/student_no
 import 'package:digital_academic_portal/features/student_panel/shared/students_Diary/presentation/bindings/StudentDiaryBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/bindings/TeacherPanelBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/pages/TeacherDashboardPage.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_assignment/presentation/bindings/TeacherAssignmentBinding.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_assignment/presentation/pages/TeacherAssignmentPage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_attendance/presentation/bindings/TeacherAttendanceBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_calendar_events/presentation/bindings/TeacherCalendarEventBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/bindings/TeacherCourseBinding.dart';
@@ -60,6 +63,7 @@ import 'features/teacher_panel/shared/teacher_calendar_events/presentation/pages
 import 'features/teacher_panel/shared/teacher_announcement/presentation/pages/TeacherAnnouncementPage.dart';
 import 'features/teacher_panel/shared/teacher_queries/presentation/pages/TeacherQueryPage.dart';
 import 'features/teacher_panel/shared/teacher_timetable/presentation/pages/TeacherTimeTablePage.dart';
+import 'features/teacher_panel/shared/teacher_grades/presentation/bindings/TeacherGradeBinding.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -142,10 +146,9 @@ class MyApp extends StatelessWidget {
             page: () => const LoginPage(),
             binding: AuthBinding()),
         GetPage(
-          name: '/admin',
-          page: () => const AdministratorDashboardPage(),
-          // binding: DepartmentBinding()
-        ),
+            name: '/admin',
+            page: () => const AdministratorDashboardPage(),
+            binding: AdminDashboardBinding()),
         GetPage(
           name: '/teacherDashboard',
           page: () => const TeacherDashboardPage(),
@@ -314,9 +317,9 @@ class MyApp extends StatelessWidget {
           //binding: CalendarEventBinding(),
         ),
         GetPage(
-          name: '/teacher_assignments',
-          page: () => const TeacherAssignmentPortal(),
-          //binding: CalendarEventBinding(),
+          name: '/teacherAssignments',
+          page: () => const TeacherAssignmentPage(),
+          binding: TeacherAssignmentBinding(),
         ),
         GetPage(
           name: '/teacherQueryPage',
@@ -331,8 +334,9 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/teacherGradePage',
-          page: () =>  TeachersGradeScreen(),
-         // binding: ,
+          page: () =>
+              TeachersGradePage(teacherDept: Get.arguments['teacherDept']),
+          binding: TeacherGradeBinding(),
         ),
         GetPage(
           name: '/teacherAttendancePage',
@@ -407,4 +411,3 @@ class DefaultFirebaseOptions {
       appId: "1:849792758725:web:1239caff45159a088911ac",
       measurementId: "G-YX93SV1GFK");
 }
-

@@ -1,8 +1,9 @@
+import 'package:digital_academic_portal/core/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../presentation/pages/StudentPanelDashboardPage.dart';
 import '../../domain/entities/StudentGrade.dart';
-import '../../domain/entities/PreviousCourseGrade.dart';
+import '../../../../../../shared/domain/entities/PreviousCourseGrade.dart';
 import '../../domain/use_cases/GetStudentGradesUseCase.dart';
 import '../../domain/use_cases/GetAllGradesUseCase.dart';
 import '../../domain/use_cases/GetPreviousCourseGradesUseCase.dart';
@@ -93,15 +94,13 @@ class StudentGradeController extends GetxController {
 
       result.fold(
         (failure) {
-          Get.snackbar('Error', failure.toString(),
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: Colors.red,
-              colorText: Colors.white);
+          Utils().showErrorSnackBar('Error', failure.failure.toString());
         },
         (grades) {
           currentGradesList.assignAll(grades);
+          print('Grades: ${grades.length}');
           // Extract unique categories
-          categories.value = grades.map((g) => g.category).toSet().toList();
+          categories.value = grades.map((g) => g.type).toSet().toList();
         },
       );
     } finally {
@@ -169,7 +168,7 @@ class StudentGradeController extends GetxController {
 
   List<StudentGrade> getGradesByCategory(String category) {
     return currentGradesList
-        .where((grade) => grade.category == category)
+        .where((grade) => grade.type == category)
         .toList();
   }
 
