@@ -4,6 +4,9 @@ class Note {
   final String content;
   final bool isCompleted;
   final String dateTime;
+  final String? priority;
+  final String? category;
+  final String? dueDate;
 
   Note({
     required this.id,
@@ -11,6 +14,9 @@ class Note {
     required this.content,
     this.isCompleted = false,
     required this.dateTime,
+    this.priority,
+    this.category,
+    this.dueDate,
   });
 
   Note copyWith({
@@ -19,6 +25,9 @@ class Note {
     String? content,
     bool? isCompleted,
     String? dateTime,
+    String? priority,
+    String? category,
+    String? dueDate,
   }) {
     return Note(
       id: id ?? this.id,
@@ -26,6 +35,9 @@ class Note {
       content: content ?? this.content,
       isCompleted: isCompleted ?? this.isCompleted,
       dateTime: dateTime ?? this.dateTime,
+      priority: priority ?? this.priority,
+      category: category ?? this.category,
+      dueDate: dueDate ?? this.dueDate,
     );
   }
 }
