@@ -246,7 +246,8 @@ class TeacherAttendanceMarkingPage extends StatelessWidget {
         children: [
           // Date Picker Button
           Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+            padding:
+                const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
             child: Row(
               children: [
                 Expanded(
@@ -362,7 +363,8 @@ class TeacherAttendanceMarkingPage extends StatelessWidget {
               return Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 5),
                     child: Obx(() => Text(
                           controller.isExistingAttendance.value
                               ? 'Editing existing attendance for ${DateFormat('dd-MMM-yyyy').format(controller.selectedDate.value)}'

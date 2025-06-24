@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:digital_academic_portal/core/usecases/UseCase.dart';
-import '../entities/PreviousCourseGrade.dart';
+import '../../../../../../shared/domain/entities/PreviousCourseGrade.dart';
 import '../repositories/PreviousCourseGradeRepository.dart';
 
 class GetPreviousCourseGradesParams {
