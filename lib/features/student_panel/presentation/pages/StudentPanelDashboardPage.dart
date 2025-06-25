@@ -371,7 +371,7 @@ class StudentPortalDashboardPageState
                               padding: const WidgetStatePropertyAll(
                                   EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 5))),
-                          onPressed: () => Get.toNamed('/student_NoticeBoard'),
+                          onPressed: () => Get.toNamed('/studentNoticeBoard'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
