@@ -103,7 +103,7 @@ class StudentDrawer extends StatelessWidget {
             leading: Image.asset('assets/images/noticeboard_icon.png', height: 30, width: 30),
             title: Text('Notice Board', style: TextStyle(fontFamily: 'Ubuntu', color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
             onTap: () {
-              Get.toNamed('/student_NoticeBoard');
+              Get.toNamed('/studentNoticeBoard');
             },
           ),
           const Divider(),

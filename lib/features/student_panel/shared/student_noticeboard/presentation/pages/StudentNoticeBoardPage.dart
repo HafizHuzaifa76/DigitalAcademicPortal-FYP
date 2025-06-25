@@ -15,9 +15,15 @@ class StudentNoticeBoardPage extends StatefulWidget {
 }
 
 class _StudentNoticeBoardPageState extends State<StudentNoticeBoardPage> {
-  final StudentNoticeBoardController controller = Get.find();
+  late final StudentNoticeBoardController controller;
   final addNoticeKey = GlobalKey<FormState>();
   final editNoticeKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.find<StudentNoticeBoardController>();
+  }
 
   @override
   Widget build(BuildContext context) {

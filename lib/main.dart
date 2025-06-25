@@ -51,6 +51,7 @@ import 'features/student_panel/shared/student_chatbot/presentation/pages/Stu_Cha
 import 'features/student_panel/shared/student_courses/presentation/bindings/StudentCoursesBinding.dart';
 import 'features/student_panel/shared/student_grades/presentation/pages/StudentGradePage.dart';
 import 'features/student_panel/shared/student_grades/presentation/bindings/StudentGradeBindings.dart';
+import 'features/student_panel/shared/student_noticeboard/presentation/controllers/StudentNoticeBoardController.dart';
 import 'features/student_panel/shared/student_report/presentation/pages/Stu_Reports.dart';
 import 'features/student_panel/shared/student_timetable/presentation/pages/Stu_TimeTablePage.dart';
 import 'features/student_panel/shared/students_Diary/presentation/pages/StudentDiaryPage.dart';
@@ -60,6 +61,7 @@ import 'features/teacher_panel/shared/teacher_calendar_events/presentation/pages
 import 'features/teacher_panel/shared/teacher_announcement/presentation/pages/TeacherAnnouncementPage.dart';
 import 'features/teacher_panel/shared/teacher_queries/presentation/pages/TeacherQueryPage.dart';
 import 'features/teacher_panel/shared/teacher_timetable/presentation/pages/TeacherTimeTablePage.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_noticeboard/presentation/bindings/StudentNoticeBoardBindings.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -222,7 +224,7 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/studentNoticeBoard',
           page: () => const StudentNoticeBoardPage(),
-          // binding: StudenNotiBoBin(),
+          binding: StudentNoticeBoardBinding(),
         ),
         GetPage(
           name: '/calendarPage',
@@ -290,11 +292,6 @@ class MyApp extends StatelessWidget {
             studentRollNo: Get.arguments['studentRollNo'],
           ),
           binding: StudentDiaryBinding(),
-        ),
-        GetPage(
-          name: '/Stu_report',
-          page: () => const Stu_Reports(),
-          //binding: CalendarEventBinding(),
         ),
         GetPage(
           name: '/teacherCalendarPage',
