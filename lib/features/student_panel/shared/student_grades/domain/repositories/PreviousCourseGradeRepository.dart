@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../entities/PreviousCourseGrade.dart';
+import '../../../../../../shared/domain/entities/PreviousCourseGrade.dart';
 
 abstract class PreviousCourseGradeRepository {
   Future<Either<Fail, List<PreviousCourseGrade>>> getPreviousCourseGrades(

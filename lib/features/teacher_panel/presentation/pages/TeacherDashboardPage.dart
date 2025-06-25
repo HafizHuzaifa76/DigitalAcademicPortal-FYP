@@ -20,7 +20,6 @@ class TeacherDashboardPage extends StatefulWidget {
 class TeacherDashboardPageState extends State<TeacherDashboardPage> {
   final TeacherDashboardController controller = Get.find();
 
-  int count = 0;
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -107,15 +106,35 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                           child: SizedBox(
                             height: screenSize.height * 0.25 * 0.34,
                             width: screenSize.width * 0.30,
-                            child: Center(
-                              child: Text(
-                                'Departments\n$count',
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Ubuntu',
-                                    color: Theme.of(context).primaryColorDark),
-                                textAlign: TextAlign.center,
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Department',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Ubuntu',
+                                          color: Theme.of(context)
+                                              .primaryColorDark),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    AutoSizeText(
+                                      controller.teacher.value?.teacherDept ??
+                                          '',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Ubuntu',
+                                          color: Theme.of(context)
+                                              .primaryColorDark),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 1,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -125,15 +144,34 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                           child: SizedBox(
                             height: screenSize.height * 0.25 * 0.34,
                             width: screenSize.width * 0.28,
-                            child: Center(
-                              child: Text(
-                                'Teachers\n$count',
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    color: Theme.of(context).primaryColorDark,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Ubuntu'),
-                                textAlign: TextAlign.center,
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Courses',
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          color: Theme.of(context)
+                                              .primaryColorDark,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Ubuntu'),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    AutoSizeText(
+                                      '0',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Ubuntu',
+                                          color: Theme.of(context)
+                                              .primaryColorDark),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 1,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -145,20 +183,36 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                           child: SizedBox(
                             height: screenSize.height * 0.25 * 0.34,
                             width: screenSize.width * 0.28,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Students\n$count',
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      color: Theme.of(context).primaryColorDark,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Ubuntu'),
-                                  textAlign: TextAlign.center,
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Faculty Type',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Theme.of(context)
+                                              .primaryColorDark,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Ubuntu'),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    AutoSizeText(
+                                      controller.teacher.value?.teacherType ??
+                                          '',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Ubuntu',
+                                          color: Theme.of(context)
+                                              .primaryColorDark),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 1,
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
                         ),
@@ -320,7 +374,7 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                                       horizontal: 12, vertical: 5))),
                           onPressed: () {
                             if (controller.teacher.value != null) {
-                              Get.toNamed('/teacher_assignments');
+                              Get.toNamed('/teacherAssignments');
                             } else {
                               Utils().showErrorSnackBar('Error',
                                   'Teacher data not loaded. Please wait or refresh.');
@@ -487,10 +541,10 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                           // onPressed: () => Get.to(const TableEventsExample()),
                           onPressed: () {
                             if (controller.teacher.value != null) {
-                              Get.toNamed(
-                                '/teacherGradePage',
-                              );
-
+                              Get.toNamed('/teacherGradePage', arguments: {
+                                'teacherDept':
+                                    controller.teacher.value?.teacherDept ?? ''
+                              });
                             } else {
                               Utils().showErrorSnackBar('Error',
                                   'Teacher data not loaded. Please wait or refresh.');
@@ -623,22 +677,19 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                 subtitle: Text(
                     controller.teacher.value?.teacherEmail ?? 'Loading...'),
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://via.placeholder.com/150'), // User's image URL
+                  backgroundColor: Theme.of(context).primaryColor,
+                  child: const Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 30,
+                  ),
                 ),
               ),
               const Divider(),
               ListTile(
-                leading: const Icon(Icons.account_circle),
-                title: const Text('Manage your Google Account'),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  // Handle the action
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Sign out'),
+                leading: Icon(Icons.logout, color: Colors.red.shade700),
+                title: Text('Sign out',
+                    style: TextStyle(color: Colors.red.shade700)),
                 onTap: () {
                   Get.back(); // Close the drawer
                   Get.off(() => const LoginPage());
