@@ -33,8 +33,8 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
               floating: true,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
-                titlePadding: EdgeInsets.only(
-                    bottom: controller.titlePadding.value),
+                titlePadding:
+                    EdgeInsets.only(bottom: controller.titlePadding.value),
                 centerTitle: true,
                 title: const SizedBox(
                   width: double.infinity,
@@ -66,9 +66,7 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Theme
-                            .of(context)
-                            .primaryColor,
+                        Theme.of(context).primaryColor,
                         const Color(0xFF1B7660),
                       ],
                       begin: Alignment.topCenter,
@@ -103,7 +101,6 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
               ),
             );
           }),
-
           Obx(() {
             if (controller.isLoading.value) {
               return SliverFillRemaining(
@@ -124,11 +121,11 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
               } else {
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
+                    (BuildContext context, int index) {
                       final student = controller.filteredStudentList[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0,
-                            vertical: 5.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 5.0),
                         child: Card(
                           elevation: 4,
                           shape: RoundedRectangleBorder(
@@ -136,9 +133,7 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                           ),
                           child: ListTile(
                             leading: CircleAvatar(
-                              backgroundColor: Theme
-                                  .of(context)
-                                  .primaryColor,
+                              backgroundColor: Theme.of(context).primaryColor,
                               child: Text(
                                 student.studentName[0],
                                 // Show initial of student's name
@@ -151,13 +146,11 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                             title: Text(
                               student.studentRollNo,
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, color: Theme
-                                  .of(context)
-                                  .primaryColor),
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColor),
                             ),
                             subtitle: Text(
-                              'Name: ${student.studentName}\nFather: ${student
-                                  .fatherName}',
+                              'Name: ${student.studentName}\nFather: ${student.fatherName}',
                             ),
                             trailing: const Icon(Icons.arrow_forward_ios),
                             onTap: () {
@@ -177,5 +170,4 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
       ),
     );
   }
-
 }
