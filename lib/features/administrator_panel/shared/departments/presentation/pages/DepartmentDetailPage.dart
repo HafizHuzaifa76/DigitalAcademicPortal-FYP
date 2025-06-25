@@ -53,14 +53,22 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsets.only(bottom: 16),
               centerTitle: true,
-              title: Text(
-                dept.departmentName,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  fontFamily: 'Ubuntu',
-                  fontWeight: FontWeight.bold,
-                ),
+              title: Stack(
+                children: [
+                  Positioned(
+                    bottom: 90,
+                    left: 60,
+                    child: Text(
+                      dept.departmentName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        fontFamily: 'Ubuntu',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               background: Container(
                 decoration: BoxDecoration(
@@ -212,74 +220,84 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 24),
-
-                  // Quick Actions
-                  Text(
-                    'Quick Actions',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
-                      fontFamily: 'Ubuntu',
-                    ),
-                  ),
                   const SizedBox(height: 16),
 
                   // Action buttons grid
-                  GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 1.2,
+                  Column(
                     children: [
-                      _buildActionButton(
-                        icon: Icons.account_balance_rounded,
-                        title: 'Semesters',
-                        onTap: () => semestersBottomSheet(context),
-                        color: Colors.blue,
+                      // First row (3 items)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildActionButton(
+                              icon: Icons.account_balance_rounded,
+                              title: 'Semesters',
+                              onTap: () => semestersBottomSheet(context),
+                              color: Get.theme.primaryColor,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _buildActionButton(
+                              icon: FontAwesomeIcons.userGraduate,
+                              title: 'Students',
+                              onTap: () => Get.toNamed('/departmentStudents',
+                                  arguments: {
+                                    'deptName': dept.departmentName,
+                                    'deptCode': dept.departmentCode,
+                                    'semesterList': controller.semestersList,
+                                  }),
+                              color: Get.theme.primaryColor,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _buildActionButton(
+                              icon: Icons.school_rounded,
+                              title: 'Teachers',
+                              onTap: () => Get.toNamed('/deptTeachers',
+                                  arguments: {'deptName': dept.departmentName}),
+                              color: Get.theme.primaryColor,
+                            ),
+                          ),
+                        ],
                       ),
-                      _buildActionButton(
-                        icon: FontAwesomeIcons.userGraduate,
-                        title: 'Students',
-                        onTap: () =>
-                            Get.toNamed('/departmentStudents', arguments: {
-                          'deptName': dept.departmentName,
-                          'deptCode': dept.departmentCode,
-                          'semesterList': controller.semestersList,
-                        }),
-                        color: Colors.green,
-                      ),
-                      _buildActionButton(
-                        icon: Icons.school_rounded,
-                        title: 'Teachers',
-                        onTap: () => Get.toNamed('/deptTeachers',
-                            arguments: {'deptName': dept.departmentName}),
-                        color: Colors.orange,
-                      ),
-                      _buildActionButton(
-                        icon: Icons.book_rounded,
-                        title: 'Courses',
-                        onTap: () => Get.toNamed('/deptCourses', arguments: {
-                          'deptName': dept.departmentName,
-                          'deptCode': dept.departmentCode,
-                          'semesterList': controller.semestersList
-                        }),
-                        color: Colors.purple,
-                      ),
-                      _buildActionButton(
-                        icon: FontAwesomeIcons.bullhorn,
-                        title: 'Notice Board',
-                        onTap: () => Get.toNamed('/teachers'),
-                        color: Colors.red,
-                      ),
-                      _buildActionButton(
-                        icon: Icons.more_horiz_rounded,
-                        title: 'More Options',
-                        onTap: () {},
-                        color: Colors.grey,
+                      const SizedBox(height: 8),
+                      // Second row (3 items)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildActionButton(
+                              icon: Icons.book_rounded,
+                              title: 'Courses',
+                              onTap: () =>
+                                  Get.toNamed('/deptCourses', arguments: {
+                                'deptName': dept.departmentName,
+                                'deptCode': dept.departmentCode,
+                                'semesterList': controller.semestersList
+                              }),
+                              color: Get.theme.primaryColor,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _buildActionButton(
+                              icon: FontAwesomeIcons.bullhorn,
+                              title: 'Notice Board',
+                              onTap: () => Get.toNamed('/teachers'),
+                              color: Get.theme.primaryColor,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _buildActionButton(
+                              icon: Icons.more_horiz_rounded,
+                              title: 'More Options',
+                              onTap: () {},
+                              color: Get.theme.primaryColor,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -301,6 +319,7 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
     required Color color,
   }) {
     return Container(
+      width: 105,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       decoration: BoxDecoration(
         color: color.withOpacity(0.2),
@@ -399,13 +418,14 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
         borderRadius: BorderRadius.circular(16),
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.all(20),
+          height: 110,
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: color,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: color.withOpacity(0.1),
+                color: color.withOpacity(0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -413,26 +433,27 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   icon,
-                  color: color,
+                  color: Colors.white,
                   size: 28,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               Text(
                 title,
-                style: TextStyle(
-                  fontSize: 14,
+                style: const TextStyle(
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: Theme.of(context).primaryColor,
+                  color: Colors.white,
                   fontFamily: 'Ubuntu',
                 ),
                 textAlign: TextAlign.center,

@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../controllers/TeacherController.dart';
+import 'TeacherDetailPage.dart';
 
 class DeptTeacherPage extends StatefulWidget {
   final String deptName;
@@ -30,7 +31,6 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
     return Scaffold(
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFab(
-
         openButtonBuilder: RotateFloatingActionButtonBuilder(
           child: const Icon(Icons.chevron_right, size: 30),
           fabSize: ExpandableFabSize.regular,
@@ -51,26 +51,29 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
             );
           },
         ),
-          children: [
-            IconButton(
-                onPressed: (){
-                  showExcelBottomSheet(context);
-                },
-                icon: const Icon(FontAwesomeIcons.fileExcel, )
-            ),
-            IconButton(
-                onPressed: (){
-                  addTeacherBottomSheet(context);
-                },
-                icon: const Icon(CupertinoIcons.add, )
-            ),
-          ],
+        children: [
+          IconButton(
+            onPressed: () {
+              showExcelBottomSheet(context);
+            },
+            icon: const Icon(FontAwesomeIcons.fileExcel),
+          ),
+          IconButton(
+            onPressed: () {
+              addTeacherBottomSheet(context);
+            },
+            icon: const Icon(CupertinoIcons.add),
+          ),
+        ],
       ),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: 150.0,
             floating: true,
+            pinned: true,
+            elevation: 0,
+            backgroundColor: Theme.of(context).primaryColor,
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsets.only(bottom: 70),
               centerTitle: true,
@@ -82,10 +85,8 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                     style: TextStyle(color: Colors.white, fontSize: 16.0, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 5),
-
                   Text('Department of ${widget.deptName}',
-                      style: const TextStyle(color: Colors.white, fontSize: 12.0, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold)
-                  ),
+                      style: const TextStyle(color: Colors.white, fontSize: 12.0, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold)),
                   const SizedBox(height: 2),
                 ],
               ),
@@ -147,7 +148,7 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
               } else {
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
+                    (BuildContext context, int index) {
                       final teacher = controller.filteredTeacherList[index];
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
@@ -157,6 +158,16 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                             borderRadius: BorderRadius.circular(15.0),
                           ),
                           child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              child: Text(
+                                teacher.teacherName[0],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                             title: Text(
                               teacher.teacherName,
                               style: TextStyle(
@@ -164,10 +175,12 @@ class _DeptTeacherPageState extends State<DeptTeacherPage> {
                                 color: Theme.of(context).primaryColor,
                               ),
                             ),
-                            subtitle: const Text(''),
+                            subtitle: Text(
+                              'CNIC: ${teacher.teacherCNIC}\nEmail: ${teacher.teacherEmail}',
+                            ),
                             trailing: const Icon(Icons.arrow_forward_ios),
                             onTap: () {
-                              // Navigate to Teacher Detail Page (if needed)
+                              Get.to(TeacherDetailPage(teacher: teacher));
                             },
                           ),
                         ),
