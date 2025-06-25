@@ -11,7 +11,8 @@ class SemesterStudentsPage extends StatefulWidget {
   final String deptName;
   final String semester;
 
-  const SemesterStudentsPage({super.key, required this.deptName, required this.semester});
+  const SemesterStudentsPage(
+      {super.key, required this.deptName, required this.semester});
 
   @override
   State<SemesterStudentsPage> createState() => _SemesterStudentsPageState();
@@ -47,13 +48,21 @@ class _SemesterStudentsPageState extends State<SemesterStudentsPage> {
                   children: [
                     Text(
                       'Students',
-                      style: TextStyle(color: Colors.white, fontSize: 16.0, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                          fontFamily: 'Ubuntu',
+                          fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 5),
-
-                    AutoSizeText('${widget.deptName.trim()} Semester - ${widget.semester.split('-').last}', maxLines: 1, maxFontSize: 12,
-                        style: TextStyle(color: Colors.white, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold)
-                    ),
+                    AutoSizeText(
+                        '${widget.deptName.trim()} Semester - ${widget.semester.split('-').last}',
+                        maxLines: 1,
+                        maxFontSize: 12,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Ubuntu',
+                            fontWeight: FontWeight.bold)),
                     SizedBox(height: 2),
                   ],
                 ),
@@ -96,7 +105,6 @@ class _SemesterStudentsPageState extends State<SemesterStudentsPage> {
               ),
             ),
           ),
-
           Obx(() {
             if (controller.isLoading.value) {
               return SliverFillRemaining(
@@ -110,17 +118,18 @@ class _SemesterStudentsPageState extends State<SemesterStudentsPage> {
                 ),
               );
             } else {
-              if ( controller.filteredStudentList.isEmpty) {
+              if (controller.filteredStudentList.isEmpty) {
                 return const SliverFillRemaining(
                   child: Center(child: Text("No Students available")),
                 );
               } else {
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      final student =  controller.filteredStudentList[index];
+                    (BuildContext context, int index) {
+                      final student = controller.filteredStudentList[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 5.0),
                         child: Card(
                           elevation: 4,
                           shape: RoundedRectangleBorder(
@@ -130,7 +139,8 @@ class _SemesterStudentsPageState extends State<SemesterStudentsPage> {
                             leading: CircleAvatar(
                               backgroundColor: Theme.of(context).primaryColor,
                               child: Text(
-                                student.studentName[0], // Show initial of student's name
+                                student.studentName[
+                                    0], // Show initial of student's name
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -139,7 +149,9 @@ class _SemesterStudentsPageState extends State<SemesterStudentsPage> {
                             ),
                             title: Text(
                               student.studentRollNo,
-                              style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColor),
                             ),
                             subtitle: Text(
                               'Name: ${student.studentName}\nFather: ${student.fatherName}',
@@ -152,7 +164,7 @@ class _SemesterStudentsPageState extends State<SemesterStudentsPage> {
                         ),
                       );
                     },
-                    childCount:  controller.filteredStudentList.length,
+                    childCount: controller.filteredStudentList.length,
                   ),
                 );
               }
@@ -162,5 +174,4 @@ class _SemesterStudentsPageState extends State<SemesterStudentsPage> {
       ),
     );
   }
-
 }
