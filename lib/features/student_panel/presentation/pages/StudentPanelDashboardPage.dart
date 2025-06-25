@@ -32,126 +32,121 @@ class StudentPortalDashboardPageState
           color: Theme.of(context).primaryColor,
           child: Column(
             children: [
-              Container(
-                height: screenSize.height * .25,
-                width: screenSize.width,
-                padding: const EdgeInsets.only(
-                    top: 35, left: 15, right: 10, bottom: 3),
-                decoration: const BoxDecoration(),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: kIsWeb
-                          ? screenSize.height * 0.25 * 0.3
-                          : screenSize.height * 0.25 * 0.4,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                              top: 20,
-                              right: 100,
-                              left: 100,
-                              child: Text(
-                                kIsWeb
-                                    ? 'Student Dashboard'
-                                    : 'Student \nDashboard',
-                                style: Theme.of(context)
-                                    .appBarTheme
-                                    .titleTextStyle,
-                                textAlign: TextAlign.center,
-                              )),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Wrap IconButton with Builder to get a proper context
-                              Builder(
-                                builder: (context) {
-                                  return SizedBox(
-                                    height: 20,
-                                    child: IconButton(
-                                        padding: const EdgeInsets.all(5),
-                                        onPressed: () {
-                                          Scaffold.of(context)
-                                              .openDrawer(); // Open drawer on click
-                                        },
-                                        icon: const Icon(
-                                          Icons.sort,
-                                          color: Colors.white,
-                                          size: 28,
-                                        )),
-                                  );
-                                },
-                              ),
-
-                              IconButton(
-                                icon: Image.asset(
-                                  'assets/images/admin.png',
-                                  height: 35,
-                                  width: 35,
-                                ),
-                                onPressed: () => _showCustomMenu(context),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Card(
-                          color: const Color(0xFF128771),
-                          borderOnForeground: true,
-                          semanticContainer: true,
-                          shadowColor: Colors.black,
-                          child: SizedBox(
-                            height: screenSize.height * 0.25 * 0.34,
-                            width: screenSize.width * 0.30,
-                            child: Center(
-                              child: Text(
-                                'Departments\n$count',
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Ubuntu',
-                                    color: Theme.of(context).primaryColorDark),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Card(
-                          color: const Color(0xFF128771),
-                          child: SizedBox(
-                            height: screenSize.height * 0.25 * 0.34,
-                            width: screenSize.width * 0.28,
-                            child: Center(
-                              child: Text(
-                                'Teachers\n$count',
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    color: Theme.of(context).primaryColorDark,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Ubuntu'),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Card(
-                          color: const Color(0xFF128771),
-                          surfaceTintColor: Colors.black,
-                          shadowColor: Theme.of(context).primaryColorLight,
-                          child: SizedBox(
-                            height: screenSize.height * 0.25 * 0.34,
-                            width: screenSize.width * 0.28,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+              Obx(
+                () => Container(
+                  height: screenSize.height * .25,
+                  width: screenSize.width,
+                  padding: const EdgeInsets.only(
+                      top: 35, left: 15, right: 10, bottom: 3),
+                  decoration: const BoxDecoration(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        height: kIsWeb
+                            ? screenSize.height * 0.25 * 0.3
+                            : screenSize.height * 0.25 * 0.4,
+                        child: Stack(
+                          children: [
+                            Positioned(
+                                top: 20,
+                                right: 100,
+                                left: 100,
+                                child: Text(
+                                  kIsWeb
+                                      ? 'Student Dashboard'
+                                      : 'Student \nDashboard',
+                                  style: Theme.of(context)
+                                      .appBarTheme
+                                      .titleTextStyle,
+                                  textAlign: TextAlign.center,
+                                )),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Students\n$count',
+                                // Wrap IconButton with Builder to get a proper context
+                                Builder(
+                                  builder: (context) {
+                                    return SizedBox(
+                                      height: 20,
+                                      child: IconButton(
+                                          padding: const EdgeInsets.all(5),
+                                          onPressed: () {
+                                            Scaffold.of(context)
+                                                .openDrawer(); // Open drawer on click
+                                          },
+                                          icon: const Icon(
+                                            Icons.sort,
+                                            color: Colors.white,
+                                            size: 28,
+                                          )),
+                                    );
+                                  },
+                                ),
+
+                                IconButton(
+                                  icon: Image.asset(
+                                    'assets/images/admin.png',
+                                    height: 35,
+                                    width: 35,
+                                  ),
+                                  onPressed: () => _showCustomMenu(context),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Card(
+                            color: const Color(0xFF128771),
+                            borderOnForeground: true,
+                            semanticContainer: true,
+                            shadowColor: Colors.black,
+                            child: SizedBox(
+                              height: screenSize.height * 0.25 * 0.34,
+                              width: screenSize.width * 0.30,
+                              child: Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Roll No',
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Ubuntu',
+                                          color: Theme.of(context)
+                                              .primaryColorDark),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    AutoSizeText(
+                                      controller.student.value?.studentRollNo ??
+                                          '',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Ubuntu',
+                                          color: Theme.of(context)
+                                              .primaryColorDark),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Card(
+                            color: const Color(0xFF128771),
+                            child: SizedBox(
+                              height: screenSize.height * 0.25 * 0.34,
+                              width: screenSize.width * 0.28,
+                              child: Center(
+                                child: Text(
+                                  'Semester\n${controller.student.value?.studentSemester ?? ''}',
                                   style: TextStyle(
                                       fontSize: 17,
                                       color: Theme.of(context).primaryColorDark,
@@ -159,13 +154,38 @@ class StudentPortalDashboardPageState
                                       fontFamily: 'Ubuntu'),
                                   textAlign: TextAlign.center,
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                          Card(
+                            color: const Color(0xFF128771),
+                            surfaceTintColor: Colors.black,
+                            shadowColor: Theme.of(context).primaryColorLight,
+                            child: SizedBox(
+                              height: screenSize.height * 0.25 * 0.34,
+                              width: screenSize.width * 0.28,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Section\n${controller.student.value?.studentSection ?? ''}',
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        color:
+                                            Theme.of(context).primaryColorDark,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Ubuntu'),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
               Container(
@@ -531,26 +551,22 @@ class StudentPortalDashboardPageState
           enabled: false,
           child: Column(
             children: [
-              const ListTile(
-                title: Text('Hi, Hafiz!'),
-                subtitle: Text('hafizm.huzaifa1234gf@gmail.com'),
+              ListTile(
+                title: Text('Hi, ${controller.student.value?.studentName}!'),
+                subtitle: Text(controller.student.value?.studentEmail ?? ''),
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://via.placeholder.com/150'), // User's image URL
+                  backgroundColor: Theme.of(context).primaryColor,
+                  child: const Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 30,
+                  ),
                 ),
               ),
               const Divider(),
               ListTile(
-                leading: const Icon(Icons.account_circle),
-                title: const Text('Manage your Google Account'),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  // Handle the action
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Sign out'),
+                leading: Icon(Icons.logout, color: Colors.red.shade700),
+                title: Text('Sign out', style: TextStyle(color: Colors.red.shade700)),
                 onTap: () {
                   Get.back(); // Close the drawer
                   Get.offNamed('/login');

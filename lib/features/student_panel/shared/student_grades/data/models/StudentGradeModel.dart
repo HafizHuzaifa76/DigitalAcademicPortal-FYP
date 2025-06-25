@@ -1,53 +1,25 @@
 import '../../domain/entities/StudentGrade.dart';
 
 class StudentGradeModel extends StudentGrade {
-  StudentGradeModel({
-    required String id,
-    required String courseId,
-    required String studentId,
-    required String grade,
-    required double marks,
-    required double totalMarks,
-    required String category,
-    required String semester,
-    String? remarks,
-  }) : super(
-          id: id,
-          course: courseId,
-          studentId: studentId,
-          grade: grade,
-          marks: marks,
-          totalMarks: totalMarks,
-          category: category,
-          semester: semester,
-          remarks: remarks,
-        );
-
-  factory StudentGradeModel.fromMap(Map<String, dynamic> map) {
+  StudentGradeModel({required super.id, required super.title, required super.totalMarks, required super.type, required super.obtainedMarks});
+  
+  factory StudentGradeModel.fromMap(Map<String, dynamic> json, double obtainedMarks) {
     return StudentGradeModel(
-      id: map['id'] as String,
-      courseId: map['courseId'] as String,
-      studentId: map['studentId'] as String,
-      grade: map['grade'] as String,
-      marks: (map['marks'] as num).toDouble(),
-      totalMarks: (map['totalMarks'] as num).toDouble(),
-      category: map['category'] as String,
-      semester: map['semester'] as String,
-      remarks: map['remarks'] as String?,
+      id: json['id'] as String,
+      title: json['title'] as String,
+      totalMarks: json['totalMarks'] as int,
+      type: json['type'] as String,
+      obtainedMarks: obtainedMarks,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'courseId': course,
-      'studentId': studentId,
-      'grade': grade,
-      'marks': marks,
+      'title': title,
       'totalMarks': totalMarks,
-      'category': category,
-      'semester': semester,
-      'remarks': remarks,
+      'type': type,
+      'obtainedMarks': obtainedMarks,
     };
   }
 }
