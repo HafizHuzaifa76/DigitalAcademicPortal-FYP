@@ -81,7 +81,9 @@ class _AdministratorDashboardPageState
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              kIsWeb ? 'Administrator Dashboard' : 'Admin Dashboard',
+                              kIsWeb
+                                  ? 'Administrator Dashboard'
+                                  : 'Admin Dashboard',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20.0,
