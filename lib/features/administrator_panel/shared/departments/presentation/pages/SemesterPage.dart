@@ -48,7 +48,7 @@ class _SemesterPageState extends State<SemesterPage> {
               titlePadding: const EdgeInsets.only(bottom: 16),
               centerTitle: true,
               title: Stack(
-                children: [
+            children: [
                   Positioned(
                     bottom: 78,
                     left: 65,
@@ -97,7 +97,7 @@ class _SemesterPageState extends State<SemesterPage> {
                       left: -20,
                       child: Container(
                         width: 80,
-                        height: 80,
+                      height: 80,
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.1),
                           shape: BoxShape.circle,
@@ -135,17 +135,17 @@ class _SemesterPageState extends State<SemesterPage> {
                     ),
                   ],
                 ),
-              ),
-            ),
-          ),
+                            ),
+                          ),
+                        ),
 
           // Main content
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Column(
+                            child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                              children: [
                   // Department Info Cards
                   Container(
                     padding: const EdgeInsets.all(20),
@@ -159,8 +159,8 @@ class _SemesterPageState extends State<SemesterPage> {
                           offset: const Offset(0, 4),
                         ),
                       ],
-                    ),
-                    child: Column(
+                ),
+                child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -188,13 +188,13 @@ class _SemesterPageState extends State<SemesterPage> {
                                 icon: Icons.person_rounded,
                                 title: 'Head of Department',
                                 value: dept.headOfDepartment,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
+                      ],
+                    ),
                         const SizedBox(height: 12),
-                        Row(
-                          children: [
+                    Row(
+                      children: [
                             Expanded(
                               child: _buildInfoCard(
                                 icon: Icons.account_tree_rounded,
@@ -222,17 +222,17 @@ class _SemesterPageState extends State<SemesterPage> {
                   Column(
                     children: [
                       // First row (3 items)
-                      Row(
-                        children: [
+                    Row(
+                      children: [
                           Expanded(
                             child: _buildActionButton(
                               icon: FontAwesomeIcons.userGraduate,
                               title: 'Students',
                               onTap: () =>
                                   Get.toNamed('/semesterStudents', arguments: {
-                                'deptName': dept.departmentName,
-                                'semester': semester,
-                              }),
+                            'deptName': dept.departmentName,
+                            'semester': semester,
+                          }),
                               color: Get.theme.primaryColor,
                             ),
                           ),
@@ -252,19 +252,19 @@ class _SemesterPageState extends State<SemesterPage> {
                               title: 'Courses',
                               onTap: () => Get.toNamed('/semesterCourses',
                                   arguments: {
-                                    'deptName': dept.departmentName,
-                                    'semester': semester
-                                  }),
+                            'deptName': dept.departmentName,
+                            'semester': semester
+                          }),
                               color: Get.theme.primaryColor,
-                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
                       const SizedBox(height: 8),
                       // Second row (2 items) - centered
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                           SizedBox(
                             width: (MediaQuery.of(context).size.width - 56) / 3,
                             child: _buildActionButton(
@@ -272,9 +272,9 @@ class _SemesterPageState extends State<SemesterPage> {
                               title: 'Sections',
                               onTap: () => Get.toNamed('/allSections',
                                   arguments: {
-                                    'deptName': dept.departmentName,
-                                    'semester': semester
-                                  }),
+                              'deptName': dept.departmentName,
+                              'semester': semester
+                            }),
                               color: Get.theme.primaryColor,
                             ),
                           ),
@@ -286,16 +286,16 @@ class _SemesterPageState extends State<SemesterPage> {
                               title: 'Time Table',
                               onTap: () => Get.toNamed('/semesterTimeTablePage',
                                   arguments: {
-                                    'deptName': dept.departmentName,
-                                    'semester': semester
-                                  }),
+                              'deptName': dept.departmentName,
+                              'semester': semester
+                            }),
                               color: Get.theme.primaryColor,
                             ),
                           ),
                         ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
 
                   const SizedBox(height: 24),
                 ],

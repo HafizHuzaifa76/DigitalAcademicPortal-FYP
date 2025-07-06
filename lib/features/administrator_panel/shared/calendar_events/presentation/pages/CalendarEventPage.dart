@@ -43,7 +43,7 @@ class _CalendarEventPageState extends State<CalendarEventPage> {
         child: FloatingActionButton(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          onPressed: () => _showAddOrEditDialog(context),
+        onPressed: () => _showAddOrEditDialog(context),
           child: const Icon(Icons.add, color: Colors.white, size: 28),
         ),
       ),
@@ -260,11 +260,11 @@ class _CalendarEventPageState extends State<CalendarEventPage> {
       if (_controller.isLoading.value) {
         return SliverFillRemaining(
           child: Center(
-            child: Lottie.asset(
-              'assets/animations/loading_animation4.json',
-              width: 60,
-              height: 60,
-              fit: BoxFit.scaleDown,
+          child: Lottie.asset(
+            'assets/animations/loading_animation4.json',
+            width: 60,
+            height: 60,
+            fit: BoxFit.scaleDown,
             ),
           ),
         );
@@ -277,7 +277,7 @@ class _CalendarEventPageState extends State<CalendarEventPage> {
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                      children: [
                   Icon(
                     Icons.event_busy,
                     size: 80,
@@ -457,12 +457,12 @@ class _CalendarEventPageState extends State<CalendarEventPage> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header
                 Row(
-                  children: [
+            children: [
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -489,8 +489,8 @@ class _CalendarEventPageState extends State<CalendarEventPage> {
                 const SizedBox(height: 24),
 
                 // Form fields
-                TextField(
-                  controller: _controller.titleController,
+              TextField(
+                controller: _controller.titleController,
                   decoration: InputDecoration(
                     labelText: "Title",
                     labelStyle: TextStyle(
@@ -516,8 +516,8 @@ class _CalendarEventPageState extends State<CalendarEventPage> {
                 ),
                 const SizedBox(height: 16),
 
-                TextField(
-                  controller: _controller.categoryController,
+              TextField(
+                controller: _controller.categoryController,
                   decoration: InputDecoration(
                     labelText: "Category",
                     labelStyle: TextStyle(
@@ -567,8 +567,8 @@ class _CalendarEventPageState extends State<CalendarEventPage> {
                               fontFamily: 'Ubuntu',
                               fontWeight: FontWeight.w500,
                             ),
-                          );
-                        }),
+                );
+              }),
                       ),
                     ],
                   ),
@@ -634,21 +634,21 @@ class _CalendarEventPageState extends State<CalendarEventPage> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(12),
                             onTap: () {
-                              if (event == null) {
-                                _controller.addEvent();
-                              } else {
-                                final updatedEvent = CalendarEvent(
-                                  id: event.id,
+                if (event == null) {
+                  _controller.addEvent();
+                } else {
+                  final updatedEvent = CalendarEvent(
+                    id: event.id,
                                   title:
                                       _controller.titleController.text.trim(),
                                   category: _controller.categoryController.text
                                       .trim(),
-                                  date: _controller.selectedDay.value,
-                                );
-                                _controller.editEvent(updatedEvent);
-                              }
-                              Navigator.of(ctx).pop();
-                            },
+                    date: _controller.selectedDay.value,
+                  );
+                  _controller.editEvent(updatedEvent);
+                }
+                Navigator.of(ctx).pop();
+              },
                             child: Center(
                               child: Text(
                                 event == null ? "Add" : "Update",

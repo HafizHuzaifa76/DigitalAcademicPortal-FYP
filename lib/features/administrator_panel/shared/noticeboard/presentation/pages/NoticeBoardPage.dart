@@ -44,7 +44,7 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
         child: FloatingActionButton(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          onPressed: () => addNoticeBottomSheet(context),
+        onPressed: () => addNoticeBottomSheet(context),
           child: const Icon(Icons.add, color: Colors.white, size: 28),
         ),
       ),
@@ -148,10 +148,10 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
                                   ),
                                 ],
                               ),
-                              child: TextField(
-                                onChanged: (query) {
-                                  controller.filterNotices(query);
-                                },
+                        child: TextField(
+                          onChanged: (query) {
+                            controller.filterNotices(query);
+                          },
                                 decoration: const InputDecoration(
                                   hintText: 'Search notices...',
                                   hintStyle: TextStyle(
@@ -237,13 +237,13 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
                 return SliverPadding(
                   padding: const EdgeInsets.all(16),
                   sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      final notice = controller.filteredNoticeList[index];
-                      return Padding(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final notice = controller.filteredNoticeList[index];
+                    return Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: _buildModernNoticeCard(notice),
-                      );
-                    }, childCount: controller.filteredNoticeList.length),
+                    );
+                  }, childCount: controller.filteredNoticeList.length),
                   ),
                 );
               }
@@ -394,10 +394,10 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
             borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
           ),
           child: buildNoticeForm(context, addNoticeKey, "Add", () {
-            if (addNoticeKey.currentState!.validate()) {
-              controller.addNotice();
-              Get.back();
-            }
+          if (addNoticeKey.currentState!.validate()) {
+            controller.addNotice();
+            Get.back();
+          }
           }),
         );
       },
@@ -417,10 +417,10 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
             borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
           ),
           child: buildNoticeForm(context, editNoticeKey, "Edit", () {
-            if (editNoticeKey.currentState!.validate()) {
-              controller.editNotice(notice);
-              Get.back();
-            }
+          if (editNoticeKey.currentState!.validate()) {
+            controller.editNotice(notice);
+            Get.back();
+          }
           }),
         );
       },
@@ -469,9 +469,9 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
                 GestureDetector(
                   onTap: controller.pickImage,
                   child: Container(
-                    height: 200,
-                    width: double.maxFinite,
-                    decoration: BoxDecoration(
+                        height: 200,
+                        width: double.maxFinite,
+                        decoration: BoxDecoration(
                       color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
@@ -479,21 +479,21 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
                         width: 2,
                         style: BorderStyle.solid,
                       ),
-                    ),
-                    child: Obx(() {
-                      if (controller.imageFile.value != null) {
+                        ),
+                        child: Obx(() {
+                          if (controller.imageFile.value != null) {
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(14),
                           child: Image.file(
-                            controller.imageFile.value!,
-                            fit: BoxFit.cover,
+                              controller.imageFile.value!,
+                              fit: BoxFit.cover,
                           ),
-                        );
-                      } else {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
+                            );
+                          } else {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
                             Icon(
                               CupertinoIcons.photo,
                               color: Colors.grey[600],
@@ -509,10 +509,10 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                          ],
-                        );
-                      }
-                    }),
+                              ],
+                            );
+                          }
+                        }),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -523,11 +523,11 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
                   keyboardType: TextInputType.name,
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(
+                      border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: Colors.grey[300]!),
-                    ),
-                    enabledBorder: OutlineInputBorder(
+                      ),
+                      enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: Colors.grey[300]!),
                     ),
@@ -556,11 +556,11 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
                   textCapitalization: TextCapitalization.sentences,
                   maxLines: 4,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(
+                      border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: Colors.grey[300]!),
-                    ),
-                    enabledBorder: OutlineInputBorder(
+                      ),
+                      enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: Colors.grey[300]!),
                     ),
@@ -614,9 +614,9 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
                 borderRadius: BorderRadius.circular(16),
                 onTap: onSave,
                 child: Center(
-                  child: Text(
-                    title,
-                    style: const TextStyle(
+            child: Text(
+              title,
+              style: const TextStyle(
                       fontFamily: 'Ubuntu',
                       fontSize: 18,
                       fontWeight: FontWeight.w600,

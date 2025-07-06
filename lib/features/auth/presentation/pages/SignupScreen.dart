@@ -53,14 +53,14 @@ class SignupScreen_State extends State<SignupScreen> {
           ),
         ),
         child: SafeArea(
-          child: Center(
+        child: Center(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
                     // Decorative elements
                     Stack(
                       children: [
@@ -167,11 +167,11 @@ class SignupScreen_State extends State<SignupScreen> {
                     const SizedBox(height: 40),
 
                     // Signup form card
-                    Container(
+                        Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(32),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
@@ -209,14 +209,14 @@ class SignupScreen_State extends State<SignupScreen> {
 
                             // Email field
                             TextFormField(
-                              keyboardType: TextInputType.emailAddress,
-                              controller: emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            controller: emailController,
                               cursorColor: Theme.of(context).primaryColor,
                               style: const TextStyle(
                                 color: Colors.black87,
                                 fontFamily: 'Ubuntu',
                               ),
-                              decoration: InputDecoration(
+                            decoration: InputDecoration(
                                 labelText: 'Email',
                                 labelStyle: TextStyle(
                                   color: Colors.grey[600],
@@ -242,7 +242,7 @@ class SignupScreen_State extends State<SignupScreen> {
                                     size: 20,
                                   ),
                                 ),
-                                border: OutlineInputBorder(
+                              border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide:
                                       BorderSide(color: Colors.grey[300]!),
@@ -264,19 +264,19 @@ class SignupScreen_State extends State<SignupScreen> {
                               ),
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return 'Please enter your email!';
+                                return 'Please enter your email!';
                                 } else if (!value.contains("@gmail.com")) {
-                                  return 'Please enter a valid email!';
-                                }
-                                return null;
-                              },
-                            ),
+                                return 'Please enter a valid email!';
+                              }
+                              return null;
+                            },
+                          ),
                             const SizedBox(height: 20),
 
                             // Password field
                             TextFormField(
-                              keyboardType: TextInputType.text,
-                              controller: passwordController,
+                            keyboardType: TextInputType.text,
+                            controller: passwordController,
                               cursorColor: Theme.of(context).primaryColor,
                               style: const TextStyle(
                                 color: Colors.black87,
@@ -322,13 +322,13 @@ class SignupScreen_State extends State<SignupScreen> {
                                           : Icons.visibility_off,
                                       color: Colors.grey[600],
                                       size: 20,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
+                                ),
+                                onPressed: () {
+                                  setState(() {
                                         _obscureText = !_obscureText;
-                                      });
-                                    },
-                                  ),
+                                  });
+                                },
+                              ),
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
@@ -349,18 +349,18 @@ class SignupScreen_State extends State<SignupScreen> {
                                 ),
                                 filled: true,
                                 fillColor: Colors.grey[50],
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your password!';
-                                } else if (value.length < 6) {
-                                  return 'Please enter at least 6 characters!';
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your password!';
+                              } else if (value.length < 6) {
+                                return 'Please enter at least 6 characters!';
                                 } else if (!(value
                                     .contains(RegExp(r'[0-9]')))) {
-                                  return 'Please add a number 0-9';
-                                }
-                                return null;
-                              },
+                                return 'Please add a number 0-9';
+                              }
+                              return null;
+                            },
                             ),
 
                             const SizedBox(height: 16),
@@ -406,17 +406,17 @@ class SignupScreen_State extends State<SignupScreen> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (formKey.currentState!.validate()) {
-                                    setState(() {
-                                      loading = true;
-                                    });
+                    setState(() {
+                      loading = true;
+                    });
                                     auth
                                         .createUserWithEmailAndPassword(
-                                      email: emailController.text.toString(),
+                        email: emailController.text.toString(),
                                       password:
                                           passwordController.text.toString(),
                                     )
                                         .then((value) {
-                                      Utils().toast("Account Created", context);
+                      Utils().toast("Account Created", context);
                                       auth
                                           .signInWithEmailAndPassword(
                                         email: emailController.text.toString(),
@@ -424,20 +424,20 @@ class SignupScreen_State extends State<SignupScreen> {
                                             passwordController.text.toString(),
                                       )
                                           .then((value) {
-                                        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
                                       }).onError((error, stackTrace) {
                                         Utils().toastErrorMessage(
                                             error.toString(), context);
-                                      });
+                      });
                                     }).onError((error, stackTrace) {
                                       Utils().toastErrorMessage(
                                           error.toString(), context);
-                                      setState(() {
-                                        loading = false;
-                                      });
-                                    });
-                                  }
-                                },
+                      setState(() {
+                        loading = false;
+                      });
+                    });
+                  }
+                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
                                       Theme.of(context).primaryColor,
@@ -467,18 +467,18 @@ class SignupScreen_State extends State<SignupScreen> {
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600,
                                         ),
-                                      ),
-                              ),
-                            ),
+                    ),
+                  ),
+                ),
                           ],
                         ),
                       ),
-                    ),
+              ),
 
                     const SizedBox(height: 24),
 
                     // Login link
-                    Container(
+              Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.1),
@@ -487,9 +487,9 @@ class SignupScreen_State extends State<SignupScreen> {
                           color: Colors.white.withOpacity(0.2),
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                           Text(
                             "Already have an account?\nAre you an employee?",
                             style: TextStyle(
@@ -499,7 +499,7 @@ class SignupScreen_State extends State<SignupScreen> {
                             ),
                           ),
                           const SizedBox(width: 8),
-                          TextButton(
+                    TextButton(
                             onPressed: () {
                               // TODO: Navigate to login
                             },

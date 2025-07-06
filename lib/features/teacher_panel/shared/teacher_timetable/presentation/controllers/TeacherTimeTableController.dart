@@ -9,9 +9,9 @@ class TeacherTimeTableController extends GetxController {
 
   TeacherTimeTableController(this.fetchTeacherTimetable);
 
-  Future<void> loadTeacherTimetable(String teacherDept) async {
+  Future<void> loadTeacherTimetable() async {
     isLoading.value = true;
-    final result = await fetchTeacherTimetable.execute(teacherDept);
+    final result = await fetchTeacherTimetable.execute(null);
 
     result.fold(
       (failure) {
