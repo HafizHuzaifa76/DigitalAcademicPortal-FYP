@@ -19,8 +19,13 @@ class _TeacherAttendancePageState extends State<TeacherAttendancePage> {
 
   @override
   void initState() {
+    invokeController();
     super.initState();
-    controller.getTeacherCourses(widget.teacherDept);
+  }
+
+  invokeController() async {
+    await controller.getTeacherCourses(widget.teacherDept);
+    await controller.geCoursesTimetable(widget.teacherDept);
   }
 
   @override
@@ -205,9 +210,29 @@ class TeacherAttendanceMarkingPage extends StatelessWidget {
       firstDate: DateTime(2020),
       lastDate: DateTime(2030),
       selectableDayPredicate: (DateTime date) {
-        // Allow only Tuesdays (2) and Thursdays (4)
-        return date.weekday == DateTime.tuesday ||
-            date.weekday == DateTime.thursday;
+        final courseName = '${course.courseName}-${course.courseSection}';
+        final availableDays = controller.courseDaysMap[courseName];
+        // If no days are given, make every day available except Saturday and Sunday
+        if (availableDays == null || availableDays.isEmpty) {
+          return date.weekday != DateTime.saturday &&
+              date.weekday != DateTime.sunday;
+        }
+
+        // Convert weekday number to day name
+        final dayNames = {
+          1: 'Monday',
+          2: 'Tuesday',
+          3: 'Wednesday',
+          4: 'Thursday',
+          5: 'Friday',
+          6: 'Saturday',
+          7: 'Sunday',
+        };
+
+        final currentDayName = dayNames[date.weekday];
+
+        // Check if the current day is available for this course
+        return availableDays.contains(currentDayName);
       },
     );
     if (picked != null && picked != controller.selectedDate.value) {
@@ -216,11 +241,48 @@ class TeacherAttendanceMarkingPage extends StatelessWidget {
   }
 
   DateTime _getLastValidDate(DateTime date) {
-    // If current date is not Tuesday or Thursday, find the last valid date
-    while (
-        date.weekday != DateTime.tuesday && date.weekday != DateTime.thursday) {
+    final courseName = '${course.courseName}-${course.courseSection}';
+    final availableDays = controller.courseDaysMap[courseName];
+    print('availableDays');
+    print(availableDays);
+    if (availableDays == null || availableDays.isEmpty) {
+      // Fallback to Tuesday/Thursday if no timetable data
+      print('date');
+      print(date);
+      return date;
+    }
+
+    // Convert day names to weekday numbers
+    final dayToWeekday = {
+      'Monday': 1,
+      'Tuesday': 2,
+      'Wednesday': 3,
+      'Thursday': 4,
+      'Friday': 5,
+      'Saturday': 6,
+      'Sunday': 7,
+    };
+
+    // Get weekday numbers for available days
+    final availableWeekdays = availableDays
+        .map((day) => dayToWeekday[day])
+        .where((weekday) => weekday != null)
+        .toList();
+
+    if (availableWeekdays.isEmpty) {
+      // Fallback to Tuesday/Thursday if no valid weekdays
+      while (date.weekday != DateTime.tuesday &&
+          date.weekday != DateTime.thursday) {
+        date = date.subtract(const Duration(days: 1));
+      }
+      return date;
+    }
+
+    // Find the last valid date that matches available weekdays
+    while (!availableWeekdays.contains(date.weekday)) {
       date = date.subtract(const Duration(days: 1));
     }
+
     return date;
   }
 

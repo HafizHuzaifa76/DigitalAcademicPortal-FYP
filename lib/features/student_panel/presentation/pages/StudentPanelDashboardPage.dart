@@ -60,37 +60,37 @@ class StudentPortalDashboardPageState
                 ),
                 child: IconButton(
                   icon: const Icon(Icons.person_rounded, color: Colors.white),
-                  onPressed: () => _showCustomMenu(context),
-                ),
+                                  onPressed: () => _showCustomMenu(context),
+                                ),
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsets.only(bottom: 16),
               centerTitle: true,
               title: const Stack(
-                children: [
+                        children: [
                   Positioned(
                     bottom: 90,
                     left: 50,
                     right: 50,
-                    child: Center(
+                              child: Center(
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
+                                  children: [
+                                    Text(
                             kIsWeb ? 'Student Dashboard' : 'Student Dashboard',
-                            style: TextStyle(
+                                      style: TextStyle(
                               color: Colors.white,
                               fontSize: 17.0,
                               fontFamily: 'Ubuntu',
-                              fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.bold,
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                 ],
               ),
               background: Container(
@@ -116,9 +116,9 @@ class StudentPortalDashboardPageState
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.1),
                           shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
+                              ),
+                            ),
+                          ),
                     Positioned(
                       bottom: -20,
                       left: -20,
@@ -128,9 +128,9 @@ class StudentPortalDashboardPageState
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.1),
                           shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
+                                ),
+                              ),
+                            ),
                     // Stats cards
                     Positioned(
                       bottom: 20,
@@ -163,10 +163,10 @@ class StudentPortalDashboardPageState
                         ],
                       ),
                     ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
           ),
 
           // Main content
@@ -177,10 +177,10 @@ class StudentPortalDashboardPageState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Logo and Title Section
-                  Container(
+              Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                    color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
@@ -190,7 +190,7 @@ class StudentPortalDashboardPageState
                         ),
                       ],
                     ),
-                    child: Column(
+                child: Column(
                       children: [
                         Image.asset(
                           'assets/images/DAP logo.png',
@@ -203,8 +203,8 @@ class StudentPortalDashboardPageState
                             Text(
                               'Digital',
                               style: TextStyle(
-                                fontFamily: 'Belanosima',
-                                color: Theme.of(context).primaryColor,
+                                  fontFamily: 'Belanosima',
+                                  color: Theme.of(context).primaryColor,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -212,8 +212,8 @@ class StudentPortalDashboardPageState
                             const Text(
                               ' Academic ',
                               style: TextStyle(
-                                fontFamily: 'Belanosima',
-                                color: Colors.black,
+                                  fontFamily: 'Belanosima',
+                                  color: Colors.black,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -221,8 +221,8 @@ class StudentPortalDashboardPageState
                             Text(
                               'Portal',
                               style: TextStyle(
-                                fontFamily: 'Belanosima',
-                                color: Theme.of(context).primaryColor,
+                                  fontFamily: 'Belanosima',
+                                  color: Theme.of(context).primaryColor,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -240,7 +240,7 @@ class StudentPortalDashboardPageState
                     children: [
                       // First row (3 items)
                       Row(
-                        children: [
+                      children: [
                           Expanded(
                             child: _buildActionButton(
                               icon: 'assets/images/attendanceB.png',
@@ -270,14 +270,14 @@ class StudentPortalDashboardPageState
                               title: 'Grades',
                               onTap: () => Get.toNamed('/student_gradesScreen'),
                               color: Theme.of(context).primaryColor,
-                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
                       const SizedBox(height: 8),
                       // Second row (3 items)
-                      Row(
-                        children: [
+                    Row(
+                      children: [
                           Expanded(
                             child: _buildActionButton(
                               icon: 'assets/images/course_icon.png',
@@ -286,8 +286,8 @@ class StudentPortalDashboardPageState
                                   arguments: {
                                     'studentDept': controller
                                             .student.value?.studentDepartment ??
-                                        ''
-                                  }),
+                                    ''
+                          }),
                               color: Theme.of(context).primaryColor,
                             ),
                           ),
@@ -307,15 +307,15 @@ class StudentPortalDashboardPageState
                               title: 'Calendar',
                               onTap: () => Get.toNamed('/student_calendarPage'),
                               color: Theme.of(context).primaryColor,
-                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
                       const SizedBox(height: 8),
                       // Third row (2 items) - centered
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                           SizedBox(
                             width: (MediaQuery.of(context).size.width - 56) / 3,
                             child: _buildActionButton(
@@ -332,13 +332,13 @@ class StudentPortalDashboardPageState
                               icon: 'assets/images/diary.png',
                               title: 'Students Diary',
                               onTap: () =>
-                                  Get.toNamed('/studentDiary', arguments: {
+                                Get.toNamed('/studentDiary', arguments: {
                                 'deptName': controller
                                         .student.value?.studentDepartment ??
-                                    '',
-                                'studentRollNo':
-                                    controller.student.value?.studentRollNo
-                              }),
+                                      '',
+                              'studentRollNo':
+                                  controller.student.value?.studentRollNo
+                            }),
                               color: Theme.of(context).primaryColor,
                             ),
                           ),
@@ -371,20 +371,20 @@ class StudentPortalDashboardPageState
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color.withOpacity(0.3)),
       ),
-      child: Column(
+                            child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
+                              children: [
           Icon(icon, color: color, size: 24),
           const SizedBox(height: 8),
           AutoSizeText(
             value,
-            style: TextStyle(
+                                  style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: color,
-              fontFamily: 'Ubuntu',
+                                      fontFamily: 'Ubuntu',
             ),
-            maxLines: 1,
+                                  maxLines: 1,
             textAlign: TextAlign.center,
           ),
           Text(
@@ -395,9 +395,9 @@ class StudentPortalDashboardPageState
               fontFamily: 'Ubuntu',
             ),
             textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+                                ),
+                              ],
+                            ),
     );
   }
 
@@ -423,9 +423,9 @@ class StudentPortalDashboardPageState
                 color: color.withOpacity(0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
-              ),
-            ],
-          ),
+                        ),
+                      ],
+                    ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -474,9 +474,9 @@ class StudentPortalDashboardPageState
           ),
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-            child: Column(
+          child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
+            children: [
                 Container(
                   width: 40,
                   height: 4,
@@ -520,11 +520,11 @@ class StudentPortalDashboardPageState
                               color: Colors.grey[600],
                               fontFamily: 'Ubuntu',
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+              ),
+            ],
+          ),
+        ),
+      ],
                 ),
                 const SizedBox(height: 20),
                 SizedBox(

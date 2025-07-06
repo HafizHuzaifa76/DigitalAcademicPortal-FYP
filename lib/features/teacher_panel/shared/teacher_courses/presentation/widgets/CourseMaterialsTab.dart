@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../domain/entities/TeacherCourse.dart';
 import '../pages/LectureSlidesScreen.dart';
 import '../pages/ResourcesScreen.dart';
 import '../pages/SyllabusScreen.dart';
 
 class CourseMaterialsTab extends StatelessWidget {
-  final dynamic course;
+  final TeacherCourse course;
 
   const CourseMaterialsTab({
     super.key,
@@ -25,7 +26,6 @@ class CourseMaterialsTab extends StatelessWidget {
             'Lecture Slides',
             'Access and manage ${course.courseCode} lecture presentations',
             Icons.slideshow_outlined,
-            'Update',
             () => Get.to(() => LectureSlidesScreen(course: course)),
           ),
           const SizedBox(height: 12),
@@ -33,7 +33,6 @@ class CourseMaterialsTab extends StatelessWidget {
             'Resources',
             'Additional learning materials for ${course.courseName}',
             Icons.folder_outlined,
-            'update Resources',
             () => Get.to(() => ResourcesScreen(course: course)),
           ),
           const SizedBox(height: 12),
@@ -41,7 +40,6 @@ class CourseMaterialsTab extends StatelessWidget {
             'Syllabus',
             'Course outline and learning objectives',
             Icons.description_outlined,
-            'Update',
             () => Get.to(() => SyllabusScreen(course: course)),
           ),
         ],
@@ -72,7 +70,8 @@ class CourseMaterialsTab extends StatelessWidget {
     );
   }
 
-  Widget _buildMaterialCard(String title, String subtitle, IconData icon, String status, VoidCallback onTap) {
+  Widget _buildMaterialCard(
+      String title, String subtitle, IconData icon, VoidCallback onTap) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -80,7 +79,8 @@ class CourseMaterialsTab extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           leading: Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
@@ -107,23 +107,10 @@ class CourseMaterialsTab extends StatelessWidget {
               ),
             ),
           ),
-          trailing: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                status,
-                style: TextStyle(
-                  color: Get.theme.primaryColor,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
-                ),
-              ),
-              const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.black54),
-            ],
-          ),
+          trailing: const Icon(Icons.arrow_forward_ios,
+              size: 16, color: Colors.black54),
         ),
       ),
     );
   }
-} 
+}
