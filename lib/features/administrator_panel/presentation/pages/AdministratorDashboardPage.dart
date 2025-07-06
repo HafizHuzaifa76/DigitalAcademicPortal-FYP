@@ -54,7 +54,7 @@ class _AdministratorDashboardPageState
                 ),
               ),
               actions: [
-                Container(
+              Container(
                   margin: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.2),
@@ -79,18 +79,20 @@ class _AdministratorDashboardPageState
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                        children: [
                             Text(
-                              kIsWeb ? 'Administrator Dashboard' : 'Admin Dashboard',
+                                kIsWeb
+                                    ? 'Administrator Dashboard'
+                                  : 'Admin Dashboard',
                               style: TextStyle(
-                                color: Colors.white,
+                                          color: Colors.white,
                                 fontSize: 20.0,
                                 fontFamily: 'Ubuntu',
                                 fontWeight: FontWeight.bold,
                               ),
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
                       ),
                     ),
                   ],
@@ -140,7 +142,7 @@ class _AdministratorDashboardPageState
                         right: 20,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
+                              children: [
                             _buildStatCard(
                               icon: Icons.school_rounded,
                               title: 'Departments',
@@ -175,9 +177,9 @@ class _AdministratorDashboardPageState
                               color: Colors.white,
                             ),
                           ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
                   ),
                 ),
               ),
@@ -205,46 +207,46 @@ class _AdministratorDashboardPageState
                         ],
                       ),
                       child: Column(
-                        children: [
+                      children: [
                           Image.asset(
                             'assets/images/DAP logo.png',
                             height: 95,
                           ),
                           const SizedBox(height: 6),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Digital',
-                                style: TextStyle(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Digital',
+                              style: TextStyle(
                                   fontFamily: 'Belanosima',
                                   color: Theme.of(context).primaryColor,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
-                              ),
-                              const Text(
-                                ' Academic ',
-                                style: TextStyle(
+                            ),
+                            const Text(
+                              ' Academic ',
+                              style: TextStyle(
                                   fontFamily: 'Belanosima',
                                   color: Colors.black,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
-                              ),
-                              Text(
-                                'Portal',
-                                style: TextStyle(
+                            ),
+                            Text(
+                              'Portal',
+                              style: TextStyle(
                                   fontFamily: 'Belanosima',
                                   color: Theme.of(context).primaryColor,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                     ),
 
                     const SizedBox(height: 18),
@@ -254,7 +256,7 @@ class _AdministratorDashboardPageState
                       children: [
                         // First row (3 items)
                         Row(
-                          children: [
+                            children: [
                             Expanded(
                               child: _buildActionButton(
                                 icon: 'assets/images/department_icon.png',
@@ -286,7 +288,7 @@ class _AdministratorDashboardPageState
                         const SizedBox(height: 8),
                         // Second row (3 items)
                         Row(
-                          children: [
+                            children: [
                             Expanded(
                               child: _buildActionButton(
                                 icon: 'assets/images/admin.png',
@@ -319,7 +321,7 @@ class _AdministratorDashboardPageState
                         // Third row (2 items) - centered
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                            children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 56) /
                                   3, // Same width as other items
@@ -350,10 +352,10 @@ class _AdministratorDashboardPageState
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
+                                ),
+                              ],
+                            ),
+                          ),
     );
   }
 
@@ -373,9 +375,9 @@ class _AdministratorDashboardPageState
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color.withOpacity(0.3)),
       ),
-      child: Column(
+                            child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
+                              children: [
           Icon(icon, color: color, size: 24),
           const SizedBox(height: 8),
           if (isLoading)
@@ -405,15 +407,15 @@ class _AdministratorDashboardPageState
             ),
           Text(
             title,
-            style: TextStyle(
+                                  style: TextStyle(
               fontSize: 12,
               color: color,
-              fontFamily: 'Ubuntu',
+                                      fontFamily: 'Ubuntu',
             ),
             textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+                                ),
+                              ],
+                            ),
     );
   }
 
@@ -439,9 +441,9 @@ class _AdministratorDashboardPageState
                 color: color.withOpacity(0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
-              ),
-            ],
-          ),
+                        ),
+                      ],
+                    ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -490,9 +492,9 @@ class _AdministratorDashboardPageState
           ),
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-            child: Column(
+          child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
+            children: [
                 Container(
                   width: 40,
                   height: 4,
@@ -556,10 +558,10 @@ class _AdministratorDashboardPageState
                       ),
                     ),
                     onPressed: () {
-                      FirebaseAuth.instance.signOut();
-                      Get.back();
-                      Get.offNamed('/login');
-                    },
+                  FirebaseAuth.instance.signOut();
+                  Get.back();
+                  Get.offNamed('/login');
+                },
                     icon: const Icon(Icons.logout_rounded),
                     label: const Text(
                       'Sign Out',
@@ -572,9 +574,9 @@ class _AdministratorDashboardPageState
                   ),
                 ),
                 const SizedBox(height: 16),
-              ],
-            ),
+            ],
           ),
+        ),
         );
       },
     );

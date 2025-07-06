@@ -35,7 +35,8 @@ class _LoginPageState extends State<LoginPage> {
                         left: -30,
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundColor: const Color(0xFF145849).withOpacity(0.9),
+                          backgroundColor:
+                              const Color(0xFF145849).withOpacity(0.9),
                         ),
                       ),
                       Positioned(
@@ -43,184 +44,366 @@ class _LoginPageState extends State<LoginPage> {
                         left: 30,
                         child: CircleAvatar(
                           radius: 40,
-                          backgroundColor: const Color(0xFF145849).withOpacity(0.85),
+                          backgroundColor:
+                              const Color(0xFF145849).withOpacity(0.85),
                         ),
                       ),
                     ],
                   ),
                 ),
-
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
                         height: 120,
-                        child: Image.asset('assets/images/DAP logo.png')
-                    ),
+                        child: Image.asset('assets/images/DAP logo.png')),
                     const SizedBox(height: 7),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Digital', style: TextStyle(fontFamily: 'Belanosima', color: Theme.of(context).primaryColor, fontSize: 23, fontWeight: FontWeight.bold),),
-                        const Text(' Academic ', style: TextStyle(fontFamily: 'Belanosima', color: Colors.black, fontSize: 23, fontWeight: FontWeight.bold),),
-                        Text('Portal', style: TextStyle(fontFamily: 'Belanosima', color: Theme.of(context).primaryColor, fontSize: 23, fontWeight: FontWeight.bold),),
+                        Text(
+                          'Digital',
+                          style: TextStyle(
+                              fontFamily: 'Belanosima',
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 23,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const Text(
+                          ' Academic ',
+                          style: TextStyle(
+                              fontFamily: 'Belanosima',
+                              color: Colors.black,
+                              fontSize: 23,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Portal',
+                          style: TextStyle(
+                              fontFamily: 'Belanosima',
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 23,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 25),
 
                     SizedBox(
                       width: 315,
-                      child: Wrap(children: [Text("Hey Welcome!\nSign-in to your account", style: TextStyle(color: Theme.of(context).primaryColor ,fontFamily: 'Ubuntu', fontSize: 28, fontWeight: FontWeight.bold))]),
+                      child: Wrap(children: [
+                        Text("Hey Welcome!\nSign-in to your account",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontFamily: 'Ubuntu',
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold))
+                      ]),
                     ),
-                    const SizedBox(height: 15.0),
-
+                    const SizedBox(height: 5.0),
                     Padding(
-                      padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 16.0),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Theme.of(context).primaryColor,
+                              const Color(0xFF1B7660),
+                              const Color(0xFF145849),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.3),
+                              blurRadius: 15,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
                       child: Form(
                           key: formKey,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
+                              // Form title
+                              const Text(
+                                'Login',
+                                style: TextStyle(
                                   color: Colors.white,
+                                  fontFamily: 'Ubuntu',
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                child: TextFormField(
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'Enter your credentials to continue',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontFamily: 'Ubuntu',
+                                  fontSize: 13,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+
+                              // Email field
+                              TextFormField(
                                   keyboardType: TextInputType.emailAddress,
                                   controller: controller.emailController,
                                   cursorColor: Theme.of(context).primaryColor,
-                                  style: const TextStyle(color: Colors.black),
+                                style: const TextStyle(
+                                  color: Colors.black87,
+                                  fontFamily: 'Ubuntu',
+                                  fontSize: 14,
+                                ),
                                   decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 5),
-                                      fillColor: Colors.black,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                      hintText: ' Email',
-                                      hintStyle: TextStyle(fontFamily: 'Ubuntu', color: Colors.grey.shade700),
-                                      prefixIcon: Icon(Icons.email_outlined, color: Theme.of(context).primaryColor)
+                                  labelText: 'Email',
+                                  labelStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 13,
                                   ),
-                                  validator: (value){
-                                    if(value == null){
+                                  hintText: 'Enter your email',
+                                  hintStyle: TextStyle(
+                                    fontFamily: 'Ubuntu',
+                                    color: Colors.grey[400],
+                                    fontSize: 13,
+                                  ),
+                                  prefixIcon: Container(
+                                    margin: const EdgeInsets.all(8),
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .primaryColor
+                                          .withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Icon(
+                                      Icons.email_outlined,
+                                      color: Theme.of(context).primaryColor,
+                                      size: 18,
+                                    ),
+                                  ),
+                                      border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide:
+                                        BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide:
+                                        BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(
+                                      color: Theme.of(context).primaryColor,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 12),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
                                       return 'Please enter your email!';
-                                    }
-                                    if(value.isEmpty){
-                                      return 'Please enter your email!';
-                                    }
-                                    else if(!value.contains("@gmail.com")){
+                                  } else if (!value.contains("@gmail.com")) {
                                       return 'Please enter a valid email!';
                                     }
                                     return null;
                                   },
                                 ),
-                              ),
-                              const SizedBox(height: 15.0),
+                              const SizedBox(height: 16),
 
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: Colors.white,
-                                ),
-                                child: Obx(() =>  TextFormField(
+                              // Password field
+                              Obx(() => TextFormField(
                                   keyboardType: TextInputType.text,
                                   controller: controller.passwordController,
                                   cursorColor: Theme.of(context).primaryColor,
-                                  style: const TextStyle(color: Colors.black),
-                                  obscureText: controller.obscureText.value, // Toggle this value to show/hide password
-                                  decoration: InputDecoration(
-                                    hoverColor: Colors.blue,
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 5),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                        gapPadding: 10
+                                    style: const TextStyle(
+                                      color: Colors.black87,
+                                      fontFamily: 'Ubuntu',
+                                      fontSize: 14,
                                     ),
-                                    hintText: ' Password',
-                                    hintStyle: TextStyle(fontFamily: 'Ubuntu', color: Colors.grey.shade700),
-                                    prefixIcon: Icon(Icons.lock_outline, color: Theme.of(context).primaryColor),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                          controller.obscureText.value ? Icons.visibility : Icons.visibility_off,
+                                    obscureText: controller.obscureText.value,
+                                    decoration: InputDecoration(
+                                      labelText: 'Password',
+                                      labelStyle: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontFamily: 'Ubuntu',
+                                        fontSize: 13,
+                                      ),
+                                      hintText: 'Enter your password',
+                                      hintStyle: TextStyle(
+                                        fontFamily: 'Ubuntu',
+                                        color: Colors.grey[400],
+                                        fontSize: 13,
+                                      ),
+                                      prefixIcon: Container(
+                                        margin: const EdgeInsets.all(8),
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .primaryColor
+                                              .withOpacity(0.1),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Icon(
+                                          Icons.lock_outline,
                                           color: Theme.of(context).primaryColor,
+                                          size: 18,
+                                        ),
+                                      ),
+                                      suffixIcon: Container(
+                                        margin: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[100],
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: IconButton(
+                                          icon: Icon(
+                                            controller.obscureText.value
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                            color: Colors.grey[600],
+                                            size: 18,
                                         ),
                                       onPressed: () {
-                                          controller.obscureText.value = !controller.obscureText.value; // Toggle the value
-                                      },
-                                    ),
+                                            controller.obscureText.value =
+                                                !controller.obscureText.value;
+                                          },
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                            color: Colors.grey[300]!),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                            color: Colors.grey[300]!),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: Theme.of(context).primaryColor,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 12),
                                   ),
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return 'Please enter your password!';
                                     } else if (value.length < 6) {
                                       return 'Please enter at least 6 characters!';
-                                    } else if (!(value.contains(RegExp(r'[0-9]')))) {
+                                      } else if (!(value
+                                          .contains(RegExp(r'[0-9]')))) {
                                       return 'Please add a number 0-9';
                                     }
                                     return null;
+                                    },
+                                  )),
+
+                              const SizedBox(height: 12),
+
+                              // Forgot password
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                  onPressed: () {
+                                    // TODO: Implement forgot password
                                   },
+                                  child: Text(
+                                    'Forgot Password?',
+                                    style: TextStyle(
+                                      fontFamily: 'Ubuntu',
+                                      fontSize: 13,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              // Login button
+                              SizedBox(
+                                width: double.infinity,
+                                height: 48,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    if (formKey.currentState!.validate()) {
+                                      controller.login();
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    foregroundColor:
+                                        Theme.of(context).primaryColor,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    shadowColor: Colors.black.withOpacity(0.1),
+                                  ),
+                                  child: Obx(() => controller.isLoading.value
+                                      ? SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                        )
+                                      : const Text(
+                                          "Login Now",
+                                          style: TextStyle(
+                                            color: Colors.black87,
+                                            fontFamily: 'Ubuntu',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
                                 ),
                               )),
+                                ),
+                              ),
                             ],
-                          )
+                          ),
+                        ),
                       ),
                     ),
 
-                    const SizedBox(height: 4.0),
-                    TextButton(
-                        onPressed: (){
+                    const SizedBox(height: 5),
 
-                        },
-                        child: const Text('Forget Password', style: TextStyle(fontFamily: 'Ubuntu', fontSize: 16),)
+                    // Additional info
+                    Text(
+                      'Secure login for Digital Academic Portal',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor.withOpacity(0.8),
+                        fontFamily: 'Ubuntu',
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 6.0),
-
-                    ElevatedButton(
-                        onPressed: (){
-                          if(formKey.currentState!.validate()){
-                            controller.login();
-                            // final user = FirebaseAuth.instance.currentUser;
-                            // print('email: ${user!.email}');
-                            // setState(() {
-                            //   loading = true;
-                            // });
-                            // auth.signInWithEmailAndPassword(
-                            //     email: emailController.text.toString(),
-                            //     password: passwordController.text.toString())
-                            //     .then((value) async {
-                            //   setState(() {
-                            //     loading = false;
-                            //   });
-                            //   final user = FirebaseAuth.instance.currentUser;
-
-                              // DocumentReference docRef = FirebaseFirestore.instance.collection('drivers').doc(user!.email).collection('vehicles').doc('current_vehicle');
-                              // DocumentSnapshot snapshot = await docRef.get();
-
-                              // if(snapshot.exists){
-                              //   // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardView()));
-                              // }
-                              // else {
-                              // }
-                            //   Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
-                            //   Utils().toast("Welcome", context);
-                            // }).onError((error, stackTrace) {
-                            //   print('error: $error');
-                            //   Utils().toastErrorMessage(error.toString(), context);
-                            // });
-                          }
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(Theme.of(context).primaryColor),
-                          fixedSize: WidgetStateProperty.all(const Size(330,55)),
-                          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40.0), // Set your desired border radius
-                            ),
-                          ),
-                        ),
-                        child: Obx(() =>
-                          controller.isLoading.value ? const CircularProgressIndicator(strokeWidth: 3, color: Colors.white) : const Text("Login Now", style: TextStyle(color: Colors.white, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.w600))
-                        )
-                    ),
-                    const SizedBox(height: 15.0),
 
                     // OutlinedButton(
                     //     style: OutlinedButton.styleFrom(
@@ -243,7 +426,6 @@ class _LoginPageState extends State<LoginPage> {
                     // ),
                   ],
                 ),
-
                 const SizedBox()
               ],
             ),

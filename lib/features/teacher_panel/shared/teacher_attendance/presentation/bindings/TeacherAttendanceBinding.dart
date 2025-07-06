@@ -3,6 +3,10 @@ import '../../../teacher_courses/data/datasources/TeacherCourseRemoteDataSource.
 import '../../../teacher_courses/data/repositories/TeacherCourseRepositoryImpl.dart';
 import '../../../teacher_courses/domain/repositories/TeacherCourseRepository.dart';
 import '../../../teacher_courses/domain/usecases/FetchAllTeacherCoursesUseCase.dart';
+import '../../../teacher_timetable/data/datasources/TeacherTimeTableRemoteDataSource.dart';
+import '../../../teacher_timetable/data/repositories/TeacherTimeTableRepositoryImpl.dart';
+import '../../../teacher_timetable/domain/repositories/TeacherTimeTableRepository.dart';
+import '../../../teacher_timetable/domain/usecases/FetchTeacherTimetable.dart';
 import '../../domain/usecases/GetTeacherCoursesUseCase.dart';
 import '../../data/datasources/TeacherAttendanceRemoteDataSource.dart';
 import '../../data/repositories/TeacherAttendanceRepositoryImpl.dart';
@@ -14,6 +18,17 @@ import '../controllers/TeacherAttendanceController.dart';
 class TeacherAttendanceBinding extends Bindings {
   @override
   void dependencies() {
+    // timetable dependencies
+    Get.lazyPut<TeacherTimeTableRemoteDataSource>(
+      () => TeacherTimeTableRemoteDataSourceImpl(),
+    );
+
+    Get.lazyPut<TeacherTimeTableRepository>(
+      () => TeacherTimeTableRepositoryImpl(Get.find()),
+    );
+
+    Get.lazyPut(() => FetchTeacherTimetable(Get.find()));
+
     // Course dependencies
     Get.lazyPut<TeacherCourseRemoteDataSource>(
       () => TeacherCourseRemoteDataSourceImpl(),
@@ -43,6 +58,7 @@ class TeacherAttendanceBinding extends Bindings {
           getTeacherCoursesUseCase: Get.find(),
           getCourseAttendanceUseCase: Get.find(),
           markAttendanceUseCase: Get.find(),
+          fetchTeacherTimetable: Get.find(),
         ));
   }
 }
