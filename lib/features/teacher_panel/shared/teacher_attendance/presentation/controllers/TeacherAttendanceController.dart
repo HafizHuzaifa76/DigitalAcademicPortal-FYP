@@ -3,13 +3,16 @@ import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_at
 import 'package:get/get.dart';
 import '../../../teacher_courses/domain/entities/TeacherCourse.dart';
 import '../../../../../../shared/domain/entities/Attendance.dart';
+import '../../../teacher_timetable/domain/usecases/FetchTeacherTimetable.dart';
 import '../../domain/usecases/GetCourseAttendanceUseCase.dart';
 import '../../domain/usecases/MarkAttendanceUseCase.dart';
+import '../../../../../../shared/domain/entities/TimeTable.dart';
 
 class TeacherAttendanceController extends GetxController {
   final GetTeacherCoursesUseCase getTeacherCoursesUseCase;
   final GetCourseAttendanceUseCase getCourseAttendanceUseCase;
   final MarkAttendanceUseCase markAttendanceUseCase;
+  final FetchTeacherTimetable fetchTeacherTimetable;
 
   final RxMap<String, List<Attendance>> attendanceMap =
       <String, List<Attendance>>{}.obs;
@@ -21,10 +24,15 @@ class TeacherAttendanceController extends GetxController {
   final RxBool isAllMarked = false.obs;
   final RxBool isExistingAttendance = false.obs;
 
+  // Course to days mapping
+  final RxMap<String, List<String>> courseDaysMap =
+      <String, List<String>>{}.obs;
+
   TeacherAttendanceController({
     required this.getTeacherCoursesUseCase,
     required this.getCourseAttendanceUseCase,
     required this.markAttendanceUseCase,
+    required this.fetchTeacherTimetable,
   }) {
     selectedDate.value = getLastValidDate(DateTime.now());
   }
@@ -37,12 +45,63 @@ class TeacherAttendanceController extends GetxController {
         Utils().showErrorSnackBar('Error', failure.failure.toString());
         isLoading.value = false;
       },
-      (courses) {
+      (courses) async {
         coursesList.value = courses;
         print('courses length: ${courses.length}');
         isLoading.value = false;
       },
     );
+  }
+
+  Future<void> geCoursesTimetable(String teacherDept) async {
+    isLoading.value = true;
+    final timeTableResult = await fetchTeacherTimetable.execute(null);
+    timeTableResult.fold((failure) {
+      Utils().showErrorSnackBar('Error', failure.failure.toString());
+      isLoading.value = false;
+    }, (timetable) {
+      print('timetable length ${timetable.length}');
+      _createCourseDaysMap(timetable);
+      isLoading.value = false;
+    });
+  }
+
+  void _createCourseDaysMap(List<TimeTableEntry> timetable) {
+    final Map<String, List<String>> tempMap = {};
+
+    print('creating days');
+    for (var entry in timetable) {
+      final courseName = '${entry.courseName}-${entry.section}';
+
+      if (tempMap.containsKey(courseName)) {
+        // If course already exists, add the day if it's not already there
+        if (!tempMap[courseName]!.contains(entry.day)) {
+          tempMap[courseName]!.add(entry.day);
+        }
+      } else {
+        // If course doesn't exist, create new list with the day
+        tempMap[courseName] = [entry.day];
+      }
+    }
+
+    // Sort days for each course
+    for (var courseName in tempMap.keys) {
+      tempMap[courseName]!.sort((a, b) {
+        final dayOrder = {
+          'Monday': 1,
+          'Tuesday': 2,
+          'Wednesday': 3,
+          'Thursday': 4,
+          'Friday': 5,
+          'Saturday': 6,
+          'Sunday': 7,
+        };
+        return (dayOrder[a] ?? 0).compareTo(dayOrder[b] ?? 0);
+      });
+    }
+
+    courseDaysMap.value = tempMap;
+    print('Course Days Map: $tempMap');
   }
 
   Future<void> loadAttendance() async {

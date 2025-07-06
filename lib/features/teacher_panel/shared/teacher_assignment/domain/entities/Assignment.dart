@@ -4,6 +4,7 @@ class Assignment {
   final String description;
   final DateTime dueDate;
   final String fileUrl;
+  final Map<String, dynamic> studentAssignments;
 
   Assignment({
     required this.id,
@@ -11,5 +12,6 @@ class Assignment {
     required this.description,
     required this.dueDate,
     required this.fileUrl,
+    required this.studentAssignments,
   });
 }

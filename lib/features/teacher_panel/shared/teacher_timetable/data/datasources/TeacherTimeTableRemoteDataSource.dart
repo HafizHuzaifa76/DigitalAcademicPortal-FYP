@@ -2,20 +2,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digital_academic_portal/shared/data/models/TimeTableEntryModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../../presentation/pages/TeacherDashboardPage.dart';
+
 abstract class TeacherTimeTableRemoteDataSource {
-  Future<List<TimeTableEntryModel>> fetchTeacherTimetable(String teacherCNIC);
+  Future<List<TimeTableEntryModel>> fetchTeacherTimetable();
 }
 
 class TeacherTimeTableRemoteDataSourceImpl implements TeacherTimeTableRemoteDataSource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final teacher = TeacherDashboardPage.teacherProfile;
 
   @override
-  Future<List<TimeTableEntryModel>> fetchTeacherTimetable(String teacherCNIC) async {
+  Future<List<TimeTableEntryModel>> fetchTeacherTimetable() async {
     try {
       final User? currentUser = _auth.currentUser;
       if (currentUser == null) {
         throw Exception('No user logged in');
+      }
+      if (teacher == null) {
+        throw Exception('Teacher profile data not found');
       }
       
       String displayName = currentUser.displayName ?? '';
@@ -36,7 +42,7 @@ class TeacherTimeTableRemoteDataSourceImpl implements TeacherTimeTableRemoteData
       // For each semester, check its timetable
       for (var semester in semestersSnapshot.docs) {
         final QuerySnapshot timeTableSnapshot = await semesterRef.doc(semester.id).collection('timetable')
-            .where('teacherCNIC', isEqualTo: teacherCNIC)
+            .where('teacherCNIC', isEqualTo: teacher!.teacherCNIC)
             .get();
         final semesterEntries = timeTableSnapshot.docs
             .map((doc) => TimeTableEntryModel.fromMap(doc.id, doc.data() as Map<String, dynamic>))

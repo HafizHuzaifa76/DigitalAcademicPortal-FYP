@@ -76,9 +76,8 @@ class _AssignmentPageState extends State<AssignmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentAssignments = selectedCourse != null
-        ? courseAssignments[selectedCourse] ?? []
-        : [];
+    final currentAssignments =
+        selectedCourse != null ? courseAssignments[selectedCourse] ?? [] : [];
 
     return Scaffold(
       appBar: AppBar(title: Text('Pending Assignments')),
@@ -111,85 +110,84 @@ class _AssignmentPageState extends State<AssignmentPage> {
             Expanded(
               child: currentAssignments.isEmpty
                   ? Center(
-                child: Text(
-                  'No course selected or no assignments available.',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              )
-                  : ListView.builder(
-                itemCount: currentAssignments.length,
-                itemBuilder: (context, index) {
-                  final assignment = currentAssignments[index];
-                  return Card(
-                    color: Color(0xFF2C5D3B),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Table(
-                        columnWidths: {
-                          0: FlexColumnWidth(1),
-                          1: FlexColumnWidth(2),
-                        },
-                        defaultVerticalAlignment:
-                        TableCellVerticalAlignment.middle,
-                        children: [
-                          TableRow(
-                            children: [
-                              Text('Title:', style: _labelStyle()),
-                              Text(assignment['title']!,
-                                  style: _valueStyle()),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Text('Due Date:', style: _labelStyle()),
-                              Text(assignment['dueDate']!,
-                                  style: _valueStyle()),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Text('Instructions:', style: _labelStyle()),
-                              Text(assignment['instructions']!,
-                                  style: _valueStyle()),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Text('Status:', style: _labelStyle()),
-                              Text(assignment['status']!,
-                                  style: _valueStyle()),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              SizedBox(),
-                              Padding(
-                                padding:
-                                const EdgeInsets.only(top: 12.0),
-                                child: ElevatedButton.icon(
-                                  onPressed: () =>
-                                      _uploadAssignment(index),
-                                  icon: Icon(Icons.upload_file),
-                                  label: Text('Upload Assignment'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 10),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                      child: Text(
+                        'No course selected or no assignments available.',
+                        style: TextStyle(color: Colors.grey),
                       ),
+                    )
+                  : ListView.builder(
+                      itemCount: currentAssignments.length,
+                      itemBuilder: (context, index) {
+                        final assignment = currentAssignments[index];
+                        return Card(
+                          color: Color(0xFF2C5D3B),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Table(
+                              columnWidths: {
+                                0: FlexColumnWidth(1),
+                                1: FlexColumnWidth(2),
+                              },
+                              defaultVerticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              children: [
+                                TableRow(
+                                  children: [
+                                    Text('Title:', style: _labelStyle()),
+                                    Text(assignment['title']!,
+                                        style: _valueStyle()),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    Text('Due Date:', style: _labelStyle()),
+                                    Text(assignment['dueDate']!,
+                                        style: _valueStyle()),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    Text('Instructions:', style: _labelStyle()),
+                                    Text(assignment['instructions']!,
+                                        style: _valueStyle()),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    Text('Status:', style: _labelStyle()),
+                                    Text(assignment['status']!,
+                                        style: _valueStyle()),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    SizedBox(),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 12.0),
+                                      child: ElevatedButton.icon(
+                                        onPressed: () =>
+                                            _uploadAssignment(index),
+                                        icon: Icon(Icons.upload_file),
+                                        label: Text('Upload Assignment'),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 10),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ],
         ),
@@ -199,8 +197,7 @@ class _AssignmentPageState extends State<AssignmentPage> {
 
   TextStyle _labelStyle() =>
       TextStyle(color: Colors.white70, fontWeight: FontWeight.w600);
-  TextStyle _valueStyle() =>
-      TextStyle(color: Colors.white, fontSize: 16);
+  TextStyle _valueStyle() => TextStyle(color: Colors.white, fontSize: 16);
 
   Future<void> _uploadAssignment(int index) async {
     if (selectedCourse == null) return;
