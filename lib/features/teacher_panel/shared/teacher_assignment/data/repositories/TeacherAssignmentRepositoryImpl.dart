@@ -32,6 +32,7 @@ class TeacherAssignmentRepositoryImpl implements TeacherAssignmentRepository {
         description: assignment.description,
         dueDate: assignment.dueDate,
         fileUrl: assignment.fileUrl,
+        studentAssignments: assignment.studentAssignments
       );
       await remoteDataSource.createAssignment(
           course, assignmentModel);

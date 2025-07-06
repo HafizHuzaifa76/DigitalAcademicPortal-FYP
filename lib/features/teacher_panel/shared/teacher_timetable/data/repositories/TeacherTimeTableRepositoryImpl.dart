@@ -9,9 +9,9 @@ class TeacherTimeTableRepositoryImpl implements TeacherTimeTableRepository {
   TeacherTimeTableRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Fail, List<TimeTableEntry>>> fetchTeacherTimetable(String teacherCNIC) async {
+  Future<Either<Fail, List<TimeTableEntry>>> fetchTeacherTimetable() async {
     try {
-      final timetable = await remoteDataSource.fetchTeacherTimetable(teacherCNIC);
+      final timetable = await remoteDataSource.fetchTeacherTimetable();
       return Right(timetable);
     } catch (e) {
       return Left(Fail(e.toString()));

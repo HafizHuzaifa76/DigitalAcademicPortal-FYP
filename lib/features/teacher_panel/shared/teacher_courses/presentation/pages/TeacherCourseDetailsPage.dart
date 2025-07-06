@@ -1,11 +1,13 @@
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/domain/entities/TeacherCourse.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/TeacherCourseController.dart';
 import '../widgets/CourseMaterialsTab.dart';
 import '../widgets/StudentListTab.dart';
 import '../widgets/StudentQueriesTab.dart';
 
 class TeacherCourseDetailsPage extends StatefulWidget {
-  final dynamic course;
+  final TeacherCourse course;
   
   const TeacherCourseDetailsPage({
     super.key,
@@ -18,10 +20,13 @@ class TeacherCourseDetailsPage extends StatefulWidget {
 
 class _TeacherCourseDetailsPageState extends State<TeacherCourseDetailsPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late TeacherCourseController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = Get.find<TeacherCourseController>();
+    controller.selectedCourse = widget.course;
     _tabController = TabController(length: 3, vsync: this);
   }
 
@@ -166,9 +171,9 @@ class _TeacherCourseDetailsPageState extends State<TeacherCourseDetailsPage> wit
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.only(
+          borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),

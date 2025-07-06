@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/TeacherAssignmentController.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
+
+// Add import for the new submissions page
+import '../widgets/assignment_submissions_page.dart';
 
 class TeacherAssignmentPage extends GetView<TeacherAssignmentController> {
   const TeacherAssignmentPage({Key? key}) : super(key: key);
@@ -164,6 +168,50 @@ class TeacherAssignmentPage extends GetView<TeacherAssignmentController> {
                                 color: Colors.black87,
                               ),
                             ),
+                            const SizedBox(height: 8),
+                            // Show deadline
+                            Row(
+                              children: [
+                                Icon(Icons.calendar_today_rounded,
+                                    color: theme.primaryColor, size: 18),
+                                const SizedBox(width: 6),
+                                Text(
+                                  'Deadline: ${DateFormat.yMMMd().format(assignment.dueDate)}',
+                                  style: TextStyle(
+                                    color: theme.primaryColor,
+                                    fontFamily: 'Ubuntu',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            // View Submissions button
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton.icon(
+                                icon: Icon(Icons.people_alt_rounded,
+                                    color: theme.primaryColor),
+                                label: Text(
+                                  'View Submissions',
+                                  style: TextStyle(
+                                    color: theme.primaryColor,
+                                    fontFamily: 'Ubuntu',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                  side: BorderSide(color: theme.primaryColor),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Get.to(() => AssignmentSubmissionsPage(
+                                      assignment: assignment));
+                                },
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -184,7 +232,7 @@ class TeacherAssignmentPage extends GetView<TeacherAssignmentController> {
         ),
         onPressed: () {
           if (controller.selectedCourse.value != null) {
-            Get.dialog(AddAssignmentDialog());
+            showAddAssignmentBottomSheet(context);
           } else {
             Get.snackbar(
               'No Course Selected',
