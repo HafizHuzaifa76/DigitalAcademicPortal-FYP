@@ -9,6 +9,7 @@ class CurrentSemesterGradePage extends GetView<StudentGradeController> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Obx(() {
       if (controller.isLoading.value) {
         return Center(
@@ -21,66 +22,134 @@ class CurrentSemesterGradePage extends GetView<StudentGradeController> {
         );
       }
 
-      return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          const Text('SELECT COUSE',
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          DropdownButton<StudentCourse>(
-            value: controller.selectedCourse.value,
-            items: controller.studentCourses
-                .map((course) => DropdownMenuItem(
-                    value: course, child: Text(course.courseName)))
+      return Container(
+        color: const Color(0xFFF8F9FA),
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            const Text('Select Course',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Ubuntu',
+                  fontSize: 16,
+                )),
+            const SizedBox(height: 10),
+            Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<StudentCourse>(
+                    value: controller.selectedCourse.value,
+                    isExpanded: true,
+                    items: controller.studentCourses
+                        .map((course) => DropdownMenuItem(
+                            value: course, child: Text(course.courseName)))
+                        .toList(),
+                    onChanged: (val) {
+                      controller.updateSelectedCourse(val!);
+                    },
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            ...controller.categories
+                .map((category) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle(category.toUpperCase(), theme),
+                        ...controller.getGradesByCategory(category).map(
+                            (grade) => _buildGradeRow(grade.title,
+                                grade.totalMarks, grade.obtainedMarks, theme)),
+                      ],
+                    ))
                 .toList(),
-            onChanged: (val) {
-              print('val');
-              print(val);
-              controller.updateSelectedCourse(val!);
-            },
-          ),
-          const SizedBox(height: 20),
-          ...controller.categories
-              .map((category) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionTitle(category.toUpperCase()),
-                      ...controller.getGradesByCategory(category).map((grade) =>
-                          _buildGradeRow(
-                              grade.title, grade.totalMarks, grade.obtainedMarks)),
-                    ],
-                  ))
-              .toList(),
-        ],
+          ],
+        ),
       );
     });
   }
 
-  Widget _buildGradeRow(String title, int total, double obtained) {
+  Widget _buildGradeRow(
+      String title, int total, double obtained, ThemeData theme) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      margin: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: theme.primaryColor.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text('Total: ${total.toString()}'),
-          Text('Obtained: ${obtained.toString()}'),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [theme.primaryColor, const Color(0xFF1B7660)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Ubuntu',
+                fontSize: 16,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Total: $total',
+                    style: TextStyle(
+                        color: theme.primaryColor,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Ubuntu',
+                        fontSize: 15)),
+                Text('Obtained: $obtained',
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Ubuntu',
+                        fontSize: 15)),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(String title, ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Text(title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+              fontFamily: 'Ubuntu',
+              color: theme.primaryColor)),
     );
   }
 }

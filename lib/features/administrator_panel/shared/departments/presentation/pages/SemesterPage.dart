@@ -1,4 +1,3 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/departments/domain/entities/Department.dart';
 import 'package:flutter/material.dart';
@@ -10,336 +9,451 @@ import '../controllers/DepartmentController.dart';
 class SemesterPage extends StatefulWidget {
   final Department department;
   final String semester;
-  const SemesterPage({super.key, required this.department, required this.semester});
+  const SemesterPage(
+      {super.key, required this.department, required this.semester});
 
   @override
   State<SemesterPage> createState() => _SemesterPageState();
 }
 
 class _SemesterPageState extends State<SemesterPage> {
-
   @override
   Widget build(BuildContext context) {
     var dept = widget.department;
     var semester = widget.semester;
-    var screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Center(
-        child: Container(
-          color: Theme.of(context).primaryColor,
-          child: Column(
+      backgroundColor: const Color(0xFFF8F9FA),
+      body: CustomScrollView(
+        slivers: [
+          // Modern App Bar with gradient
+          SliverAppBar(
+            expandedHeight: 200.0,
+            floating: false,
+            pinned: true,
+            elevation: 0,
+            backgroundColor: Theme.of(context).primaryColor,
+            leading: Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+                onPressed: () => Get.back(),
+              ),
+            ),
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.only(bottom: 16),
+              centerTitle: true,
+              title: Stack(
             children: [
-              Container(
-                height: screenSize.height * .25,
-                width: screenSize.width,
-                padding: EdgeInsets.only(top: 35, left: screenSize.width *0.035, right: screenSize.width *0.035, bottom: 8),
-                decoration: const BoxDecoration(
+                  Positioned(
+                    bottom: 78,
+                    left: 65,
+                    right: 65,
+                    child: Text(
+                      '${dept.departmentName}\n$semester',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15.0,
+                        fontFamily: 'Ubuntu',
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Theme.of(context).primaryColor,
+                      const Color(0xFF1B7660),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Stack(
                   children: [
-                    Container(
+                    // Decorative circles
+                    Positioned(
+                      top: -30,
+                      right: -30,
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -20,
+                      left: -20,
+                      child: Container(
+                        width: 80,
                       height: 80,
-                      width: double.infinity,
-                      child: Stack(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                    // Stats cards
+                    Positioned(
+                      bottom: 20,
+                      left: 20,
+                      right: 20,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Positioned(
-                            top: 20,
-                            child: Container(
-                                width: screenSize.width * 0.93,
-                                child: Text('${dept.departmentName}\n$semester', style: Theme.of(context).appBarTheme.titleTextStyle, textAlign: TextAlign.center,)),
+                          _buildStatCard(
+                            icon: Icons.book_rounded,
+                            title: 'Courses',
+                            value: '${dept.totalSemesters}',
+                            color: Colors.white,
                           ),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 30,
-                                child: IconButton(
-                                    padding: const EdgeInsets.all(8),
-                                    onPressed: (){
-                                      Get.back();
-                                    },
-                                    icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28,)
-                                ),
-                              ),
-
-                              // IconButton(
-                              //   icon: const CircleAvatar(
-                              //     child: Icon(FontAwesomeIcons.userShield),
-                              //   ),
-                              //   onPressed: () => _showCustomMenu(context),
-                              // ),
-                            ],
+                          _buildStatCard(
+                            icon: Icons.person_rounded,
+                            title: 'Teachers',
+                            value: '${dept.totalTeachers}',
+                            color: Colors.white,
+                          ),
+                          _buildStatCard(
+                            icon: Icons.people_rounded,
+                            title: 'Students',
+                            value: '${dept.totalStudents}',
+                            color: Colors.white,
                           ),
                         ],
                       ),
                     ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Card(
-                          color: const Color(0xFF128771),
-                          borderOnForeground: true,
-                          semanticContainer: true,
-                          shadowColor: Colors.black,
-                          child: SizedBox(
-                            height: 70,
-                            width: screenSize.width * 0.30,
-                            child: Center(
-                              child: Text('Courses\n${dept.totalSemesters}', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, fontFamily: 'Ubuntu', color: Theme.of(context).primaryColorDark), textAlign: TextAlign.center,),
-                            ),
-                          ),
-                        ),
-
-                        Card(
-                          color: const Color(0xFF128771),
-                          child: SizedBox(
-                            height: 70,
-                            width: screenSize.width * 0.28,
-                            child: Center(
-                              child: Text('Teachers\n${dept.totalTeachers}', style: TextStyle(fontSize: 17, color: Theme.of(context).primaryColorDark, fontWeight: FontWeight.bold, fontFamily: 'Ubuntu'), textAlign: TextAlign.center,),
-                            ),
-                          ),
-                        ),
-
-                        Card(
-                          color: const Color(0xFF128771),
-                          surfaceTintColor: Colors.black,
-                          shadowColor: Theme.of(context).primaryColorLight,
-                          child: SizedBox(
-                            height: 70,
-                            width: screenSize.width * 0.28,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text('Students\n${dept.totalStudents}', style: TextStyle(fontSize: 17, color: Theme.of(context).primaryColorDark, fontWeight: FontWeight.bold, fontFamily: 'Ubuntu'), textAlign: TextAlign.center,),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
                   ],
                 ),
-              ),
+                            ),
+                          ),
+                        ),
 
-              Container(
-                height: screenSize.height * .75,
-                width: screenSize.width,
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30)
-                    )
+          // Main content
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                  // Department Info Cards
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                 ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-
-                    const SizedBox(height: 10),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: screenSize.width * 0.4,
-                          height: 80,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Theme.of(context).primaryColor, width: 2)
-                          ),
-                          child: Card(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                AutoSizeText('Dept Code', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 17, fontWeight: FontWeight.bold), maxLines: 1,),
-                                AutoSizeText(dept.departmentCode, style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                              ],
-                            ),
+                        Text(
+                          'Semester Information',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                            fontFamily: 'Ubuntu',
                           ),
                         ),
-
-                        Container(
-                          width: screenSize.width * 0.4,
-                          height: 80,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Theme.of(context).primaryColor, width: 2)
-                          ),
-                          child: Card(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                AutoSizeText('HOD', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                                AutoSizeText(dept.headOfDepartment, style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                              ],
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildInfoCard(
+                                icon: Icons.code_rounded,
+                                title: 'Department Code',
+                                value: dept.departmentCode,
+                              ),
                             ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _buildInfoCard(
+                                icon: Icons.person_rounded,
+                                title: 'Head of Department',
+                                value: dept.headOfDepartment,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-
+                        const SizedBox(height: 12),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Container(
-                          width: screenSize.width * 0.4,
-                          height: 80,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Theme.of(context).primaryColor, width: 2)
-                          ),
-                          child: Card(
-                            child: Column(
-                              children: [
-                                AutoSizeText('Sections', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                                AutoSizeText('0', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                              ],
+                            Expanded(
+                              child: _buildInfoCard(
+                                icon: Icons.account_tree_rounded,
+                                title: 'Sections',
+                                value: '0',
+                              ),
                             ),
-                          ),
-                        ),
-
-                        Container(
-                          width: screenSize.width * 0.4,
-                          height: 80,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Theme.of(context).primaryColor, width: 2)
-                          ),
-                          child: Card(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                AutoSizeText('Semesters', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                                AutoSizeText('${dept.totalSemesters}', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                              ],
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _buildInfoCard(
+                                icon: Icons.schedule_rounded,
+                                title: 'Total Semesters',
+                                value: '${dept.totalSemesters}',
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                  ),
 
-                    const SizedBox(),
+                  const SizedBox(height: 24),
+
+                  // Action buttons grid
+                  Column(
+                    children: [
+                      // First row (3 items)
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
-                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
-                          ),
-                          onPressed: ()=> Get.toNamed('/semesterStudents', arguments: {
+                          Expanded(
+                            child: _buildActionButton(
+                              icon: FontAwesomeIcons.userGraduate,
+                              title: 'Students',
+                              onTap: () =>
+                                  Get.toNamed('/semesterStudents', arguments: {
                             'deptName': dept.departmentName,
                             'semester': semester,
                           }),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(FontAwesomeIcons.userGraduate, color: Theme.of(context).primaryColorLight, size: 35,),
-                              AutoSizeText('Students', style: TextStyle(color: Theme.of(context).primaryColorLight, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
-                            ],
+                              color: Get.theme.primaryColor,
+                            ),
                           ),
-                        ),
-
-                        ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
-                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _buildActionButton(
+                              icon: Icons.school_rounded,
+                              title: 'Teachers',
+                              onTap: () => Get.toNamed('/teachers'),
+                              color: Get.theme.primaryColor,
+                            ),
                           ),
-                          onPressed: ()=> Get.toNamed('/teachers'),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(Icons.school, color: Theme.of(context).primaryColorLight, size: 35,),
-                              AutoSizeText('Teachers', style: TextStyle(color: Theme.of(context).primaryColorLight, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
-                            ],
-                          ),
-                        ),
-
-                        ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
-                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
-                          ),
-                          onPressed: ()=> Get.toNamed('/semesterCourses', arguments: {
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _buildActionButton(
+                              icon: Icons.book_rounded,
+                              title: 'Courses',
+                              onTap: () => Get.toNamed('/semesterCourses',
+                                  arguments: {
                             'deptName': dept.departmentName,
                             'semester': semester
                           }),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(Icons.book, color: Theme.of(context).primaryColorLight, size: 35,),
-                              AutoSizeText(' Courses ', style: TextStyle(color: Theme.of(context).primaryColorLight, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
-                            ],
+                              color: Get.theme.primaryColor,
                           ),
                         ),
                       ],
                     ),
-
+                      const SizedBox(height: 8),
+                      // Second row (2 items) - centered
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-                                fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
-                                shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
-                            ),
-                            onPressed: ()=> Get.toNamed('/allSections', arguments: {
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 56) / 3,
+                            child: _buildActionButton(
+                              icon: Icons.account_tree_rounded,
+                              title: 'Sections',
+                              onTap: () => Get.toNamed('/allSections',
+                                  arguments: {
                               'deptName': dept.departmentName,
                               'semester': semester
                             }),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Icon(Icons.account_tree, color: Theme.of(context).primaryColorLight, size: 35,),
-                                AutoSizeText(' Sections ', style: TextStyle(color: Theme.of(context).primaryColorLight, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
-                              ],
+                              color: Get.theme.primaryColor,
                             ),
                           ),
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-                                fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .3, 100)),
-                                padding: WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 2, horizontal: 2)),
-                                shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
-                            ),
-                            onPressed: ()=> Get.toNamed('/semesterTimeTablePage', arguments: {
+                          const SizedBox(width: 8),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 56) / 3,
+                            child: _buildActionButton(
+                              icon: Icons.event_note_rounded,
+                              title: 'Time Table',
+                              onTap: () => Get.toNamed('/semesterTimeTablePage',
+                                  arguments: {
                               'deptName': dept.departmentName,
                               'semester': semester
                             }),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Icon(Icons.event_note, color: Theme.of(context).primaryColorLight, size: 35,),
-                                AutoSizeText('Time Table', style: TextStyle(color: Theme.of(context).primaryColorLight, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
-                              ],
+                              color: Get.theme.primaryColor,
                             ),
                           ),
+                        ],
                         ),
                       ],
                     ),
 
-                    const SizedBox(),
-                  ],
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatCard({
+    required IconData icon,
+    required String title,
+    required String value,
+    required Color color,
+  }) {
+    return Container(
+      width: 105,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: color,
+              fontFamily: 'Ubuntu',
+            ),
+          ),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              color: color,
+              fontFamily: 'Ubuntu',
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoCard({
+    required IconData icon,
+    required String title,
+    required String value,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                icon,
+                size: 16,
+                color: Colors.grey[600],
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                    fontFamily: 'Ubuntu',
+                  ),
                 ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).primaryColor,
+              fontFamily: 'Ubuntu',
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    required Color color,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Container(
+          height: 110,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: color.withOpacity(0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  fontFamily: 'Ubuntu',
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

@@ -29,6 +29,7 @@ import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_as
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_attendance/presentation/bindings/TeacherAttendanceBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_calendar_events/presentation/bindings/TeacherCalendarEventBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/bindings/TeacherCourseBinding.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/bindings/UploadedFileBinding.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/pages/TeacherCoursesPage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_grades/presentation/pages/TeachersGradePage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_timetable/presentation/bindings/TeacherTimeTableBinding.dart';
@@ -48,7 +49,9 @@ import 'features/administrator_panel/shared/student/presentation/pages/AllStuden
 import 'features/auth/presentation/bindings/AuthBinding.dart';
 import 'features/student_panel/presentation/bindings/StudentPanelBinding.dart';
 import 'features/student_panel/presentation/pages/StudentPanelDashboardPage.dart';
+import 'features/student_panel/shared/student_assignment/presentation/bindings/StudentAssignmentBinding.dart';
 import 'features/student_panel/shared/student_assignment/presentation/pages/Stu_Assignments.dart';
+import 'features/student_panel/shared/student_assignment/presentation/pages/StudentAssignmentPage.dart';
 import 'features/student_panel/shared/student_attendance/presentation/pages/StudentAttendancePage.dart';
 import 'features/student_panel/shared/student_chatbot/presentation/pages/Stu_ChatBot.dart';
 import 'features/student_panel/shared/student_courses/presentation/bindings/StudentCoursesBinding.dart';
@@ -57,10 +60,12 @@ import 'features/student_panel/shared/student_grades/presentation/bindings/Stude
 import 'features/student_panel/shared/student_report/presentation/pages/Stu_Reports.dart';
 import 'features/student_panel/shared/student_timetable/presentation/pages/Stu_TimeTablePage.dart';
 import 'features/student_panel/shared/students_Diary/presentation/pages/StudentDiaryPage.dart';
+import 'features/teacher_panel/shared/teacher_announcement/presentation/bindings/TeacherAnnouncementBinding.dart';
 import 'features/teacher_panel/shared/teacher_assignment/presentation/pages/Tch_Assignment.dart';
 import 'features/teacher_panel/shared/teacher_attendance/presentation/pages/TeacherAttendancePage.dart';
 import 'features/teacher_panel/shared/teacher_calendar_events/presentation/pages/Tch_CalendarEventPage.dart';
 import 'features/teacher_panel/shared/teacher_announcement/presentation/pages/TeacherAnnouncementPage.dart';
+import 'features/teacher_panel/shared/teacher_courses/presentation/pages/TeacherCourseDetailsPage.dart';
 import 'features/teacher_panel/shared/teacher_queries/presentation/pages/TeacherQueryPage.dart';
 import 'features/teacher_panel/shared/teacher_timetable/presentation/pages/TeacherTimeTablePage.dart';
 import 'features/teacher_panel/shared/teacher_grades/presentation/bindings/TeacherGradeBinding.dart';
@@ -266,10 +271,9 @@ class MyApp extends StatelessWidget {
           binding: StudentGradeBinding(),
         ),
         GetPage(
-          name: '/pendingAssignment',
-          page: () => AssignmentPage(),
-          //binding: ,
-        ),
+            name: '/pendingAssignment',
+            page: () => const StudentAssignmentPage(),
+            binding: StudentAssignmentBinding()),
         GetPage(
           name: '/Stu_ChatBot',
           page: () => const Stu_ChatBot(),
@@ -314,7 +318,7 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/teacherAnnouncement',
           page: () => const TeacherAnnouncementPage(),
-          //binding: CalendarEventBinding(),
+          binding: TeacherAnnouncementBinding(),
         ),
         GetPage(
           name: '/teacherAssignments',
@@ -331,6 +335,11 @@ class MyApp extends StatelessWidget {
           page: () =>
               TeacherCoursesPage(teacherDept: Get.arguments['teacherDept']),
           binding: TeacherCourseBinding(),
+        ),
+        GetPage(
+          name: '/teacherCourseDetailPage',
+          page: () => TeacherCourseDetailsPage(course: Get.arguments['course']),
+          binding: UploadedFileBinding(),
         ),
         GetPage(
           name: '/teacherGradePage',

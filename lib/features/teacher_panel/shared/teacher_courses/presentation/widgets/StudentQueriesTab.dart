@@ -1,15 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '';
-import '../pages/DiscussionForumScreen.dart';
+import '../../domain/entities/TeacherCourse.dart';
 import '../pages/PendingQueriesScreen.dart';
-class StudentQueriesTab extends StatelessWidget {
-  final dynamic course;
+import '../pages/RespondedQueriesScreen.dart';
+import '../controllers/TeacherCourseController.dart';
+
+class StudentQueriesTab extends StatefulWidget {
+  final TeacherCourse course;
 
   const StudentQueriesTab({
     super.key,
     required this.course,
   });
+
+  @override
+  State<StudentQueriesTab> createState() => _StudentQueriesTabState();
+}
+
+class _StudentQueriesTabState extends State<StudentQueriesTab> {
+  late TeacherCourseController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.find<TeacherCourseController>();
+
+    if (controller.allQueries.isEmpty) {
+      controller.fetchQueries(widget.course);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,24 +38,25 @@ class StudentQueriesTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionHeader('Pending Queries'),
-          _buildQueryCard(
-            'Pending Queries',
-            'View and answer student queries',
-            'Pending',
-            Icons.help_outline,
-            Colors.orange,
-            () => Get.to(() => PendingQueriesScreen(course: course)),
-          ),
+          Obx(() => _buildQueryCard(
+                'Pending Queries',
+                'View and answer student queries',
+                '${controller.pendingQueries.length} Pending',
+                Icons.help_outline,
+                Colors.orange,
+                () => Get.to(() => PendingQueriesScreen(course: widget.course)),
+              )),
           const SizedBox(height: 24),
-          _buildSectionHeader('Discussion Forum'),
-          _buildQueryCard(
-            'Discussion Forum',
-            'Open chatroom for course discussions',
-            'Open',
-            Icons.forum_outlined,
-            Colors.blue,
-            () => Get.to(() => DiscussionForumScreen(course: course)),
-          ),
+          _buildSectionHeader('Responded Queries'),
+          Obx(() => _buildQueryCard(
+                'Responded Queries',
+                'View queries that have been answered',
+                '${controller.respondedQueries.length} Responded',
+                Icons.check_circle_outline,
+                Colors.green,
+                () =>
+                    Get.to(() => RespondedQueriesScreen(course: widget.course)),
+              )),
         ],
       ),
     );
@@ -65,12 +85,14 @@ class StudentQueriesTab extends StatelessWidget {
     );
   }
 
-  Widget _buildQueryCard(String title, String subtitle, String status, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildQueryCard(String title, String subtitle, String status,
+      IconData icon, Color color, VoidCallback onTap) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -109,11 +131,12 @@ class StudentQueriesTab extends StatelessWidget {
                 fontSize: 13,
               ),
             ),
-            const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.black54),
+            const Icon(Icons.arrow_forward_ios,
+                size: 16, color: Colors.black54),
           ],
         ),
         onTap: onTap,
       ),
     );
   }
-} 
+}

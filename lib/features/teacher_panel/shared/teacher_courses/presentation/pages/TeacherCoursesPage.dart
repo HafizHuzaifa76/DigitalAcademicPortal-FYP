@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/TeacherCourseController.dart';
-import 'TeacherCourseDetailsPage.dart';
 
 class TeacherCoursesPage extends StatefulWidget {
   final String teacherDept;
@@ -34,11 +33,11 @@ class _TeacherCoursesPageState extends State<TeacherCoursesPage> {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
-        
+
         if (controller.coursesList.isEmpty) {
           return const Center(child: Text('No courses assigned'));
         }
-        
+
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView(
@@ -67,7 +66,7 @@ class _TeacherCoursesPageState extends State<TeacherCoursesPage> {
   Widget _buildCourseCard(course) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => TeacherCourseDetailsPage(course: course));
+        Get.toNamed('/teacherCourseDetailPage', arguments: {'course': course});
       },
       child: Card(
         elevation: 4,
@@ -142,7 +141,8 @@ class _TeacherCoursesPageState extends State<TeacherCoursesPage> {
                     ],
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.black26,
                       borderRadius: BorderRadius.circular(12),

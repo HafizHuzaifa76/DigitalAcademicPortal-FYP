@@ -18,7 +18,7 @@ class _TeacherTimeTablePageState extends State<TeacherTimeTablePage> {
   @override
   void initState() {
     super.initState();
-    controller.loadTeacherTimetable(widget.teacherCNIC);
+    controller.loadTeacherTimetable();
   }
 
   @override

@@ -1,20 +1,8 @@
 import '../../domain/entities/Assignment.dart';
 
 class AssignmentModel extends Assignment {
-  AssignmentModel({
-    required String id,
-    required String title,
-    required String description,
-    required DateTime dueDate,
-    required String fileUrl,
-  }) : super(
-          id: id,
-          title: title,
-          description: description,
-          dueDate: dueDate,
-          fileUrl: fileUrl,
-        );
-
+  AssignmentModel({required super.id, required super.title, required super.description, required super.dueDate, required super.fileUrl, required super.studentAssignments});
+  
   factory AssignmentModel.fromMap(Map<String, dynamic> map, String documentId) {
     return AssignmentModel(
       id: documentId,
@@ -22,6 +10,7 @@ class AssignmentModel extends Assignment {
       description: map['description'],
       dueDate: map['dueDate'].toDate(),
       fileUrl: map['fileUrl'],
+      studentAssignments: map['studentAssignments'],
     );
   }
 
@@ -31,6 +20,8 @@ class AssignmentModel extends Assignment {
       'description': description,
       'dueDate': dueDate,
       'fileUrl': fileUrl,
+      'studentAssignments': studentAssignments,
     };
   }
+
 }
