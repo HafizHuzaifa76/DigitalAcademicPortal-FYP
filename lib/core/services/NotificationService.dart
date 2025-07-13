@@ -84,26 +84,31 @@ Future<String> getAccessToken() async {
   // Close the HTTP client
   client.close();
 
+  print('accessToken');
+  print(credentials.accessToken.data);
+
   return credentials.accessToken.data;
 }
 
-Future<void> sendFCMMessage() async {
+Future<void> sendFCMMessage(
+    String topic, String title, String body, String screenName) async {
   final String serverKey = await getAccessToken(); // Your FCM server key
-  final String fcmEndpoint =
+
+  const String fcmEndpoint =
       'https://fcm.googleapis.com/v1/projects/digital-academic-portal/messages:send';
   final String? currentFCMToken = await FirebaseMessaging.instance.getToken();
 
+  print('topic: $topic');
   final Map<String, dynamic> message = {
     'message': {
-      "token":
-          currentFCMToken, // Token of the device you want to send the message to
+      "topic": topic.toLowerCase().replaceAll(" ", "-"),
       'notification': {
-        'body': 'This is an FCM notification message!',
-        'title': 'FCM Message'
+        'title': title,
+        'body': body,
       },
       'data': {
-        'current_user_fcm_token':
-            currentFCMToken, // Include the current user's FCM token in data payload
+        // 'current_user_fcm_token': currentFCMToken,
+        'screen': screenName,
       }
     }
   };
@@ -121,5 +126,6 @@ Future<void> sendFCMMessage() async {
     print("FCM message sent successfully");
   } else {
     print("Failed to send FCM message: ${response.statusCode}");
+    print("Response body: ${response.body}");
   }
 }

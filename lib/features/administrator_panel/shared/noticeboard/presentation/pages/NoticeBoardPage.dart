@@ -15,12 +15,30 @@ class MainNoticeBoardPage extends StatefulWidget {
 }
 
 class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
-  final NoticeBoardController controller = Get.find();
+  NoticeBoardController? controller;
   final addNoticeKey = GlobalKey<FormState>();
   final editNoticeKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+    try {
+      controller = Get.find<NoticeBoardController>();
+    } catch (e) {
+      print('Error finding NoticeBoardController: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (controller == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       floatingActionButton: Container(
         decoration: BoxDecoration(
@@ -44,210 +62,209 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
         child: FloatingActionButton(
           backgroundColor: Colors.transparent,
           elevation: 0,
-        onPressed: () => addNoticeBottomSheet(context),
+          onPressed: () => addNoticeBottomSheet(context),
           child: const Icon(Icons.add, color: Colors.white, size: 28),
         ),
       ),
       body: CustomScrollView(
-        controller: controller.scrollController,
+        controller: controller!.scrollController,
         physics: const BouncingScrollPhysics(),
         slivers: [
           // Modern SliverAppBar with gradient
-          Obx(() {
-            return SliverAppBar(
-              expandedHeight: 200.0,
-              floating: false,
-              pinned: true,
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Get.theme.primaryColor,
-                        const Color(0xFF1B7660),
-                      ],
-                    ),
+          SliverAppBar(
+            expandedHeight: 200.0,
+            floating: false,
+            pinned: true,
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Get.theme.primaryColor,
+                      const Color(0xFF1B7660),
+                    ],
                   ),
-                  child: Stack(
-                    children: [
-                      // Decorative elements
-                      Positioned(
-                        top: -50,
-                        right: -50,
-                        child: Container(
-                          width: 150,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.1),
-                          ),
+                ),
+                child: Stack(
+                  children: [
+                    // Decorative elements
+                    Positioned(
+                      top: -50,
+                      right: -50,
+                      child: Container(
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.1),
                         ),
                       ),
-                      Positioned(
-                        bottom: -30,
-                        left: -30,
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.1),
-                          ),
+                    ),
+                    Positioned(
+                      bottom: -30,
+                      left: -30,
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.1),
                         ),
                       ),
-                      // Content
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 40),
-                          Container(
-                            width: 60,
-                            height: 60,
+                    ),
+                    // Content
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 40),
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.2),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.3),
+                              width: 2,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.notifications_active,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Notice Board',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Ubuntu',
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Modern search bar
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Container(
+                            height: 50,
                             decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white.withOpacity(0.2),
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.3),
-                                width: 2,
-                              ),
-                            ),
-                            child: const Icon(
-                              Icons.notifications_active,
                               color: Colors.white,
-                              size: 30,
+                              borderRadius: BorderRadius.circular(25),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            'Notice Board',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Ubuntu',
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          // Modern search bar
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(25),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 5),
-                                  ),
-                                ],
-                              ),
-                        child: TextField(
-                          onChanged: (query) {
-                            controller.filterNotices(query);
-                          },
-                                decoration: const InputDecoration(
-                                  hintText: 'Search notices...',
-                                  hintStyle: TextStyle(
-                                    color: Colors.grey,
-                                    fontFamily: 'Ubuntu',
-                                  ),
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    color: Colors.grey,
-                                  ),
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 15,
-                                  ),
+                            child: TextField(
+                              onChanged: (query) {
+                                controller!.filterNotices(query);
+                              },
+                              decoration: const InputDecoration(
+                                hintText: 'Search notices...',
+                                hintStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontFamily: 'Ubuntu',
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: Colors.grey,
+                                ),
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 15,
                                 ),
                               ),
                             ),
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            leading: IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              onPressed: () => Get.back(),
+            ),
+          ),
+
+          // Notices List
+          Obx(() {
+            if (controller!.isLoading.value) {
+              return const SliverFillRemaining(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+
+            final notices = controller!.filteredNoticeList;
+            if (notices.isEmpty) {
+              return const SliverFillRemaining(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.notifications_off,
+                        size: 80,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        "No notices available",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey,
+                          fontFamily: 'Ubuntu',
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              leading: IconButton(
-                icon: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
-                    size: 20,
-                  ),
+              );
+            }
+
+            return SliverPadding(
+              padding: const EdgeInsets.all(16),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final notice = notices[index];
+                    if (notice == null) return const SizedBox.shrink();
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: _buildModernNoticeCard(notice),
+                    );
+                  },
+                  childCount: notices.length,
                 ),
-                onPressed: () => Get.back(),
               ),
             );
-          }),
-
-          // Notices List
-          Obx(() {
-            if (controller.isLoading.value) {
-              return SliverFillRemaining(
-                child: Center(
-                  child: Lottie.asset(
-                    'assets/animations/loading_animation4.json',
-                    width: 120,
-                    height: 120,
-                    fit: BoxFit.scaleDown,
-                  ),
-                ),
-              );
-            } else {
-              if (controller.filteredNoticeList.isEmpty) {
-                return SliverFillRemaining(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.notifications_off,
-                          size: 80,
-                          color: Colors.grey[400],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          "No notices available",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey[600],
-                            fontFamily: 'Ubuntu',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              } else {
-                return SliverPadding(
-                  padding: const EdgeInsets.all(16),
-                  sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final notice = controller.filteredNoticeList[index];
-                    return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: _buildModernNoticeCard(notice),
-                    );
-                  }, childCount: controller.filteredNoticeList.length),
-                  ),
-                );
-              }
-            }
           }),
         ],
       ),
@@ -321,7 +338,7 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: IconButton(
-                    onPressed: () => controller.deleteNotice(notice),
+                    onPressed: () => controller!.deleteNotice(notice),
                     icon: const Icon(
                       Icons.delete,
                       color: Colors.red,
@@ -334,34 +351,34 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
           ),
 
           // Notice image
-          GestureDetector(
-            onTap: () {
-              Get.to(() => const ImageView(
-                  image: AssetImage('assets/images/demo_notice.jpg')));
-            },
-            child: Container(
-              width: double.infinity,
-              height: 200,
-              margin: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
+          if (notice.imageUrl != null)
+            GestureDetector(
+              onTap: () {
+                Get.to(() => ImageView(image: NetworkImage(notice.imageUrl!)));
+              },
+              child: Container(
+                width: double.infinity,
+                height: 200,
+                margin: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.network(
+                    notice.imageUrl!,
+                    fit: BoxFit.cover,
                   ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.asset(
-                  'assets/images/demo_notice.jpg',
-                  fit: BoxFit.cover,
                 ),
               ),
             ),
-          ),
 
           // Notice description
           Padding(
@@ -382,7 +399,7 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
   }
 
   Future addNoticeBottomSheet(BuildContext context) {
-    controller.clearFields();
+    controller!.clearFields();
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -394,10 +411,10 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
             borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
           ),
           child: buildNoticeForm(context, addNoticeKey, "Add", () {
-          if (addNoticeKey.currentState!.validate()) {
-            controller.addNotice();
-            Get.back();
-          }
+            if (addNoticeKey.currentState!.validate()) {
+              controller!.addNotice();
+              Get.back();
+            }
           }),
         );
       },
@@ -405,7 +422,7 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
   }
 
   Future editNoticeBottomSheet(BuildContext context, MainNotice notice) {
-    controller.updateNoticeDetails(notice);
+    controller!.updateNoticeDetails(notice);
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -417,10 +434,10 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
             borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
           ),
           child: buildNoticeForm(context, editNoticeKey, "Edit", () {
-          if (editNoticeKey.currentState!.validate()) {
-            controller.editNotice(notice);
-            Get.back();
-          }
+            if (editNoticeKey.currentState!.validate()) {
+              controller!.editNotice(notice);
+              Get.back();
+            }
           }),
         );
       },
@@ -467,11 +484,11 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
               children: [
                 // Image picker
                 GestureDetector(
-                  onTap: controller.pickImage,
+                  onTap: controller!.pickImage,
                   child: Container(
-                        height: 200,
-                        width: double.maxFinite,
-                        decoration: BoxDecoration(
+                    height: 200,
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
                       color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
@@ -479,21 +496,21 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
                         width: 2,
                         style: BorderStyle.solid,
                       ),
-                        ),
-                        child: Obx(() {
-                          if (controller.imageFile.value != null) {
+                    ),
+                    child: Obx(() {
+                      if (controller!.imageFile.value != null) {
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(14),
                           child: Image.file(
-                              controller.imageFile.value!,
-                              fit: BoxFit.cover,
+                            controller!.imageFile.value!,
+                            fit: BoxFit.cover,
                           ),
-                            );
-                          } else {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
+                        );
+                      } else {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
                             Icon(
                               CupertinoIcons.photo,
                               color: Colors.grey[600],
@@ -509,25 +526,25 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                              ],
-                            );
-                          }
-                        }),
+                          ],
+                        );
+                      }
+                    }),
                   ),
                 ),
                 const SizedBox(height: 20),
 
                 // Title field
                 TextFormField(
-                  controller: controller.noticeTitleController,
+                  controller: controller!.noticeTitleController,
                   keyboardType: TextInputType.name,
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: Colors.grey[300]!),
-                      ),
-                      enabledBorder: OutlineInputBorder(
+                    ),
+                    enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: Colors.grey[300]!),
                     ),
@@ -551,16 +568,16 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
 
                 // Description field
                 TextFormField(
-                  controller: controller.noticeDescriptionController,
+                  controller: controller!.noticeDescriptionController,
                   keyboardType: TextInputType.multiline,
                   textCapitalization: TextCapitalization.sentences,
                   maxLines: 4,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: Colors.grey[300]!),
-                      ),
-                      enabledBorder: OutlineInputBorder(
+                    ),
+                    enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: Colors.grey[300]!),
                     ),
@@ -614,9 +631,9 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
                 borderRadius: BorderRadius.circular(16),
                 onTap: onSave,
                 child: Center(
-            child: Text(
-              title,
-              style: const TextStyle(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
                       fontFamily: 'Ubuntu',
                       fontSize: 18,
                       fontWeight: FontWeight.w600,

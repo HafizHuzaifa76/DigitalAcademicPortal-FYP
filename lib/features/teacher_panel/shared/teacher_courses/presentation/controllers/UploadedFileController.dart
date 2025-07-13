@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:path/path.dart' as path;
 import 'dart:io';
+import '../../../../../../core/services/NotificationService.dart';
 import '../../domain/entities/UploadedFile.dart';
 import '../../domain/usecases/GetUploadedFilesUseCase.dart';
 import '../../domain/usecases/UploadFileUseCase.dart';
@@ -110,11 +111,20 @@ class UploadedFileController extends GetxController {
             Utils().showErrorSnackBar('Error', failure.failure.toString());
             isUploading.value = false;
           },
-          (_) {
+          (_) async {
             // Refresh the files list
             getFiles(course, type);
             Utils()
                 .showSuccessSnackBar('Success', 'File uploaded successfully');
+                
+          final sectionTopic =
+              'Section-${course.courseSemester}-${course.courseSection}';
+          await sendFCMMessage(
+              sectionTopic,
+              'Course Material',
+              'New ${getFileTypeDisplayName(type)} Material have been Uploaded for ${course.courseName}',
+              'student_gradesScreen');
+
             isUploading.value = false;
           },
         );

@@ -21,5 +21,4 @@ class NoticeBoardBinding extends Bindings{
     Get.lazyPut(() => DeleteNoticeUseCase(Get.find()));
     Get.lazyPut(() => NoticeBoardController(addNoticeUseCase: Get.find(), deleteNoticeUseCase: Get.find(), editNoticeUseCase: Get.find(), allNoticesUseCase: Get.find()));
   }
-
 }

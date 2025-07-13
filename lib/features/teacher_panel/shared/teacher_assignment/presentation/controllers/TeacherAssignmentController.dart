@@ -5,6 +5,7 @@ import 'package:digital_academic_portal/core/utils/Utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import '../../../../../../core/services/NotificationService.dart';
 import '../../../teacher_courses/domain/entities/TeacherCourse.dart';
 import '../../domain/entities/Assignment.dart';
 import '../../domain/usecases/CreateAssignmentUseCase.dart';
@@ -145,9 +146,17 @@ class TeacherAssignmentController extends GetxController {
         Utils().showErrorSnackBar('Error', failure.failure.toString());
         isLoading.value = false;
       },
-      (_) {
+      (_) async {
         fetchAssignments(); // Refresh the list
         Get.back(); // Close dialog
+        
+        final sectionTopic =
+            'Section-${selectedCourse.value?.courseSemester}-${selectedCourse.value?.courseSection}';
+        await sendFCMMessage(
+            sectionTopic,
+            'Assignment',
+            'A new ${selectedCourse.value?.courseName} assignment has been posted.\nDue Date: ${assignment.dueDate}',
+            'pendingAssignment');
         Utils().showSuccessSnackBar('Success', 'Assignment added successfully');
       },
     );

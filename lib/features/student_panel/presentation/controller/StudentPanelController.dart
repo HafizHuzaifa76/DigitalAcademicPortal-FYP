@@ -3,6 +3,9 @@ import 'package:digital_academic_portal/shared/domain/entities/Student.dart';
 import 'package:get/get.dart';
 import '../../../../core/utils/Utils.dart';
 import '../../domain/usecases/GetStudentPanelProfile.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+import '../../../../core/services/SharedPrefService.dart';
 
 class StudentDashboardController extends GetxController {
   final GetStudentPanelProfile getStudentPanelProfile;
@@ -19,18 +22,33 @@ class StudentDashboardController extends GetxController {
 
   Future<void> loadStudentProfile() async {
     isLoading.value = true;
+    List<String> topics = await SharedPrefService.getTopics();
+    print('topics');
+    print(topics);
+
     final result = await getStudentPanelProfile.execute(null);
 
     result.fold(
       (failure) {
         Utils().showErrorSnackBar('Error', failure.failure.toString());
       },
-      (studentData) {
+      (studentData) async {
         student.value = studentData;
         StudentPortalDashboardPage.studentProfile = studentData;
         print(studentData.studentCNIC);
-        print(studentData.studentEmail);
-        print(studentData.toString());
+
+        final sectionTopic =
+            'Section-${studentData.studentSemester}-${studentData.studentSection}'
+                .toLowerCase()
+                .replaceAll(" ", "-");
+        print(sectionTopic);
+        bool isSubscribed = await SharedPrefService.isSubscribed(sectionTopic);
+        print(isSubscribed);
+
+        if (!isSubscribed) {
+          await FirebaseMessaging.instance.subscribeToTopic(sectionTopic).then(
+              (value) async => await SharedPrefService.addTopic(sectionTopic));
+        }
       },
     );
     isLoading.value = false;

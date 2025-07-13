@@ -15,7 +15,7 @@ class StudentNoticeRemoteDataSourceImpl implements StudentNoticeRemoteDataSource
     final querySnapshot = await _firestore.collection('notices').get();
     return querySnapshot.docs
         .map((doc) => NoticeModel.fromMap(doc.data()))
-        .toList();
+        .toList().reversed.toList();
   }
 
 }

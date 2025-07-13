@@ -80,10 +80,25 @@ class StudentAssignmentController extends GetxController {
     fetchAssignments();
   }
 
-  Future<void> submitAssignment(String assignmentId, String fileUrl) async {
+  Future<void> submitAssignment(String assignmentId, var fileUrl) async {
+    if (selectedCourse.value == null) {
+      Get.snackbar(
+        'Error',
+        'Please select a course first',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
     isLoading.value = true;
     final result = await submitAssignmentUseCase.execute(
-      SubmitAssignmentParams(assignmentId: assignmentId, fileUrl: fileUrl),
+      SubmitAssignmentParams(
+        assignmentId: assignmentId,
+        fileUrl: fileUrl,
+        course: selectedCourse.value!,
+      ),
     );
     result.fold(
       (failure) => error.value = failure.failure.toString(),

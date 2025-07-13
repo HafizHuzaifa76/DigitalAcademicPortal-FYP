@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../../../../../../core/services/NotificationService.dart';
 import '../../../../../../core/utils/Utils.dart';
 import '../../domain/usecases/AddCalendarEventUseCase.dart';
 import '../../domain/usecases/AllCalendarEventUseCase.dart';
@@ -17,7 +18,11 @@ class CalendarEventController extends GetxController {
   final EditCalendarEventUseCase updateCalendarEventUseCase;
   final DeleteCalendarEventUseCase deleteCalendarEventUseCase;
 
-  CalendarEventController({required this.fetchCalendarEventsUseCase, required this.addCalendarEventUseCase, required this.updateCalendarEventUseCase, required this.deleteCalendarEventUseCase}); // Error message state
+  CalendarEventController(
+      {required this.fetchCalendarEventsUseCase,
+      required this.addCalendarEventUseCase,
+      required this.updateCalendarEventUseCase,
+      required this.deleteCalendarEventUseCase}); // Error message state
 
   // Firestore reference
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -60,7 +65,8 @@ class CalendarEventController extends GetxController {
       allEvents.addAll(
         events.values
             .expand((eventList) => eventList)
-            .where((event) => event.date.isAfter(now) || event.date.day == now.day)
+            .where(
+                (event) => event.date.isAfter(now) || event.date.day == now.day)
             .toList()
           ..sort((a, b) => a.date.compareTo(b.date)),
       );
@@ -83,7 +89,8 @@ class CalendarEventController extends GetxController {
       final event = CalendarEvent(
         id: doc.id,
         title: data['title'],
-        date: eventDate, category: '',
+        date: eventDate,
+        category: '',
       );
 
       if (eventMap[eventDate] == null) {
@@ -113,7 +120,7 @@ class CalendarEventController extends GetxController {
         if (kDebugMode) {
           print(message);
         }
-      }, (event) {
+      }, (event) async {
         final eventDate = selectedDay.value;
         if (events[eventDate] == null) {
           events[eventDate] = [];
@@ -122,6 +129,11 @@ class CalendarEventController extends GetxController {
         events[eventDate]!.add(event);
         update();
 
+        await sendFCMMessage(
+            'university',
+            'Calendar Event',
+            'A new Calendar event added from university',
+            'studentCalendarPage');
         Utils().showSuccessSnackBar('Success', 'Event added successfully.');
       });
     } finally {
@@ -142,7 +154,6 @@ class CalendarEventController extends GetxController {
         String message = left.failure.toString();
         Utils().showErrorSnackBar('Error', message);
       }, (right) {
-
         if (events[day] != null) {
           events[day]!.remove(event);
           if (events[day]!.isEmpty) {
@@ -169,11 +180,9 @@ class CalendarEventController extends GetxController {
       result.fold((left) {
         String message = left.failure.toString();
         Utils().showErrorSnackBar('Error', message);
-
       }, (right) {
-
-        final oldDate = events.keys.firstWhere((date) =>
-            events[date]!.any((e) => e.id == updatedEvent.id));
+        final oldDate = events.keys.firstWhere(
+            (date) => events[date]!.any((e) => e.id == updatedEvent.id));
 
         // Remove from old date
         events[oldDate]?.removeWhere((e) => e.id == updatedEvent.id);

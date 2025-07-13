@@ -6,7 +6,7 @@ import '../../domain/repositories/StudentNoticeBoardRepository.dart';
 import '../../domain/usecases/StudentNoticeUseCase.dart';
 import '../controllers/StudentNoticeBoardController.dart';
 
-class NoticeBoardBinding extends Bindings{
+class StudentNoticeBoardBinding extends Bindings{
   @override
   void dependencies() {
     Get.lazyPut<StudentNoticeRemoteDataSource>(() => StudentNoticeRemoteDataSourceImpl());

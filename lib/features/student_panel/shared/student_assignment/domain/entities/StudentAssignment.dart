@@ -8,7 +8,6 @@ class StudentAssignment {
   final String courseName;
   final String status; // 'Not Uploaded', 'Uploaded', 'Submitted'
   final String? submittedFileUrl;
-  final DateTime? submittedAt;
 
   StudentAssignment({
     required this.id,
@@ -20,6 +19,5 @@ class StudentAssignment {
     required this.courseName,
     required this.status,
     this.submittedFileUrl,
-    this.submittedAt,
   });
 }

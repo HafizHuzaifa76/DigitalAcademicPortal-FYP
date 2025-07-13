@@ -7,5 +7,5 @@ abstract class StudentAssignmentRepository {
   Future<Either<Fail, List<StudentAssignment>>> getAssignments(
       StudentCourse course);
   Future<Either<Fail, void>> submitAssignment(
-      String assignmentId, String fileUrl);
+      String assignmentId, String fileUrl, StudentCourse course);
 }

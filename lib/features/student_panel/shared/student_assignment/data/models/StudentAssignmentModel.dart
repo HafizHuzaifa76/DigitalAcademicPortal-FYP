@@ -11,23 +11,22 @@ class StudentAssignmentModel extends StudentAssignment {
     required super.courseName,
     required super.status,
     super.submittedFileUrl,
-    super.submittedAt,
   });
 
-  factory StudentAssignmentModel.fromMap(
-      Map<String, dynamic> map, String documentId) {
+  factory StudentAssignmentModel.fromMap(Map<String, dynamic> map,
+      String documentId, String courseId, String courseName, String studentId) {
     return StudentAssignmentModel(
       id: documentId,
       title: map['title'],
       description: map['description'],
       dueDate: map['dueDate'].toDate(),
       fileUrl: map['fileUrl'],
-      courseId: map['courseId'],
-      courseName: map['courseName'],
-      status: map['status'],
-      submittedFileUrl: map['submittedFileUrl'],
-      submittedAt:
-          map['submittedAt'] != null ? map['submittedAt'].toDate() : null,
+      courseId: courseId,
+      courseName: courseName,
+      status: map['studentAssignments'][studentId] == 'Not Submitted'
+          ? 'pending'
+          : 'submitted',
+      submittedFileUrl: map['studentAssignments'][studentId],
     );
   }
 
@@ -41,7 +40,6 @@ class StudentAssignmentModel extends StudentAssignment {
       'courseName': courseName,
       'status': status,
       'submittedFileUrl': submittedFileUrl,
-      'submittedAt': submittedAt,
     };
   }
 }

@@ -1,9 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:digital_academic_portal/features/student_panel/presentation/widgets/StudentDrawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
+import '../../../../core/services/SharedPrefService.dart';
 import '../../../../shared/domain/entities/Student.dart';
 import '../controller/StudentPanelController.dart';
 
@@ -60,37 +63,37 @@ class StudentPortalDashboardPageState
                 ),
                 child: IconButton(
                   icon: const Icon(Icons.person_rounded, color: Colors.white),
-                                  onPressed: () => _showCustomMenu(context),
-                                ),
+                  onPressed: () => _showCustomMenu(context),
+                ),
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsets.only(bottom: 16),
               centerTitle: true,
               title: const Stack(
-                        children: [
+                children: [
                   Positioned(
                     bottom: 90,
                     left: 50,
                     right: 50,
-                              child: Center(
+                    child: Center(
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
+                        children: [
+                          Text(
                             kIsWeb ? 'Student Dashboard' : 'Student Dashboard',
-                                      style: TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: 17.0,
                               fontFamily: 'Ubuntu',
-                                          fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.bold,
                             ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
               background: Container(
@@ -104,69 +107,72 @@ class StudentPortalDashboardPageState
                     end: Alignment.bottomRight,
                   ),
                 ),
-                child: Stack(
-                  children: [
-                    // Decorative circles
-                    Positioned(
-                      top: -30,
-                      right: -30,
-                      child: Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
-                          shape: BoxShape.circle,
-                              ),
-                            ),
+                child: Obx(
+                  () => Stack(
+                    children: [
+                      // Decorative circles
+                      Positioned(
+                        top: -30,
+                        right: -30,
+                        child: Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.1),
+                            shape: BoxShape.circle,
                           ),
-                    Positioned(
-                      bottom: -20,
-                      left: -20,
-                      child: Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
-                          shape: BoxShape.circle,
-                                ),
-                              ),
-                            ),
-                    // Stats cards
-                    Positioned(
-                      bottom: 20,
-                      left: 20,
-                      right: 20,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildStatCard(
-                            icon: Icons.badge_rounded,
-                            title: 'Roll No',
-                            value: controller.student.value?.studentRollNo ??
-                                'N/A',
-                            color: Colors.white,
-                          ),
-                          _buildStatCard(
-                            icon: Icons.school_rounded,
-                            title: 'Semester',
-                            value: controller.student.value?.studentSemester ??
-                                'N/A',
-                            color: Colors.white,
-                          ),
-                          _buildStatCard(
-                            icon: Icons.group_rounded,
-                            title: 'Section',
-                            value: controller.student.value?.studentSection ??
-                                'N/A',
-                            color: Colors.white,
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                      Positioned(
+                        bottom: -20,
+                        left: -20,
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                      // Stats cards
+                      Positioned(
+                        bottom: 20,
+                        left: 20,
+                        right: 20,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _buildStatCard(
+                              icon: Icons.badge_rounded,
+                              title: 'Roll No',
+                              value: controller.student.value?.studentRollNo ??
+                                  'N/A',
+                              color: Colors.white,
+                            ),
+                            _buildStatCard(
+                              icon: Icons.school_rounded,
+                              title: 'Semester',
+                              value:
+                                  controller.student.value?.studentSemester ??
+                                      'N/A',
+                              color: Colors.white,
+                            ),
+                            _buildStatCard(
+                              icon: Icons.group_rounded,
+                              title: 'Section',
+                              value: controller.student.value?.studentSection ??
+                                  'N/A',
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
+            ),
           ),
 
           // Main content
@@ -177,10 +183,10 @@ class StudentPortalDashboardPageState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Logo and Title Section
-              Container(
+                  Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                    color: Colors.white,
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
@@ -190,7 +196,7 @@ class StudentPortalDashboardPageState
                         ),
                       ],
                     ),
-                child: Column(
+                    child: Column(
                       children: [
                         Image.asset(
                           'assets/images/DAP logo.png',
@@ -203,8 +209,8 @@ class StudentPortalDashboardPageState
                             Text(
                               'Digital',
                               style: TextStyle(
-                                  fontFamily: 'Belanosima',
-                                  color: Theme.of(context).primaryColor,
+                                fontFamily: 'Belanosima',
+                                color: Theme.of(context).primaryColor,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -212,8 +218,8 @@ class StudentPortalDashboardPageState
                             const Text(
                               ' Academic ',
                               style: TextStyle(
-                                  fontFamily: 'Belanosima',
-                                  color: Colors.black,
+                                fontFamily: 'Belanosima',
+                                color: Colors.black,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -221,8 +227,8 @@ class StudentPortalDashboardPageState
                             Text(
                               'Portal',
                               style: TextStyle(
-                                  fontFamily: 'Belanosima',
-                                  color: Theme.of(context).primaryColor,
+                                fontFamily: 'Belanosima',
+                                color: Theme.of(context).primaryColor,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -240,7 +246,7 @@ class StudentPortalDashboardPageState
                     children: [
                       // First row (3 items)
                       Row(
-                      children: [
+                        children: [
                           Expanded(
                             child: _buildActionButton(
                               icon: 'assets/images/attendanceB.png',
@@ -270,14 +276,14 @@ class StudentPortalDashboardPageState
                               title: 'Grades',
                               onTap: () => Get.toNamed('/student_gradesScreen'),
                               color: Theme.of(context).primaryColor,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                       const SizedBox(height: 8),
                       // Second row (3 items)
-                    Row(
-                      children: [
+                      Row(
+                        children: [
                           Expanded(
                             child: _buildActionButton(
                               icon: 'assets/images/course_icon.png',
@@ -286,8 +292,8 @@ class StudentPortalDashboardPageState
                                   arguments: {
                                     'studentDept': controller
                                             .student.value?.studentDepartment ??
-                                    ''
-                          }),
+                                        ''
+                                  }),
                               color: Theme.of(context).primaryColor,
                             ),
                           ),
@@ -296,7 +302,7 @@ class StudentPortalDashboardPageState
                             child: _buildActionButton(
                               icon: 'assets/images/noticeboard_icon.png',
                               title: 'Notice Board',
-                              onTap: () => Get.toNamed('/student_NoticeBoard'),
+                              onTap: () => Get.toNamed('/studentNoticeBoard'),
                               color: Theme.of(context).primaryColor,
                             ),
                           ),
@@ -305,17 +311,17 @@ class StudentPortalDashboardPageState
                             child: _buildActionButton(
                               icon: 'assets/images/calendar_icon.png',
                               title: 'Calendar',
-                              onTap: () => Get.toNamed('/student_calendarPage'),
+                              onTap: () => Get.toNamed('/studentCalendarPage'),
                               color: Theme.of(context).primaryColor,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                       const SizedBox(height: 8),
                       // Third row (2 items) - centered
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
                           SizedBox(
                             width: (MediaQuery.of(context).size.width - 56) / 3,
                             child: _buildActionButton(
@@ -332,13 +338,13 @@ class StudentPortalDashboardPageState
                               icon: 'assets/images/diary.png',
                               title: 'Students Diary',
                               onTap: () =>
-                                Get.toNamed('/studentDiary', arguments: {
+                                  Get.toNamed('/studentDiary', arguments: {
                                 'deptName': controller
                                         .student.value?.studentDepartment ??
-                                      '',
-                              'studentRollNo':
-                                  controller.student.value?.studentRollNo
-                            }),
+                                    '',
+                                'studentRollNo':
+                                    controller.student.value?.studentRollNo
+                              }),
                               color: Theme.of(context).primaryColor,
                             ),
                           ),
@@ -371,20 +377,20 @@ class StudentPortalDashboardPageState
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color.withOpacity(0.3)),
       ),
-                            child: Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
-                              children: [
+        children: [
           Icon(icon, color: color, size: 24),
           const SizedBox(height: 8),
           AutoSizeText(
             value,
-                                  style: TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: color,
-                                      fontFamily: 'Ubuntu',
+              fontFamily: 'Ubuntu',
             ),
-                                  maxLines: 1,
+            maxLines: 1,
             textAlign: TextAlign.center,
           ),
           Text(
@@ -395,9 +401,9 @@ class StudentPortalDashboardPageState
               fontFamily: 'Ubuntu',
             ),
             textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -423,9 +429,9 @@ class StudentPortalDashboardPageState
                 color: color.withOpacity(0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
+              ),
+            ],
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -474,9 +480,9 @@ class StudentPortalDashboardPageState
           ),
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-          child: Column(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
-            children: [
+              children: [
                 Container(
                   width: 40,
                   height: 4,
@@ -520,11 +526,11 @@ class StudentPortalDashboardPageState
                               color: Colors.grey[600],
                               fontFamily: 'Ubuntu',
                             ),
-              ),
-            ],
-          ),
-        ),
-      ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
@@ -539,8 +545,16 @@ class StudentPortalDashboardPageState
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       Get.back();
+                      List<String> topics = await SharedPrefService.getTopics();
+
+                      topics.forEach((topic) async => await FirebaseMessaging
+                          .instance
+                          .unsubscribeFromTopic(topic)
+                          .then((value) async =>
+                              await SharedPrefService.removeTopic(topic)));
+                      await FirebaseAuth.instance.signOut();
                       Get.offNamed('/login');
                     },
                     icon: const Icon(Icons.logout_rounded),

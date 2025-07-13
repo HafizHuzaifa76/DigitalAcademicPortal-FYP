@@ -57,6 +57,7 @@ import 'features/student_panel/shared/student_chatbot/presentation/pages/Stu_Cha
 import 'features/student_panel/shared/student_courses/presentation/bindings/StudentCoursesBinding.dart';
 import 'features/student_panel/shared/student_grades/presentation/pages/StudentGradePage.dart';
 import 'features/student_panel/shared/student_grades/presentation/bindings/StudentGradeBindings.dart';
+import 'features/student_panel/shared/student_noticeboard/presentation/bindings/StudentNoticeBoardBindings.dart';
 import 'features/student_panel/shared/student_report/presentation/pages/Stu_Reports.dart';
 import 'features/student_panel/shared/student_timetable/presentation/pages/Stu_TimeTablePage.dart';
 import 'features/student_panel/shared/students_Diary/presentation/pages/StudentDiaryPage.dart';
@@ -230,7 +231,7 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/studentNoticeBoard',
           page: () => const StudentNoticeBoardPage(),
-          // binding: StudenNotiBoBin(),
+          binding: StudentNoticeBoardBinding(),
         ),
         GetPage(
           name: '/calendarPage',
@@ -254,7 +255,7 @@ class MyApp extends StatelessWidget {
           binding: TimeTableBinding(),
         ),
         GetPage(
-          name: '/student_calendarPage',
+          name: '/studentCalendarPage',
           page: () => const StudentCalendarPage(),
           binding: StudentCalendarEventBinding(),
         ),

@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+import '../../../../core/services/SharedPrefService.dart';
 
 abstract class AuthRemoteDataSource {
   Future<String> login(String identifier, String password); // Now returns role
@@ -49,9 +52,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         return 'admin';
       }
 
-      if (userRole.contains('student')) return 'studentDashboard';
+      if (userRole.contains('student')) {
+        final deptTopic = 'Dept-$userDept'.toLowerCase().replaceAll(" ", "-");
+        final topic = 'university'.toLowerCase();
+        await FirebaseMessaging.instance
+            .subscribeToTopic(topic)
+            .then((value) async => await SharedPrefService.addTopic(topic));
 
-      if (userRole.contains('teacher')) return 'teacherDashboard';
+        await FirebaseMessaging.instance
+            .subscribeToTopic(deptTopic)
+            .then((value) async => await SharedPrefService.addTopic(deptTopic));
+
+        return 'studentDashboard';
+      }
+
+      if (userRole.contains('teacher')) {
+        return 'teacherDashboard';
+      }
 
       // If no role matched
       return 'admin';
