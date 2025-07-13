@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:digital_academic_portal/core/utils/Utils.dart';
 import 'package:digital_academic_portal/features/teacher_panel/presentation/controllers/TeacherDashboardController.dart';
 import 'package:digital_academic_portal/shared/domain/entities/Teacher.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -580,9 +581,10 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       Get.back();
-                      Get.off(() => const LoginPage());
+                      await FirebaseAuth.instance.signOut();
+                      Get.offNamed('/login');
                     },
                     icon: const Icon(Icons.logout_rounded),
                     label: const Text(

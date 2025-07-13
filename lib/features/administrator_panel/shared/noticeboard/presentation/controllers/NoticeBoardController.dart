@@ -1,6 +1,6 @@
-
 import 'dart:io';
 
+import 'package:digital_academic_portal/core/services/NotificationService.dart';
 import 'package:digital_academic_portal/core/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../../../../core/services/CloudinaryService.dart';
 import '../../domain/usecases/AddNoticeUseCase.dart';
 import '../../domain/usecases/AllNoticeUseCase.dart';
 import '../../domain/usecases/DeleteNoticeUseCase.dart';
@@ -35,6 +36,7 @@ class NoticeBoardController extends GetxController {
   var isLoading = false.obs;
 
   var imageFile = Rxn<File>();
+  final Rx<File?> pickedFile = Rx<File?>(null);
   var noticeList = <MainNotice>[].obs;
   var filteredNoticeList = <MainNotice>[].obs;
 
@@ -63,11 +65,12 @@ class NoticeBoardController extends GetxController {
   /// Filter notices based on the query
   void filterNotices(String query) {
     if (query.isEmpty) {
-      filteredNoticeList.assignAll(noticeList); // Reset to full list if no query
+      filteredNoticeList
+          .assignAll(noticeList); // Reset to full list if no query
     } else {
       filteredNoticeList.assignAll(
         noticeList.where(
-              (notice) => notice.title.toLowerCase().contains(query.toLowerCase()),
+          (notice) => notice.title.toLowerCase().contains(query.toLowerCase()),
         ),
       );
     }
@@ -90,12 +93,18 @@ class NoticeBoardController extends GetxController {
 
   Future<void> addNotice() async {
     EasyLoading.show(status: 'Adding...');
+
+    String? fileUrl;
+    if (imageFile.value != null) {
+      fileUrl = await uploadFileToCloudinary(imageFile.value!);
+    }
+
     var newNotice = MainNotice(
-      id: DateTime.now().toIso8601String(), // Generate a unique ID
-      title: noticeTitleController.text.trim(),
-      description: noticeDescriptionController.text.trim(),
-      datePosted: DateTime.now(),
-    );
+        id: DateTime.now().toIso8601String(), // Generate a unique ID
+        title: noticeTitleController.text.trim(),
+        description: noticeDescriptionController.text.trim(),
+        datePosted: DateTime.now(),
+        imageUrl: fileUrl);
 
     try {
       isLoading(true);
@@ -107,9 +116,11 @@ class NoticeBoardController extends GetxController {
         if (kDebugMode) {
           print(message);
         }
-      }, (right) {
+      }, (right) async {
         noticeList.add(newNotice);
         filteredNoticeList.add(newNotice);
+        await sendFCMMessage('university', 'Notice',
+            'A new notice from university', 'studentNoticeBoard');
         Utils().showSuccessSnackBar('Success', 'Notice added successfully.');
       });
     } finally {
@@ -173,7 +184,8 @@ class NoticeBoardController extends GetxController {
       Utils().showErrorSnackBar('Error', message);
     }, (notices) {
       noticeList.assignAll(notices);
-      filteredNoticeList.assignAll(notices); // Initialize filtered list with all notices
+      filteredNoticeList
+          .assignAll(notices); // Initialize filtered list with all notices
       if (kDebugMode) {
         print('Notices fetched');
       }
@@ -193,5 +205,3 @@ class NoticeBoardController extends GetxController {
     noticeDescriptionController.text = notice.description;
   }
 }
-
-

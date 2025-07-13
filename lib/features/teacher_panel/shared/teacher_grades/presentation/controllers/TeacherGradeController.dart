@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:get/get.dart';
+import '../../../../../../core/services/NotificationService.dart';
 import '../../domain/entities/Grade.dart';
 import '../../domain/usecases/GetMarkingGradesUseCase.dart';
 import '../../domain/usecases/SaveMarkingGradesUseCase.dart';
@@ -88,7 +89,7 @@ class TeacherGradeController extends GetxController {
           isLoading.value = false;
           return null;
         },
-        (_) {
+        (_) async {
           Utils().showSuccessSnackBar('Success', 'Grade created successfully');
           loadGrades(selectedCourse.value!.courseName);
           isLoading.value = false;
@@ -141,9 +142,17 @@ class TeacherGradeController extends GetxController {
         (failure) {
           Utils().showErrorSnackBar('Error', failure.failure.toString());
         },
-        (_) {
+        (_) async {
           Utils().showSuccessSnackBar('Success', 'Grades saved successfully');
-          // Update the grade in the list
+
+          final sectionTopic =
+              'Section-${selectedCourse.value?.courseSemester}-${selectedCourse.value?.courseSection}';
+          await sendFCMMessage(
+              sectionTopic,
+              'Grades',
+              'New Marks have been Uploaded for ${selectedCourse.value?.courseName}',
+              'student_gradesScreen');
+
           final index = gradesList.indexWhere((g) => g.id == grade.id);
           if (index != -1) {
             gradesList[index] = updatedGrade;
@@ -178,8 +187,17 @@ class TeacherGradeController extends GetxController {
         (failure) {
           Utils().showErrorSnackBar('Error', failure.failure.toString());
         },
-        (_) {
+        (_) async {
           Utils().showSuccessSnackBar('Success', 'Grade updated successfully');
+
+          final sectionTopic =
+              'Section-${selectedCourse.value?.courseSemester}-${selectedCourse.value?.courseSection}';
+          await sendFCMMessage(
+              sectionTopic,
+              'Grades',
+              'Grade: ${grade.title} have been Updated for ${selectedCourse.value?.courseName}',
+              'student_gradesScreen');
+
           // Update the grade in the list
           final index = gradesList.indexWhere((g) => g.id == grade.id);
           if (index != -1) {
@@ -241,8 +259,17 @@ class TeacherGradeController extends GetxController {
         Utils().showErrorSnackBar('Error', failure.failure.toString());
         isSubmitting.value = false;
       },
-      (_) {
+      (_) async {
         Utils().showSuccessSnackBar('Success', 'Grades submitted successfully');
+
+        final sectionTopic =
+            'Section-${selectedCourse.value?.courseSemester}-${selectedCourse.value?.courseSection}';
+        await sendFCMMessage(
+            sectionTopic,
+            'Grades',
+            'Final Grades of ${selectedCourse.value?.courseName} have been Submitted.',
+            'student_gradesScreen');
+
         // Close both screens and navigate back to TeacherGradePage
         Get.until((route) => route.settings.name == '/teacherGradePage');
         // Refresh teacher courses since the submitted course will be removed

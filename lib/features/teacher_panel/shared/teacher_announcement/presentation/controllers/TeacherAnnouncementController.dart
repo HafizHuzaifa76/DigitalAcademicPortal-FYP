@@ -1,6 +1,7 @@
- import 'package:get/get.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../../../core/services/NotificationService.dart';
 import '../../domain/entities/Announcement.dart';
 import '../../domain/usecases/GetAnnouncementsUseCase.dart';
 import '../../domain/usecases/CreateAnnouncementUseCase.dart';
@@ -121,10 +122,19 @@ class TeacherAnnouncementController extends GetxController {
         Utils().showErrorSnackBar('Error', failure.failure.toString());
         isLoading.value = false;
       },
-      (_) {
+      (_) async {
         fetchAnnouncements(); // Refresh the list
         Get.back(); // Close dialog
-        Utils().showSuccessSnackBar('Success', 'Announcement created successfully');
+
+        final sectionTopic =
+            'Section-${selectedCourse.value?.courseSemester}-${selectedCourse.value?.courseSection}';
+        await sendFCMMessage(
+            sectionTopic,
+            'Announcement',
+            'A new announcement by ${selectedCourse.value?.courseName}',
+            'waiting');
+        Utils().showSuccessSnackBar(
+            'Success', 'Announcement created successfully');
       },
     );
   }
@@ -164,10 +174,20 @@ class TeacherAnnouncementController extends GetxController {
         Utils().showErrorSnackBar('Error', failure.failure.toString());
         isLoading.value = false;
       },
-      (_) {
+      (_) async {
         fetchAnnouncements(); // Refresh the list
         Get.back(); // Close dialog
-        Utils().showSuccessSnackBar('Success', 'Announcement updated successfully');
+        
+        final sectionTopic =
+            'Section-${selectedCourse.value?.courseSemester}-${selectedCourse.value?.courseSection}';
+        await sendFCMMessage(
+            sectionTopic,
+            'Announcement',
+            'An announcement updated by ${selectedCourse.value?.courseName}',
+            'waiting');
+
+        Utils().showSuccessSnackBar(
+            'Success', 'Announcement updated successfully');
       },
     );
   }
@@ -182,7 +202,8 @@ class TeacherAnnouncementController extends GetxController {
       },
       (_) {
         fetchAnnouncements(); // Refresh the list
-        Utils().showSuccessSnackBar('Success', 'Announcement deleted successfully');
+        Utils().showSuccessSnackBar(
+            'Success', 'Announcement deleted successfully');
       },
     );
   }

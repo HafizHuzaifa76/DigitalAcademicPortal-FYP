@@ -1,17 +1,15 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../../../shared/data/models/NoticeBoardModel.dart';
 
-
-abstract class NoticeRemoteDataSource{
+abstract class NoticeRemoteDataSource {
   Future<NoticeModel> addNotice(NoticeModel notice);
   Future<NoticeModel> editNotice(NoticeModel notice);
   Future<void> deleteNotice(String noticeID);
   Future<List<NoticeModel>> allNotices();
 }
 
-class NoticeRemoteDataSourceImpl implements NoticeRemoteDataSource{
+class NoticeRemoteDataSourceImpl implements NoticeRemoteDataSource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
@@ -52,7 +50,8 @@ class NoticeRemoteDataSourceImpl implements NoticeRemoteDataSource{
     final querySnapshot = await _firestore.collection('notices').get();
     return querySnapshot.docs
         .map((doc) => NoticeModel.fromMap(doc.data()))
+        .toList()
+        .reversed
         .toList();
   }
-
 }

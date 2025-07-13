@@ -16,265 +16,316 @@ class StudentNoticeBoardPage extends StatefulWidget {
 
 class _StudentNoticeBoardPageState extends State<StudentNoticeBoardPage> {
   final StudentNoticeBoardController controller = Get.find();
-  final addNoticeKey = GlobalKey<FormState>();
-  final editNoticeKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    if (controller == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       body: CustomScrollView(
-        controller: controller.scrollController,
+        controller: controller!.scrollController,
+        physics: const BouncingScrollPhysics(),
         slivers: [
-          Obx(() {
-            return SliverAppBar(
-              expandedHeight: 150.0,
-              floating: true,
-              flexibleSpace: FlexibleSpaceBar(
-                titlePadding: EdgeInsets.only(bottom: controller.titlePadding.value),
-                centerTitle: true,
-                title: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Notice Board', style: TextStyle(color: Colors.white,
-                        fontSize: 18.0,
-                        fontFamily: 'Ubuntu',
-                        fontWeight: FontWeight.bold)),
-                    SizedBox(height: 5),
-                  ],
-                ),
-                background: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Get.theme.primaryColor,
-                        const Color(0xFF1B7660),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
+          // Modern SliverAppBar with gradient
+          SliverAppBar(
+            expandedHeight: 200.0,
+            floating: false,
+            pinned: true,
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Get.theme.primaryColor,
+                      const Color(0xFF1B7660),
+                    ],
                   ),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        height: 55,
-                        child: TextField(
-                          onChanged: (query) {
-                            controller.filterNotices(query);
-                          },
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.all(2),
-                            hintText: 'Search Notices...',
-                            prefixIcon: const Icon(Icons.search),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
+                ),
+                child: Stack(
+                  children: [
+                    // Decorative elements
+                    Positioned(
+                      top: -50,
+                      right: -50,
+                      child: Container(
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.1),
                         ),
                       ),
                     ),
-                  ),
+                    Positioned(
+                      bottom: -30,
+                      left: -30,
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.1),
+                        ),
+                      ),
+                    ),
+                    // Content
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 40),
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.2),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.3),
+                              width: 2,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.notifications_active,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Notice Board',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Ubuntu',
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Modern search bar
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(25),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            child: TextField(
+                              onChanged: (query) {
+                                controller!.filterNotices(query);
+                              },
+                              decoration: const InputDecoration(
+                                hintText: 'Search notices...',
+                                hintStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontFamily: 'Ubuntu',
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: Colors.grey,
+                                ),
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 15,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.asset(
-                    'assets/images/noticeboard_icon.png',
-                    height: 40,
-                    width: 40,
-                  ),
+            ),
+            leading: IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ],
-            );
-          }),
+                child: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              onPressed: () => Get.back(),
+            ),
+          ),
+
+          // Notices List
           Obx(() {
-            if (controller.isLoading.value) {
-              return SliverFillRemaining(
+            if (controller!.isLoading.value) {
+              return const SliverFillRemaining(
                 child: Center(
-                  child: Lottie.asset(
-                    'assets/animations/loading_animation4.json',
-                    width: 120,
-                    height: 120,
-                    fit: BoxFit.scaleDown,
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+
+            final notices = controller!.filteredNoticeList;
+            if (notices.isEmpty) {
+              return const SliverFillRemaining(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.notifications_off,
+                        size: 80,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        "No notices available",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey,
+                          fontFamily: 'Ubuntu',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               );
-            } else {
-              if (controller.filteredNoticeList.isEmpty) {
-                return const SliverFillRemaining(
-                  child: Center(child: Text("No notices available")),
-                );
-              } else {
-                return SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final notice = controller.filteredNoticeList[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0,
-                          vertical: 5.0),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          side: BorderSide(color: Get.theme.primaryColor),
-                        ),
-                        child: ListTile(
-                          title: Text(notice.title, style: TextStyle(fontWeight: FontWeight.bold, color: Get.theme.primaryColor, fontFamily: 'Ubuntu', fontSize: 21)),
-                          subtitle: Column(
-                            children: [
-                              GestureDetector(
-                                  onTap: (){
-                                    Get.to(() => const ImageView(image: AssetImage('assets/images/demo_notice.jpg')));
-                                  },
-                                  child: Image.asset('assets/images/demo_notice.jpg')
-                              ),
-                              const SizedBox(height: 20),
-
-                              Text(notice.description, style: const TextStyle(fontFamily: 'Ubuntu')),
-                            ],
-                          ),
-
-                          onTap: () {
-                            // Additional functionality if needed
-                          },
-                        ),
-                      ),
-                    );
-                  }, childCount: controller.filteredNoticeList.length),
-                );
-              }
             }
+
+            return SliverPadding(
+              padding: const EdgeInsets.all(16),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final notice = notices[index];
+                    if (notice == null) return const SizedBox.shrink();
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: _buildModernNoticeCard(notice),
+                    );
+                  },
+                  childCount: notices.length,
+                ),
+              ),
+            );
           }),
         ],
       ),
     );
   }
 
-  Widget buildNoticeForm(BuildContext context, GlobalKey<FormState> formKey,
-      String title, VoidCallback onSave) {
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery
-            .of(context)
-            .viewInsets
-            .bottom,
-        left: 16.0,
-        right: 16.0,
-        top: 16.0,
+  Widget _buildModernNoticeCard(MainNotice notice) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '$title Notice',
-            style: TextStyle(
-              fontFamily: 'Ubuntu',
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Get.theme.primaryColor,
+          // Header with title and actions
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Get.theme.primaryColor.withOpacity(0.1),
+                  const Color(0xFF1B7660).withOpacity(0.1),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Form(
-            key: formKey,
-            child: Column(
+            child: Row(
               children: [
-                GestureDetector(
-                  onTap: controller.pickImage,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        height: 200,
-                        width: double.maxFinite,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Obx(() {
-                          if (controller.imageFile.value != null) {
-                            return Image.file(
-                              controller.imageFile.value!,
-                              height: 100,
-                              width: 100,
-                              fit: BoxFit.cover,
-                            );
-                          } else {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(CupertinoIcons.photo,
-                                    color: Colors.grey.shade700, size: 30),
-                                const Text('Click to select Image\nOptional',
-                                    style: TextStyle(fontFamily: 'Ubuntu')),
-                              ],
-                            );
-                          }
-                        }),
-                      )
-                    ],
+                Expanded(
+                  child: Text(
+                    notice.title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Get.theme.primaryColor,
+                      fontFamily: 'Ubuntu',
+                      fontSize: 18,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-
-                TextFormField(
-                  controller: controller.noticeTitleController,
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.words,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      labelText: 'Title'
-                  ),
-                  validator: (value) =>
-                  value!.isEmpty
-                      ? 'Title is required'
-                      : null,
-                ),
-                const SizedBox(height: 10),
-
-                TextFormField(
-                  controller: controller.noticeDescriptionController,
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.words,
-                  maxLines: 4,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      labelText: 'Description'
-                  ),
-                  validator: (value) =>
-                  value!.isEmpty
-                      ? 'Description is required'
-                      : null,
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: onSave,
+
+          // Notice image
+          if (notice.imageUrl != null)
+            GestureDetector(
+              onTap: () {
+                Get.to(() => ImageView(image: NetworkImage(notice.imageUrl!)));
+              },
+              child: Container(
+                width: double.infinity,
+                height: 200,
+                margin: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.network(
+                    notice.imageUrl!,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+
+          // Notice description
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
             child: Text(
-              title,
+              notice.description,
               style: const TextStyle(
-                  fontFamily: 'Ubuntu', fontSize: 20, color: Colors.white),
+                fontFamily: 'Ubuntu',
+                fontSize: 16,
+                color: Colors.black87,
+                height: 1.5,
+              ),
             ),
           ),
-          const SizedBox(height: 10),
         ],
       ),
     );

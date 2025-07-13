@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ],
                         ),
-                      child: Form(
+                        child: Form(
                           key: formKey,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,22 +156,21 @@ class _LoginPageState extends State<LoginPage> {
 
                               // Email field
                               TextFormField(
-                                  keyboardType: TextInputType.emailAddress,
-                                  controller: controller.emailController,
-                                  cursorColor: Theme.of(context).primaryColor,
+                                keyboardType: TextInputType.emailAddress,
+                                controller: controller.emailController,
+                                cursorColor: Theme.of(context).primaryColor,
                                 style: const TextStyle(
                                   color: Colors.black87,
                                   fontFamily: 'Ubuntu',
                                   fontSize: 14,
                                 ),
-                                  decoration: InputDecoration(
-                                  labelText: 'Email',
+                                decoration: InputDecoration(
                                   labelStyle: TextStyle(
                                     color: Colors.grey[600],
                                     fontFamily: 'Ubuntu',
                                     fontSize: 13,
                                   ),
-                                  hintText: 'Enter your email',
+                                  hintText: 'Email',
                                   hintStyle: TextStyle(
                                     fontFamily: 'Ubuntu',
                                     color: Colors.grey[400],
@@ -192,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
                                       size: 18,
                                     ),
                                   ),
-                                      border: OutlineInputBorder(
+                                  border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                     borderSide:
                                         BorderSide(color: Colors.grey[300]!),
@@ -216,20 +215,20 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                      return 'Please enter your email!';
+                                    return 'Please enter your email!';
                                   } else if (!value.contains("@gmail.com")) {
-                                      return 'Please enter a valid email!';
-                                    }
-                                    return null;
-                                  },
-                                ),
+                                    return 'Please enter a valid email!';
+                                  }
+                                  return null;
+                                },
+                              ),
                               const SizedBox(height: 16),
 
                               // Password field
                               Obx(() => TextFormField(
-                                  keyboardType: TextInputType.text,
-                                  controller: controller.passwordController,
-                                  cursorColor: Theme.of(context).primaryColor,
+                                    keyboardType: TextInputType.text,
+                                    controller: controller.passwordController,
+                                    cursorColor: Theme.of(context).primaryColor,
                                     style: const TextStyle(
                                       color: Colors.black87,
                                       fontFamily: 'Ubuntu',
@@ -237,13 +236,12 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                     obscureText: controller.obscureText.value,
                                     decoration: InputDecoration(
-                                      labelText: 'Password',
                                       labelStyle: TextStyle(
                                         color: Colors.grey[600],
                                         fontFamily: 'Ubuntu',
                                         fontSize: 13,
                                       ),
-                                      hintText: 'Enter your password',
+                                      hintText: 'Password',
                                       hintStyle: TextStyle(
                                         fontFamily: 'Ubuntu',
                                         color: Colors.grey[400],
@@ -265,26 +263,18 @@ class _LoginPageState extends State<LoginPage> {
                                           size: 18,
                                         ),
                                       ),
-                                      suffixIcon: Container(
-                                        margin: const EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          controller.obscureText.value
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: Get.theme.primaryColor,
+                                          size: 20,
                                         ),
-                                        child: IconButton(
-                                          icon: Icon(
-                                            controller.obscureText.value
-                                                ? Icons.visibility
-                                                : Icons.visibility_off,
-                                            color: Colors.grey[600],
-                                            size: 18,
-                                        ),
-                                      onPressed: () {
-                                            controller.obscureText.value =
-                                                !controller.obscureText.value;
-                                          },
-                                        ),
+                                        onPressed: () {
+                                          controller.obscureText.value =
+                                              !controller.obscureText.value;
+                                        },
                                       ),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
@@ -308,17 +298,17 @@ class _LoginPageState extends State<LoginPage> {
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               horizontal: 16, vertical: 12),
-                                  ),
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Please enter your password!';
-                                    } else if (value.length < 6) {
-                                      return 'Please enter at least 6 characters!';
+                                    ),
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Please enter your password!';
+                                      } else if (value.length < 6) {
+                                        return 'Please enter at least 6 characters!';
                                       } else if (!(value
                                           .contains(RegExp(r'[0-9]')))) {
-                                      return 'Please add a number 0-9';
-                                    }
-                                    return null;
+                                        return 'Please add a number 0-9';
+                                      }
+                                      return null;
                                     },
                                   )),
 
@@ -382,8 +372,8 @@ class _LoginPageState extends State<LoginPage> {
                                             fontFamily: 'Ubuntu',
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
-                                ),
-                              )),
+                                          ),
+                                        )),
                                 ),
                               ),
                             ],

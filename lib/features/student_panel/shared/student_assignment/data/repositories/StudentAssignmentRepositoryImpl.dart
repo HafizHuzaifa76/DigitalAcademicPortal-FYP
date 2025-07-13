@@ -23,9 +23,9 @@ class StudentAssignmentRepositoryImpl implements StudentAssignmentRepository {
 
   @override
   Future<Either<Fail, void>> submitAssignment(
-      String assignmentId, String fileUrl) async {
+      String assignmentId, String fileUrl, StudentCourse course) async {
     try {
-      await remoteDataSource.submitAssignment(assignmentId, fileUrl);
+      await remoteDataSource.submitAssignment(assignmentId, fileUrl, course);
       return const Right(null);
     } catch (e) {
       return Left(Fail(e.toString()));

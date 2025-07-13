@@ -1,9 +1,14 @@
+import 'package:digital_academic_portal/features/student_panel/shared/student_assignment/domain/usecases/SubmitStudentAssignmentUseCase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:io'; // Added for File
+import '../../../../../../core/services/CloudinaryService.dart';
 import '../controllers/StudentAssignmentController.dart';
 import '../../domain/entities/StudentAssignment.dart';
 import '../../../student_courses/domain/entities/StudentCourse.dart';
+import 'SubmitAssignmentPage.dart';
 
 class StudentAssignmentPage extends StatelessWidget {
   const StudentAssignmentPage({super.key});
@@ -24,7 +29,7 @@ class StudentAssignmentPage extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
+              title: const Text(
                 'Assignments',
                 style: TextStyle(
                   color: Colors.white,
@@ -38,9 +43,8 @@ class StudentAssignmentPage extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Color(0xFF2C5D3B),
-                      Color(0xFF4A7C59),
-                      Color(0xFF6B9B7A),
+                      Theme.of(context).primaryColor,
+                      const Color(0xFF1B7660),
                     ],
                   ),
                 ),
@@ -74,28 +78,15 @@ class StudentAssignmentPage extends StatelessWidget {
                     // Content
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 100, 20, 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Obx(() => Text(
-                                controller.selectedCourse.value?.courseName ??
-                                    'Select Course',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )),
-                          SizedBox(height: 8),
-                          Text(
-                            'Manage your course assignments',
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.9),
-                              fontSize: 16,
+                      child: Obx(() => Text(
+                            controller.selectedCourse.value?.courseName ??
+                                'Select Course',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ),
-                        ],
-                      ),
+                          )),
                     ),
                   ],
                 ),
@@ -103,7 +94,7 @@ class StudentAssignmentPage extends StatelessWidget {
             ),
             actions: [
               IconButton(
-                icon: Icon(Icons.refresh, color: Colors.white),
+                icon: const Icon(Icons.refresh, color: Colors.white),
                 onPressed: () => controller.fetchAssignments(),
               ),
             ],
@@ -120,7 +111,7 @@ class StudentAssignmentPage extends StatelessWidget {
                   Obx(() {
                     if (controller.studentCourses.isEmpty) {
                       return Container(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.grey.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
@@ -130,7 +121,7 @@ class StudentAssignmentPage extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(Icons.school, color: Colors.grey[600]),
-                            SizedBox(width: 12),
+                            const SizedBox(width: 12),
                             Text(
                               'Loading courses...',
                               style: TextStyle(
@@ -144,26 +135,26 @@ class StudentAssignmentPage extends StatelessWidget {
                     }
 
                     return Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                            color: Color(0xFF2C5D3B).withOpacity(0.3)),
+                            color: const Color(0xFF2C5D3B).withOpacity(0.3)),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.1),
                             blurRadius: 5,
-                            offset: Offset(0, 2),
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<StudentCourse>(
                           value: controller.selectedCourse.value,
-                          hint: Text('Select Course'),
+                          hint: const Text('Select Course'),
                           isExpanded: true,
-                          icon: Icon(Icons.arrow_drop_down,
+                          icon: const Icon(Icons.arrow_drop_down,
                               color: Color(0xFF2C5D3B)),
                           onChanged: (StudentCourse? newValue) {
                             if (newValue != null) {
@@ -176,7 +167,7 @@ class StudentAssignmentPage extends StatelessWidget {
                               value: course,
                               child: Text(
                                 course.courseName,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Color(0xFF2C5D3B),
                                   fontSize: 16,
                                 ),
@@ -188,16 +179,19 @@ class StudentAssignmentPage extends StatelessWidget {
                     );
                   }),
 
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
                   // Stats Card
                   Obx(() {
                     if (controller.selectedCourse.value == null) {
                       return Container(
-                        padding: EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [Color(0xFF2C5D3B), Color(0xFF4A7C59)],
+                            colors: [
+                              Theme.of(context).primaryColor,
+                              const Color(0xFF1B7660),
+                            ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
@@ -206,7 +200,7 @@ class StudentAssignmentPage extends StatelessWidget {
                             BoxShadow(
                               color: Colors.black.withOpacity(0.1),
                               blurRadius: 10,
-                              offset: Offset(0, 5),
+                              offset: const Offset(0, 5),
                             ),
                           ],
                         ),
@@ -223,19 +217,21 @@ class StudentAssignmentPage extends StatelessWidget {
                     }
 
                     final assignments = controller.assignments;
-                    final pendingCount = assignments
-                        .where((a) => a.status == 'Not Uploaded')
-                        .length;
+                    final pendingCount =
+                        assignments.where((a) => a.status == 'pending').length;
                     final submittedCount = assignments
-                        .where((a) => a.status == 'Submitted')
+                        .where((a) => a.status == 'submitted')
                         .length;
 
                     return Container(
                       width: double.infinity,
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [Color(0xFF2C5D3B), Color(0xFF4A7C59)],
+                          colors: [
+                            Theme.of(context).primaryColor,
+                            const Color(0xFF1B7660),
+                          ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
@@ -244,7 +240,7 @@ class StudentAssignmentPage extends StatelessWidget {
                           BoxShadow(
                             color: Colors.black.withOpacity(0.1),
                             blurRadius: 10,
-                            offset: Offset(0, 5),
+                            offset: const Offset(0, 5),
                           ),
                         ],
                       ),
@@ -262,13 +258,13 @@ class StudentAssignmentPage extends StatelessWidget {
                     );
                   }),
 
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
                   // Assignments List
                   Obx(() {
                     if (controller.selectedCourse.value == null) {
                       return Container(
-                        padding: EdgeInsets.all(40),
+                        padding: const EdgeInsets.all(40),
                         child: Column(
                           children: [
                             Icon(
@@ -276,7 +272,7 @@ class StudentAssignmentPage extends StatelessWidget {
                               size: 64,
                               color: Colors.grey[400],
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             Text(
                               'Select a course to view assignments',
                               style: TextStyle(
@@ -293,7 +289,7 @@ class StudentAssignmentPage extends StatelessWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Course Assignments',
                           style: TextStyle(
                             fontSize: 22,
@@ -301,9 +297,9 @@ class StudentAssignmentPage extends StatelessWidget {
                             color: Color(0xFF2C5D3B),
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         if (controller.isLoading.value)
-                          Center(
+                          const Center(
                             child: CircularProgressIndicator(
                               valueColor: AlwaysStoppedAnimation<Color>(
                                   Color(0xFF2C5D3B)),
@@ -311,7 +307,7 @@ class StudentAssignmentPage extends StatelessWidget {
                           )
                         else if (controller.error.value.isNotEmpty)
                           Container(
-                            padding: EdgeInsets.all(20),
+                            padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
                               color: Colors.red.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12),
@@ -320,10 +316,10 @@ class StudentAssignmentPage extends StatelessWidget {
                             ),
                             child: Column(
                               children: [
-                                Icon(Icons.error_outline,
+                                const Icon(Icons.error_outline,
                                     color: Colors.red, size: 48),
-                                SizedBox(height: 12),
-                                Text(
+                                const SizedBox(height: 12),
+                                const Text(
                                   'Error loading assignments',
                                   style: TextStyle(
                                     color: Colors.red,
@@ -331,17 +327,17 @@ class StudentAssignmentPage extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 Text(
                                   controller.error.value,
                                   style: TextStyle(color: Colors.red[700]),
                                   textAlign: TextAlign.center,
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
                                 ElevatedButton(
                                   onPressed: () =>
                                       controller.fetchAssignments(),
-                                  child: Text('Retry'),
+                                  child: const Text('Retry'),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,
                                     foregroundColor: Colors.white,
@@ -352,7 +348,7 @@ class StudentAssignmentPage extends StatelessWidget {
                           )
                         else if (controller.assignments.isEmpty)
                           Container(
-                            padding: EdgeInsets.all(40),
+                            padding: const EdgeInsets.all(40),
                             child: Column(
                               children: [
                                 Icon(
@@ -360,7 +356,7 @@ class StudentAssignmentPage extends StatelessWidget {
                                   size: 64,
                                   color: Colors.grey[400],
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
                                 Text(
                                   'No assignments available',
                                   style: TextStyle(
@@ -369,7 +365,7 @@ class StudentAssignmentPage extends StatelessWidget {
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 Text(
                                   'Check back later for new assignments',
                                   style: TextStyle(
@@ -382,7 +378,7 @@ class StudentAssignmentPage extends StatelessWidget {
                         else
                           ListView.builder(
                             shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: controller.assignments.length,
                             itemBuilder: (context, index) {
                               final assignment = controller.assignments[index];
@@ -406,17 +402,17 @@ class StudentAssignmentPage extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.2),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: Colors.white, size: 24),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -439,7 +435,7 @@ class StudentAssignmentPage extends StatelessWidget {
     final statusColor = _getStatusColor(assignment.status);
 
     return Container(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -447,12 +443,12 @@ class StudentAssignmentPage extends StatelessWidget {
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
             blurRadius: 10,
-            offset: Offset(0, 5),
+            offset: const Offset(0, 5),
           ),
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -462,7 +458,7 @@ class StudentAssignmentPage extends StatelessWidget {
                 Expanded(
                   child: Text(
                     assignment.title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF2C5D3B),
@@ -470,7 +466,8 @@ class StudentAssignmentPage extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
@@ -488,7 +485,7 @@ class StudentAssignmentPage extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Description
             Text(
@@ -500,7 +497,7 @@ class StudentAssignmentPage extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Due date with warning if overdue
             Row(
@@ -510,7 +507,7 @@ class StudentAssignmentPage extends StatelessWidget {
                   size: 16,
                   color: isOverdue ? Colors.red : Colors.grey[600],
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   'Due: ${_formatDate(assignment.dueDate)}',
                   style: TextStyle(
@@ -520,14 +517,15 @@ class StudentAssignmentPage extends StatelessWidget {
                   ),
                 ),
                 if (isOverdue) ...[
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.red.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text(
+                    child: const Text(
                       'OVERDUE',
                       style: TextStyle(
                         color: Colors.red,
@@ -540,68 +538,93 @@ class StudentAssignmentPage extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Action buttons
-            Row(
+            Column(
               children: [
-                if (assignment.fileUrl.isNotEmpty) ...[
-                  Expanded(
+                // Assignment file download button
+                if (assignment.fileUrl.isNotEmpty)
+                  Container(
+                    width: double.infinity,
                     child: OutlinedButton.icon(
                       onPressed: () => _downloadAssignment(assignment.fileUrl),
-                      icon: Icon(Icons.download, size: 18),
-                      label: Text('Download'),
+                      icon: const Icon(Icons.download, size: 18),
+                      label: const Text('Download Assignment'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: Color(0xFF2C5D3B),
-                        side: BorderSide(color: Color(0xFF2C5D3B)),
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        foregroundColor: const Color(0xFF2C5D3B),
+                        side: const BorderSide(color: Color(0xFF2C5D3B)),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),
                   ),
-                  SizedBox(width: 12),
-                ],
-                if (assignment.status == 'Not Uploaded' && !isOverdue) ...[
-                  Expanded(
+
+                // Spacing between buttons
+                if (assignment.fileUrl.isNotEmpty) const SizedBox(height: 12),
+
+                // Submit button or status display
+                if (!isOverdue) ...[
+                  Container(
+                    width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: () =>
-                          _uploadAssignment(assignment, controller),
-                      icon: Icon(Icons.upload_file, size: 18),
-                      label: Text('Submit'),
+                      onPressed: () => Get.to(SubmitAssignmentPage(
+                          assignment: assignment, controller: controller)),
+                      // _uploadAssignment(assignment, controller),
+                      icon: const Icon(Icons.upload_file, size: 18),
+                      label: Text(assignment.submittedFileUrl == null &&
+                              assignment.submittedFileUrl!.isEmpty
+                          ? 'Submit Assignment'
+                          : 'Change submitted File'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF2C5D3B),
+                        backgroundColor: const Color(0xFF2C5D3B),
                         foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),
                   ),
-                ] else if (assignment.status == 'Submitted') ...[
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                        border:
-                            Border.all(color: Colors.green.withOpacity(0.3)),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.check_circle,
-                              color: Colors.green, size: 18),
-                          SizedBox(width: 8),
-                          Text(
-                            'Submitted',
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.w600,
-                            ),
+                ] else if (assignment.status == 'submitted') ...[
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.green.withOpacity(0.3)),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.check_circle, color: Colors.green, size: 18),
+                        SizedBox(width: 8),
+                        Text(
+                          'Submitted',
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.w600,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
+                const SizedBox(height: 12),
+                // Download submitted file button
+                if (assignment.submittedFileUrl != null &&
+                    assignment.submittedFileUrl!.isNotEmpty)
+                  Container(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () =>
+                          _downloadSubmittedFile(assignment.submittedFileUrl!),
+                      icon: const Icon(Icons.download_done, size: 18),
+                      label: const Text('Download Submitted File'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.green,
+                        side: const BorderSide(color: Colors.green),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ],
@@ -627,15 +650,54 @@ class StudentAssignmentPage extends StatelessWidget {
     return '${date.day}/${date.month}/${date.year}';
   }
 
-  void _downloadAssignment(String fileUrl) {
-    // TODO: Implement file download functionality
-    Get.snackbar(
-      'Download',
-      'Downloading assignment file...',
-      backgroundColor: Color(0xFF2C5D3B),
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
-    );
+  Future<void> _downloadAssignment(String fileUrl) async {
+    try {
+      final Uri url = Uri.parse(fileUrl);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      } else {
+        Get.snackbar(
+          'Error',
+          'Could not open file URL',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red[400],
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to open file: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red[400],
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  Future<void> _downloadSubmittedFile(String fileUrl) async {
+    try {
+      final Uri url = Uri.parse(fileUrl);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      } else {
+        Get.snackbar(
+          'Error',
+          'Could not open submitted file URL',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red[400],
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to open submitted file: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red[400],
+        colorText: Colors.white,
+      );
+    }
   }
 
   Future<void> _uploadAssignment(StudentAssignment assignment,
@@ -644,11 +706,23 @@ class StudentAssignmentPage extends StatelessWidget {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf', 'doc', 'docx', 'txt'],
+        allowMultiple: false,
       );
 
-      if (result != null) {
-        // TODO: Upload file to cloud storage and get URL
-        String fileUrl = 'https://example.com/uploaded-file.pdf'; // Placeholder
+      if (result != null && result.files.single.path != null) {
+        final file = File(result.files.single.path!);
+        String? fileUrl = await uploadFileToCloudinary(file);
+
+        if (fileUrl == null) {
+          Get.snackbar(
+            'Error',
+            'Failed to upload file to Cloudinary.',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM,
+          );
+          return;
+        }
 
         await controller.submitAssignment(assignment.id, fileUrl);
 

@@ -1,6 +1,7 @@
 import 'package:digital_academic_portal/core/utils/Utils.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_attendance/domain/usecases/GetTeacherCoursesUseCase.dart';
 import 'package:get/get.dart';
+import '../../../../../../core/services/NotificationService.dart';
 import '../../../teacher_courses/domain/entities/TeacherCourse.dart';
 import '../../../../../../shared/domain/entities/Attendance.dart';
 import '../../../teacher_timetable/domain/usecases/FetchTeacherTimetable.dart';
@@ -174,11 +175,20 @@ class TeacherAttendanceController extends GetxController {
         (failure) {
           Utils().showErrorSnackBar('Error', failure.failure.toString());
         },
-        (_) {
+        (_) async {
           // Update the local map after successful marking
           attendanceMap[selectedDate.value.toIso8601String()] =
               filteredAttendanceList.toList();
           isExistingAttendance.value = true;
+
+          final sectionTopic =
+              'Section-${selectedCourse.value?.courseSemester}-${selectedCourse.value?.courseSection}';
+          await sendFCMMessage(
+              sectionTopic,
+              'Attendence',
+              'Attendance marked for date: ${filteredAttendanceList[0].date.toString().split(' ')[0]}',
+              'pendingAssignment');
+
           Utils().showSuccessSnackBar(
               'Success',
               isExistingAttendance.value
