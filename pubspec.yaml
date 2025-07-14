@@ -66,7 +66,7 @@ dependencies:
   intl: ^0.19.0
   url_launcher: ^6.3.1
   path_provider: ^2.1.2
-  flutter_quill: ^9.3.1
+  flutter_quill: ^11.4.1
 
 dev_dependencies:
   flutter_test:
@@ -85,7 +85,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/DAP_app_logo.png" # <-- Path to your logo image
+  image_path: "assets/images/DAP_app_logo.png"# <-- Path to your logo image
 # The following section is specific to Flutter packages.
 flutter:
   # The following line ensures that the Material Icons font is

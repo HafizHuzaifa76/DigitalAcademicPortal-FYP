@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../../../../../core/services/CloudinaryService.dart';
 import '../controllers/StudentAssignmentController.dart';
 import '../../domain/entities/StudentAssignment.dart';
+// import 'package:flutter_quill_to_pdf/flutter_quill_to_pdf.dart';
 
 class TextToPdfPage extends StatefulWidget {
   final StudentAssignment assignment;
@@ -28,6 +29,7 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
   late QuillController _quillController;
   bool isGeneratingPdf = false;
   bool isUploading = false;
+  String? generatedPdfPath;
   String? uploadedFileUrl;
 
   @override
@@ -44,23 +46,24 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Create PDF from Text',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF2C5D3B),
+        backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
           if (!isGeneratingPdf && !isUploading)
             TextButton(
-              onPressed: _generateAndUploadPdf,
-              child: Text(
+              onPressed: _generatePdf,
+              child: const Text(
                 'Generate PDF',
                 style: TextStyle(
                   color: Colors.white,
@@ -72,50 +75,14 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
       ),
       body: Column(
         children: [
-          // Assignment Info Card
-          Container(
-            width: double.infinity,
-            margin: EdgeInsets.all(16),
-            padding: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFF2C5D3B), Color(0xFF1B7660)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.assignment.title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Write your assignment content below and generate a PDF',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
           // Loading Indicator
           if (isGeneratingPdf || isUploading)
             Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
@@ -124,10 +91,10 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
                           AlwaysStoppedAnimation<Color>(Color(0xFF2C5D3B)),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Text(
                     isGeneratingPdf ? 'Generating PDF...' : 'Uploading PDF...',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -137,20 +104,20 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
             ),
 
           // Success Message
-          if (uploadedFileUrl != null)
+          if (generatedPdfPath != null)
             Container(
               width: double.infinity,
-              margin: EdgeInsets.symmetric(horizontal: 16),
-              padding: EdgeInsets.all(16),
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
+                color: primaryColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.green.withOpacity(0.3)),
+                border: Border.all(color: primaryColor.withOpacity(0.3)),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.check_circle, color: Colors.green, size: 24),
-                  SizedBox(width: 12),
+                  Icon(Icons.check_circle, color: primaryColor, size: 24),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,15 +127,25 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Colors.green,
+                            color: primaryColor,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           'Your PDF is ready for submission',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[600],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          generatedPdfPath != null
+                              ? generatedPdfPath!.split('/').last
+                              : '',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[700],
                           ),
                         ),
                       ],
@@ -181,7 +158,7 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
           // Quill Editor
           Expanded(
             child: Container(
-              margin: EdgeInsets.all(16),
+              margin: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -190,59 +167,71 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
                   BoxShadow(
                     color: Colors.black.withOpacity(0.05),
                     blurRadius: 5,
-                    offset: Offset(0, 2),
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
               child: Column(
                 children: [
                   // Toolbar
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[50],
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        topRight: Radius.circular(12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          trackVisibility: true,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[50],
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(12),
+                                  topRight: Radius.circular(12),
+                                ),
+                              ),
+                              child: QuillSimpleToolbar(
+                                controller: _quillController,
+                                config: const QuillSimpleToolbarConfig(
+                                  showFontFamily: false,
+                                  showSearchButton: false,
+                                  showCodeBlock: false,
+                                  showInlineCode: false,
+                                  showQuote: false,
+                                  showLink: false,
+                                  showDirection: false,
+                                  showIndent: false,
+                                  showListNumbers: true,
+                                  showListBullets: true,
+                                  showDividers: true,
+                                  showAlignmentButtons: true,
+                                  showHeaderStyle: true,
+                                  showColorButton: true,
+                                  showBackgroundColorButton: true,
+                                  showClearFormat: true,
+                                  showBoldButton: true,
+                                  showItalicButton: true,
+                                  showUnderLineButton: true,
+                                  showStrikeThrough: true,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    child: QuillToolbar.simple(
-                      configurations: QuillSimpleToolbarConfigurations(
-                        controller: _quillController,
-                        showFontFamily: false,
-                        showSearchButton: false,
-                        showCodeBlock: false,
-                        showInlineCode: false,
-                        showQuote: true,
-                        showListNumbers: true,
-                        showListBullets: true,
-                        showLink: false,
-                        showDividers: true,
-                        showIndent: true,
-                        showAlignmentButtons: true,
-                        showHeaderStyle: true,
-                        showColorButton: true,
-                        showBackgroundColorButton: true,
-                        showClearFormat: true,
-                        showBoldButton: true,
-                        showItalicButton: true,
-                        showUnderLineButton: true,
-                        showStrikeThrough: true,
-                      ),
-                    ),
+                    ],
                   ),
 
                   // Editor
                   Expanded(
                     child: Container(
-                      padding: EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       child: QuillEditor.basic(
-                        configurations: QuillEditorConfigurations(
-                          controller: _quillController,
+                        controller: _quillController,
+                        config: const QuillEditorConfig(
                           placeholder:
-                              'Start writing your assignment here...\n\nYou can use the toolbar above to format your text.\n\n• Use bullet points for lists\n• Use bold and italic for emphasis\n• Add headings for structure\n• Use quotes for important information',
-                          checkBoxReadOnly: false,
-                          
+                              'Start writing your assignment content here...',
                         ),
                       ),
                     ),
@@ -253,21 +242,21 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
           ),
 
           // Submit Button
-          if (uploadedFileUrl != null)
+          if (generatedPdfPath != null)
             Container(
               width: double.infinity,
-              margin: EdgeInsets.all(16),
+              margin: const EdgeInsets.all(16),
               child: ElevatedButton(
-                onPressed: _submitAssignment,
+                onPressed: isUploading ? null : _submitAssignment,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF2C5D3B),
+                  backgroundColor: primaryColor,
                   foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Submit Assignment',
                   style: TextStyle(
                     fontSize: 16,
@@ -281,7 +270,7 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
     );
   }
 
-  Future<void> _generateAndUploadPdf() async {
+  Future<void> _generatePdf() async {
     if (_quillController.document.isEmpty()) {
       Get.snackbar(
         'Error',
@@ -298,81 +287,46 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
     });
 
     try {
-      // Generate PDF
-      final pdf = pw.Document();
+      // final pdfConverter = PDFConverter(
+      //   document: _quillController.document.toDelta(),
+      //   pageFormat: PDFPageFormat.a4,
+      //   fallbacks: [],
+      // );
 
-      // Add content to PDF
-      pdf.addPage(
-        pw.Page(
-          pageFormat: PdfPageFormat.a4,
-          build: (pw.Context context) {
-            return pw.Padding(
-              padding: pw.EdgeInsets.all(20),
-              child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  // Header
-                  pw.Text(
-                    widget.assignment.title,
-                    style: pw.TextStyle(
-                      fontSize: 24,
-                      fontWeight: pw.FontWeight.bold,
-                    ),
-                  ),
-                  pw.SizedBox(height: 20),
+      // // Generate the PDF bytes
+      // final document = await pdfConverter.createDocument();
+      // if (document == null) {
+      //   Get.snackbar(
+      //     'Error',
+      //     'The file cannot be generated by an unknown error',
+      //     backgroundColor: Colors.red,
+      //     colorText: Colors.white,
+      //     snackPosition: SnackPosition.BOTTOM,
+      //   );
+      //   return;
+      // }
 
-                  // Assignment content
-                  ..._convertQuillToPdfWidgets(),
-                ],
-              ),
-            );
-          },
-        ),
+      // // Save PDF to temporary file
+      // final output = await getTemporaryDirectory();
+      // final file = File(
+      //     '${output.path}/assignment_${DateTime.now().millisecondsSinceEpoch}.pdf');
+      // await file.writeAsBytes(await document.save());
+
+      // setState(() {
+      //   isGeneratingPdf = false;
+      //   generatedPdfPath = file.path;
+      // });
+
+      Get.snackbar(
+        'Success',
+        'PDF generated successfully! You can now submit your assignment.',
+        backgroundColor: Theme.of(context).primaryColor,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
       );
-
-      // Save PDF to temporary file
-      final output = await getTemporaryDirectory();
-      final file = File(
-          '${output.path}/assignment_${DateTime.now().millisecondsSinceEpoch}.pdf');
-      await file.writeAsBytes(await pdf.save());
-
-      setState(() {
-        isGeneratingPdf = false;
-        isUploading = true;
-      });
-
-      // Upload to Cloudinary
-      String? fileUrl = await uploadFileToCloudinary(file);
-
-      setState(() {
-        isUploading = false;
-        uploadedFileUrl = fileUrl;
-      });
-
-      if (fileUrl == null) {
-        Get.snackbar(
-          'Error',
-          'Failed to upload PDF to Cloudinary.',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      } else {
-        Get.snackbar(
-          'Success',
-          'PDF generated and uploaded successfully!',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      }
-
-      // Clean up temporary file
-      await file.delete();
     } catch (e) {
       setState(() {
         isGeneratingPdf = false;
-        isUploading = false;
       });
       Get.snackbar(
         'Error',
@@ -384,82 +338,8 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
     }
   }
 
-  List<pw.Widget> _convertQuillToPdfWidgets() {
-    List<pw.Widget> widgets = [];
-
-    for (final operation in _quillController.document.toDelta().toList()) {
-      if (operation.data is Map) {
-        final data = operation.data as Map;
-        final text = operation.value.toString();
-
-        if (text.trim().isEmpty) {
-          widgets.add(pw.SizedBox(height: 8));
-          continue;
-        }
-
-        pw.TextStyle textStyle = pw.TextStyle(fontSize: 12);
-
-        // Apply formatting
-        if (data.containsKey('bold') && data['bold'] == true) {
-          textStyle = textStyle.copyWith(fontWeight: pw.FontWeight.bold);
-        }
-        if (data.containsKey('italic') && data['italic'] == true) {
-          textStyle = textStyle.copyWith(fontStyle: pw.FontStyle.italic);
-        }
-        if (data.containsKey('underline') && data['underline'] == true) {
-          // PDF doesn't support underline directly, we'll skip it
-        }
-
-        // Handle different block types
-        if (data.containsKey('block')) {
-          final block = data['block'];
-          if (block == 'h1') {
-            textStyle = textStyle.copyWith(
-                fontSize: 20, fontWeight: pw.FontWeight.bold);
-          } else if (block == 'h2') {
-            textStyle = textStyle.copyWith(
-                fontSize: 18, fontWeight: pw.FontWeight.bold);
-          } else if (block == 'h3') {
-            textStyle = textStyle.copyWith(
-                fontSize: 16, fontWeight: pw.FontWeight.bold);
-          } else if (block == 'quote') {
-            widgets.add(
-              pw.Container(
-                margin: pw.EdgeInsets.only(left: 20, top: 8, bottom: 8),
-                padding: pw.EdgeInsets.all(12),
-                decoration: pw.BoxDecoration(
-                  border: pw.Border(
-                    left: pw.BorderSide(color: PdfColors.grey, width: 3),
-                  ),
-                ),
-                child: pw.Text(text,
-                    style: textStyle.copyWith(fontStyle: pw.FontStyle.italic)),
-              ),
-            );
-            continue;
-          } else if (block == 'list') {
-            widgets.add(
-              pw.Row(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Text('• ', style: textStyle),
-                  pw.Expanded(child: pw.Text(text, style: textStyle)),
-                ],
-              ),
-            );
-            continue;
-          }
-        }
-
-        widgets.add(pw.Text(text, style: textStyle));
-      }
-    }
-
-    return widgets;
-  }
-
   Future<void> _submitAssignment() async {
-    if (uploadedFileUrl == null) {
+    if (generatedPdfPath == null) {
       Get.snackbar(
         'Error',
         'Please generate a PDF first.',
@@ -475,15 +355,35 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
         isUploading = true;
       });
 
+      // Upload to Cloudinary
+      final file = File(generatedPdfPath!);
+      String? fileUrl = await uploadFileToCloudinary(file);
+
+      setState(() {
+        isUploading = false;
+        uploadedFileUrl = fileUrl;
+      });
+
+      if (fileUrl == null) {
+        Get.snackbar(
+          'Error',
+          'Failed to upload PDF to Cloudinary.',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+
       await widget.controller.submitAssignment(
         widget.assignment.id,
-        uploadedFileUrl!,
+        fileUrl,
       );
 
       Get.snackbar(
         'Success',
         'Assignment submitted successfully!',
-        backgroundColor: Colors.green,
+        backgroundColor: Theme.of(context).primaryColor,
         colorText: Colors.white,
         snackPosition: SnackPosition.BOTTOM,
       );
@@ -491,6 +391,9 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
       // Navigate back to assignments page
       Get.back();
     } catch (e) {
+      setState(() {
+        isUploading = false;
+      });
       Get.snackbar(
         'Error',
         'Failed to submit assignment: $e',
@@ -498,10 +401,6 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
         colorText: Colors.white,
         snackPosition: SnackPosition.BOTTOM,
       );
-    } finally {
-      setState(() {
-        isUploading = false;
-      });
     }
   }
 }
