@@ -311,7 +311,7 @@ class StudentPortalDashboardPageState
                             child: _buildActionButton(
                               icon: 'assets/images/calendar_icon.png',
                               title: 'Calendar',
-                              onTap: () => Get.toNamed('/studentCalendarPage'),
+                              onTap: () => Get.toNamed('/calendarViewPage'),
                               color: Theme.of(context).primaryColor,
                             ),
                           ),
@@ -327,7 +327,7 @@ class StudentPortalDashboardPageState
                             child: _buildActionButton(
                               icon: 'assets/images/chatbot_icon.png',
                               title: 'ChatBot',
-                              onTap: () => Get.toNamed('/Stu_ChatBot'),
+                              onTap: () => Get.toNamed('/studentChatbotPage'),
                               color: Theme.of(context).primaryColor,
                             ),
                           ),

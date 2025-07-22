@@ -66,7 +66,14 @@ dependencies:
   intl: ^0.19.0
   url_launcher: ^6.3.1
   path_provider: ^2.1.2
-  flutter_quill: ^11.4.1
+  cunning_document_scanner: ^1.2.3
+  # flutter_quill_to_pdf: ^2.2.8
+  # flutter_quill: ^11.4.1
+  flutter_quill: ^9.3.1
+  google_mlkit_text_recognition: ^0.15.0
+  delta_to_pdf:
+    git: https://github.com/HafizHuzaifa76/quill_delta_to_pdf
+  open_file: ^3.5.10
 
 dev_dependencies:
   flutter_test:

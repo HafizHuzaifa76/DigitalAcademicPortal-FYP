@@ -548,7 +548,8 @@ class StudentAssignmentPage extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                      onPressed: () => _downloadAssignment(assignment.fileUrl),
+                      onPressed: () => controller.downloadAndOpenFile(assignment.fileUrl),
+                      // onPressed: () => _downloadAssignment(assignment.fileUrl),
                       icon: const Icon(Icons.download, size: 18),
                       label: const Text('Download Assignment'),
                       style: OutlinedButton.styleFrom(
@@ -563,7 +564,7 @@ class StudentAssignmentPage extends StatelessWidget {
                 if (assignment.fileUrl.isNotEmpty) const SizedBox(height: 12),
 
                 // Submit button or status display
-                if (!isOverdue) ...[
+                if (!isOverdue)...[
                   Container(
                     width: double.infinity,
                     child: ElevatedButton.icon(
@@ -614,8 +615,9 @@ class StudentAssignmentPage extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                      onPressed: () =>
-                          _downloadSubmittedFile(assignment.submittedFileUrl!),
+                      onPressed: () => controller.downloadAndOpenFile(assignment.submittedFileUrl!),
+                      // onPressed: () => 
+                      //     _downloadSubmittedFile(assignment.submittedFileUrl!),
                       icon: const Icon(Icons.download_done, size: 18),
                       label: const Text('Download Submitted File'),
                       style: OutlinedButton.styleFrom(
