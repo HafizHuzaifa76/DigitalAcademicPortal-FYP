@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../domain/entities/Assignment.dart';
+import '../controllers/TeacherAssignmentController.dart';
 
 class AssignmentSubmissionsPage extends StatelessWidget {
   final Assignment assignment;
-  const AssignmentSubmissionsPage({Key? key, required this.assignment})
-      : super(key: key);
+  AssignmentSubmissionsPage({super.key, required this.assignment});
+
+  final controller = Get.find<TeacherAssignmentController>();
 
   @override
   Widget build(BuildContext context) {
@@ -64,14 +66,15 @@ class AssignmentSubmissionsPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12)),
                       ),
                       onPressed: () async {
-                        final url = Uri.parse(submission);
-                        if (await canLaunchUrl(url)) {
-                          await launchUrl(url,
-                              mode: LaunchMode.externalApplication);
-                        } else {
-                          Get.snackbar(
-                              'Error', 'Could not open submission URL');
-                        }
+                        controller.downloadAndOpenFile(submission);
+                        // final url = Uri.parse(submission);
+                        // if (await canLaunchUrl(url)) {
+                        //   await launchUrl(url,
+                        //       mode: LaunchMode.externalApplication);
+                        // } else {
+                        //   Get.snackbar(
+                        //       'Error', 'Could not open submission URL');
+                        // }
                       },
                     ),
                 ],

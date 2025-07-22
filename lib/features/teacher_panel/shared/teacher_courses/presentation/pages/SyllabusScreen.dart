@@ -271,7 +271,8 @@ class SyllabusScreen extends StatelessWidget {
                               _showDeleteConfirmation(
                                   context, controller, file);
                             } else if (value == 'download') {
-                              _downloadFile(file.fileUrl, file.fileName);
+                              controller.downloadAndOpenFile(file.fileUrl);
+                              // _downloadFile(file.fileUrl, file.fileName);
                             }
                           },
                         ),

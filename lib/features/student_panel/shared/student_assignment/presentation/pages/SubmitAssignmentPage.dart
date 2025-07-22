@@ -1,3 +1,4 @@
+import 'package:digital_academic_portal/features/student_panel/shared/student_assignment/presentation/pages/ImageToPdfPage.dart';
 import 'package:digital_academic_portal/features/student_panel/shared/student_assignment/presentation/pages/TextToPdfPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,9 @@ import '../../../../../../core/services/CloudinaryService.dart';
 import '../controllers/StudentAssignmentController.dart';
 import '../../domain/entities/StudentAssignment.dart';
 import '../../../student_courses/domain/entities/StudentCourse.dart';
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'OcrToPdfPage.dart';
 
 class SubmitAssignmentPage extends StatefulWidget {
   final StudentAssignment assignment;
@@ -416,14 +420,10 @@ class _SubmitAssignmentPageState extends State<SubmitAssignmentPage> {
   }
 
   void _navigateToImageToPdfPage() {
-    // TODO: Navigate to Image to PDF page
-    Get.snackbar(
-      'Coming Soon',
-      'Image to PDF feature will be available soon!',
-      backgroundColor: Colors.blue,
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    Get.to(() => ImageToPdfPage(
+          assignment: widget.assignment,
+          controller: widget.controller,
+        ));
   }
 
   void _navigateToTextToPdfPage() {
@@ -433,15 +433,36 @@ class _SubmitAssignmentPageState extends State<SubmitAssignmentPage> {
         ));
   }
 
-  void _navigateToOcrPage() {
-    // TODO: Navigate to OCR page
-    Get.snackbar(
-      'Coming Soon',
-      'OCR text extraction feature will be available soon!',
-      backgroundColor: Colors.purple,
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
-    );
+  void _navigateToOcrPage() async {
+    try {
+      final List<String> scannedPaths =
+          await CunningDocumentScanner.getPictures(
+                  isGalleryImportAllowed: true) ??
+              [];
+      if (scannedPaths.isNotEmpty) {
+        final inputImage = InputImage.fromFilePath(scannedPaths.first);
+        final textRecognizer = TextRecognizer();
+        final RecognizedText recognizedText =
+            await textRecognizer.processImage(inputImage);
+        await textRecognizer.close();
+        final extractedText = recognizedText.text;
+        Get.to(() => OcrToPdfPage(
+              assignment: widget.assignment,
+              controller: widget.controller,
+              initialText: extractedText,
+            ));
+      } else {
+        Get.snackbar('No Image', 'No image was scanned.',
+            backgroundColor: Colors.orange,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to scan or extract text: $e',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM);
+    }
   }
 
   Future<void> _submitAssignment() async {

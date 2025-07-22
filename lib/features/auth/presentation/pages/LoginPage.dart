@@ -130,253 +130,269 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         child: Form(
                           key: formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Form title
-                              const Text(
-                                'Login',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                          child: AutofillGroup(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Form title
+                                const Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                'Enter your credentials to continue',
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8),
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 13,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-
-                              // Email field
-                              TextFormField(
-                                keyboardType: TextInputType.emailAddress,
-                                controller: controller.emailController,
-                                cursorColor: Theme.of(context).primaryColor,
-                                style: const TextStyle(
-                                  color: Colors.black87,
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 14,
-                                ),
-                                decoration: InputDecoration(
-                                  labelStyle: TextStyle(
-                                    color: Colors.grey[600],
+                                const SizedBox(height: 6),
+                                Text(
+                                  'Enter your credentials to continue',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.8),
                                     fontFamily: 'Ubuntu',
                                     fontSize: 13,
                                   ),
-                                  hintText: 'Email',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Ubuntu',
-                                    color: Colors.grey[400],
-                                    fontSize: 13,
-                                  ),
-                                  prefixIcon: Container(
-                                    margin: const EdgeInsets.all(8),
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .primaryColor
-                                          .withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Icon(
-                                      Icons.email_outlined,
-                                      color: Theme.of(context).primaryColor,
-                                      size: 18,
-                                    ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide:
-                                        BorderSide(color: Colors.grey[300]!),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide:
-                                        BorderSide(color: Colors.grey[300]!),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 12),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your email!';
-                                  } else if (!value.contains("@gmail.com")) {
-                                    return 'Please enter a valid email!';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 16),
+                                const SizedBox(height: 20),
 
-                              // Password field
-                              Obx(() => TextFormField(
-                                    keyboardType: TextInputType.text,
-                                    controller: controller.passwordController,
-                                    cursorColor: Theme.of(context).primaryColor,
-                                    style: const TextStyle(
-                                      color: Colors.black87,
-                                      fontFamily: 'Ubuntu',
-                                      fontSize: 14,
-                                    ),
-                                    obscureText: controller.obscureText.value,
-                                    decoration: InputDecoration(
-                                      labelStyle: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontFamily: 'Ubuntu',
-                                        fontSize: 13,
-                                      ),
-                                      hintText: 'Password',
-                                      hintStyle: TextStyle(
-                                        fontFamily: 'Ubuntu',
-                                        color: Colors.grey[400],
-                                        fontSize: 13,
-                                      ),
-                                      prefixIcon: Container(
-                                        margin: const EdgeInsets.all(8),
-                                        padding: const EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .primaryColor
-                                              .withOpacity(0.1),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Icon(
-                                          Icons.lock_outline,
-                                          color: Theme.of(context).primaryColor,
-                                          size: 18,
-                                        ),
-                                      ),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                          controller.obscureText.value
-                                              ? Icons.visibility
-                                              : Icons.visibility_off,
-                                          color: Get.theme.primaryColor,
-                                          size: 20,
-                                        ),
-                                        onPressed: () {
-                                          controller.obscureText.value =
-                                              !controller.obscureText.value;
-                                        },
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(
-                                            color: Colors.grey[300]!),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(
-                                            color: Colors.grey[300]!),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(
-                                          color: Theme.of(context).primaryColor,
-                                          width: 2,
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 12),
-                                    ),
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please enter your password!';
-                                      } else if (value.length < 6) {
-                                        return 'Please enter at least 6 characters!';
-                                      } else if (!(value
-                                          .contains(RegExp(r'[0-9]')))) {
-                                        return 'Please add a number 0-9';
-                                      }
-                                      return null;
-                                    },
-                                  )),
-
-                              const SizedBox(height: 12),
-
-                              // Forgot password
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                  onPressed: () {
-                                    // TODO: Implement forgot password
-                                  },
-                                  child: Text(
-                                    'Forgot Password?',
-                                    style: TextStyle(
+                                // Email field
+                                TextFormField(
+                                  autofillHints: const [
+                                    AutofillHints.username,
+                                    AutofillHints.email
+                                  ],
+                                  keyboardType: TextInputType.emailAddress,
+                                  controller: controller.emailController,
+                                  cursorColor: Theme.of(context).primaryColor,
+                                  style: const TextStyle(
+                                    color: Colors.black87,
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 14,
+                                  ),
+                                  decoration: InputDecoration(
+                                    labelStyle: TextStyle(
+                                      color: Colors.grey[600],
                                       fontFamily: 'Ubuntu',
                                       fontSize: 13,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
                                     ),
-                                  ),
-                                ),
-                              ),
-
-                              const SizedBox(height: 16),
-
-                              // Login button
-                              SizedBox(
-                                width: double.infinity,
-                                height: 48,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    if (formKey.currentState!.validate()) {
-                                      controller.login();
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor:
-                                        Theme.of(context).primaryColor,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
+                                    hintText: 'Email',
+                                    hintStyle: TextStyle(
+                                      fontFamily: 'Ubuntu',
+                                      color: Colors.grey[400],
+                                      fontSize: 13,
+                                    ),
+                                    prefixIcon: Container(
+                                      margin: const EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .primaryColor
+                                            .withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Icon(
+                                        Icons.email_outlined,
+                                        color: Theme.of(context).primaryColor,
+                                        size: 18,
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey[300]!),
                                     ),
-                                    shadowColor: Colors.black.withOpacity(0.1),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey[300]!),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context).primaryColor,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 12),
                                   ),
-                                  child: Obx(() => controller.isLoading.value
-                                      ? SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter your email!';
+                                    } else if (!value.contains("@gmail.com")) {
+                                      return 'Please enter a valid email!';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 16),
+
+                                // Password field
+                                Obx(() => TextFormField(
+                                      autofillHints: const [
+                                        AutofillHints.password
+                                      ],
+                                      keyboardType: TextInputType.text,
+                                      controller: controller.passwordController,
+                                      cursorColor:
+                                          Theme.of(context).primaryColor,
+                                      style: const TextStyle(
+                                        color: Colors.black87,
+                                        fontFamily: 'Ubuntu',
+                                        fontSize: 14,
+                                      ),
+                                      obscureText: controller.obscureText.value,
+                                      decoration: InputDecoration(
+                                        labelStyle: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontFamily: 'Ubuntu',
+                                          fontSize: 13,
+                                        ),
+                                        hintText: 'Password',
+                                        hintStyle: TextStyle(
+                                          fontFamily: 'Ubuntu',
+                                          color: Colors.grey[400],
+                                          fontSize: 13,
+                                        ),
+                                        prefixIcon: Container(
+                                          margin: const EdgeInsets.all(8),
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .primaryColor
+                                                .withOpacity(0.1),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: Icon(
+                                            Icons.lock_outline,
                                             color:
                                                 Theme.of(context).primaryColor,
+                                            size: 18,
                                           ),
-                                        )
-                                      : const Text(
-                                          "Login Now",
-                                          style: TextStyle(
-                                            color: Colors.black87,
-                                            fontFamily: 'Ubuntu',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
+                                        ),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            controller.obscureText.value
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                            color: Get.theme.primaryColor,
+                                            size: 20,
                                           ),
-                                        )),
+                                          onPressed: () {
+                                            controller.obscureText.value =
+                                                !controller.obscureText.value;
+                                          },
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          borderSide: BorderSide(
+                                              color: Colors.grey[300]!),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          borderSide: BorderSide(
+                                              color: Colors.grey[300]!),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          borderSide: BorderSide(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            width: 2,
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 12),
+                                      ),
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Please enter your password!';
+                                        } else if (value.length < 6) {
+                                          return 'Please enter at least 6 characters!';
+                                        } else if (!(value
+                                            .contains(RegExp(r'[0-9]')))) {
+                                          return 'Please add a number 0-9';
+                                        }
+                                        return null;
+                                      },
+                                    )),
+
+                                const SizedBox(height: 12),
+
+                                // Forgot password
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      // TODO: Implement forgot password
+                                    },
+                                    child: Text(
+                                      'Forgot Password?',
+                                      style: TextStyle(
+                                        fontFamily: 'Ubuntu',
+                                        fontSize: 13,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ],
+
+                                const SizedBox(height: 16),
+
+                                // Login button
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 48,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      if (formKey.currentState!.validate()) {
+                                        controller.login();
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor:
+                                          Theme.of(context).primaryColor,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      shadowColor:
+                                          Colors.black.withOpacity(0.1),
+                                    ),
+                                    child: Obx(() => controller.isLoading.value
+                                        ? SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                          )
+                                        : const Text(
+                                            "Login Now",
+                                            style: TextStyle(
+                                              color: Colors.black87,
+                                              fontFamily: 'Ubuntu',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          )),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

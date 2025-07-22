@@ -1,7 +1,5 @@
 import 'package:digital_academic_portal/features/administrator_panel/presentation/bindings/AdminDashboardBinding.dart';
 import 'package:digital_academic_portal/features/administrator_panel/presentation/pages/AdministratorDashboardPage.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/calendar_events/presentation/bindings/CalendarEventBindings.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/calendar_events/presentation/pages/CalendarEventPage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/courses/presentation/bindings/CourseBindings.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/courses/presentation/pages/AllCoursesPage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/noticeboard/presentation/pages/NoticeBoardPage.dart';
@@ -33,6 +31,7 @@ import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_co
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/pages/TeacherCoursesPage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_grades/presentation/pages/TeachersGradePage.dart';
 import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_timetable/presentation/bindings/TeacherTimeTableBinding.dart';
+import 'package:digital_academic_portal/shared/calendar_events/presentation/pages/CalendarViewPage.dart';
 import 'package:digital_academic_portal/shared/presentation/pages/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -53,7 +52,9 @@ import 'features/student_panel/shared/student_assignment/presentation/bindings/S
 import 'features/student_panel/shared/student_assignment/presentation/pages/Stu_Assignments.dart';
 import 'features/student_panel/shared/student_assignment/presentation/pages/StudentAssignmentPage.dart';
 import 'features/student_panel/shared/student_attendance/presentation/pages/StudentAttendancePage.dart';
+import 'features/student_panel/shared/student_chatbot/presentation/bindings/StudentChatbotBinding.dart';
 import 'features/student_panel/shared/student_chatbot/presentation/pages/Stu_ChatBot.dart';
+import 'features/student_panel/shared/student_chatbot/presentation/pages/StudentChatbotPage.dart';
 import 'features/student_panel/shared/student_courses/presentation/bindings/StudentCoursesBinding.dart';
 import 'features/student_panel/shared/student_grades/presentation/pages/StudentGradePage.dart';
 import 'features/student_panel/shared/student_grades/presentation/bindings/StudentGradeBindings.dart';
@@ -70,6 +71,8 @@ import 'features/teacher_panel/shared/teacher_courses/presentation/pages/Teacher
 import 'features/teacher_panel/shared/teacher_queries/presentation/pages/TeacherQueryPage.dart';
 import 'features/teacher_panel/shared/teacher_timetable/presentation/pages/TeacherTimeTablePage.dart';
 import 'features/teacher_panel/shared/teacher_grades/presentation/bindings/TeacherGradeBinding.dart';
+import 'shared/calendar_events/presentation/bindings/CalendarEventBindings.dart';
+import 'shared/calendar_events/presentation/pages/CalendarEventPage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -239,6 +242,11 @@ class MyApp extends StatelessWidget {
           binding: CalendarEventBinding(),
         ),
         GetPage(
+          name: '/calendarViewPage',
+          page: () => const CalendarViewPage(),
+          binding: CalendarEventBinding(),
+        ),
+        GetPage(
           name: '/semesterTimeTablePage',
           page: () => SemesterTimeTablePage(
               deptName: Get.arguments['deptName'],
@@ -276,9 +284,9 @@ class MyApp extends StatelessWidget {
             page: () => const StudentAssignmentPage(),
             binding: StudentAssignmentBinding()),
         GetPage(
-          name: '/Stu_ChatBot',
-          page: () => const Stu_ChatBot(),
-          //binding: CalendarEventBinding(),
+          name: '/studentChatbotPage',
+          page: () => StudentChatbotPage(),
+          binding: StudentChatbotBinding(),
         ),
         GetPage(
           name: '/studentCoursesPage',

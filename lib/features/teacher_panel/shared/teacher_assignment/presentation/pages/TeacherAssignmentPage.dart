@@ -147,14 +147,15 @@ class TeacherAssignmentPage extends GetView<TeacherAssignmentController> {
                                   icon: Icon(Icons.link,
                                       color: theme.primaryColor),
                                   onPressed: () async {
-                                    final url = Uri.parse(assignment.fileUrl);
-                                    if (await canLaunchUrl(url)) {
-                                      await launchUrl(url,
-                                          mode: LaunchMode.externalApplication);
-                                    } else {
-                                      Get.snackbar(
-                                          'Error', 'Could not open file URL');
-                                    }
+                                    controller.downloadAndOpenFile(assignment.fileUrl);
+                                    // final url = Uri.parse(assignment.fileUrl);
+                                    // if (await canLaunchUrl(url)) {
+                                    //   await launchUrl(url,
+                                    //       mode: LaunchMode.externalApplication);
+                                    // } else {
+                                    //   Get.snackbar(
+                                    //       'Error', 'Could not open file URL');
+                                    // }
                                   },
                                 ),
                               ],

@@ -1,8 +1,13 @@
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
+import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'package:open_file/open_file.dart';
+import 'package:http/http.dart' as http;
 import '../../../../../../core/services/NotificationService.dart';
 import '../../domain/entities/UploadedFile.dart';
 import '../../domain/usecases/GetUploadedFilesUseCase.dart';
@@ -151,6 +156,35 @@ class UploadedFileController extends GetxController {
       },
     );
   }
+
+  
+Future<void> downloadAndOpenFile(String url) async {
+  try {
+    EasyLoading.show(status: 'Opening File...');
+    String fileName = url.split('/').last;
+    var response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      var dir = await getTemporaryDirectory();
+
+      File file = File('${dir.path}/$fileName');
+      await file.writeAsBytes(response.bodyBytes);
+      OpenFile.open(file.path);
+    } else {
+      Utils().showErrorSnackBar(
+        'Error',
+        'Failed to download file. Status code: ${response.statusCode}');
+    }
+  } catch (e) {
+      Utils().showErrorSnackBar(
+        'Error',
+        'Error downloading or opening file: $e');
+  }
+
+  finally {
+    EasyLoading.dismiss();
+  }
+}
 
   List<String> _getAllowedExtensions(FileType type) {
     switch (type) {

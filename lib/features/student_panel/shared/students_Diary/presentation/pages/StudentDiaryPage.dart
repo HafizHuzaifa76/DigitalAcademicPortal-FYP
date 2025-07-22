@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import '../controller/StudentDiaryController.dart';
 
 import '../../domain/entities/Note.dart';
+import '../widgets/CreateNoteWidget.dart';
+import '../widgets/EditNoteWidget.dart';
 
 class StudentDiaryPage extends StatelessWidget {
   final String deptName;
@@ -117,8 +119,9 @@ class StudentDiaryPage extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        icon: const Icon(Icons.add),
-        label: const Text('New Note'),
+        icon: const Icon(Icons.add, color: Colors.white,),
+        backgroundColor: Get.theme.primaryColor,
+        label: const Text('New Note', style: TextStyle(color: Colors.white)),
         onPressed: () async {
           final newNote = await Get.to(() => CreateNoteScreen());
           if (newNote != null) {
@@ -130,20 +133,22 @@ class StudentDiaryPage extends StatelessWidget {
   }
 
   Widget _buildFilterChip(String label, bool isSelected) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: FilterChip(
-        label: Text(label),
-        selected: controller.currentFilter.value == label,
-        onSelected: (bool selected) {
-          controller.setFilter(label);
-        },
-        backgroundColor: Colors.white,
-        selectedColor: Get.theme.primaryColor.withOpacity(0.2),
-        checkmarkColor: Get.theme.primaryColor,
-        labelStyle: TextStyle(
-          color: controller.currentFilter.value == label ? Get.theme.primaryColor : Colors.black54,
-          fontWeight: controller.currentFilter.value == label ? FontWeight.bold : FontWeight.normal,
+    return Obx(()=>
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        child: FilterChip(
+          label: Text(label),
+          selected: controller.currentFilter.value == label,
+          onSelected: (bool selected) {
+            controller.setFilter(label);
+          },
+          backgroundColor: Colors.white,
+          selectedColor: Get.theme.primaryColor.withOpacity(0.2),
+          checkmarkColor: Get.theme.primaryColor,
+          labelStyle: TextStyle(
+            color: controller.currentFilter.value == label ? Get.theme.primaryColor : Colors.black54,
+            fontWeight: controller.currentFilter.value == label ? FontWeight.bold : FontWeight.normal,
+          ),
         ),
       ),
     );
@@ -473,382 +478,3 @@ class StudentDiaryPage extends StatelessWidget {
   }
 }
 
-class CreateNoteScreen extends StatefulWidget {
-  @override
-  _CreateNoteScreenState createState() => _CreateNoteScreenState();
-}
-
-class _CreateNoteScreenState extends State<CreateNoteScreen> {
-  final titleController = TextEditingController();
-  final contentController = TextEditingController();
-  String selectedPriority = 'Medium';
-  String? selectedCategory;
-  DateTime? dueDate;
-
-  final List<String> categories = [
-    'Assignment',
-    'Quiz',
-    'Project',
-    'Exam',
-    'Personal',
-    'Other'
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text('New Note', style: TextStyle(fontWeight: FontWeight.bold)),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: titleController,
-              style: TextStyle(color: Get.theme.primaryColor),
-              decoration: InputDecoration(
-                labelText: 'Title',
-                labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: contentController,
-              style: TextStyle(color: Get.theme.primaryColor),
-              maxLines: 8,
-              decoration: InputDecoration(
-                labelText: 'Note',
-                labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: selectedPriority,
-              decoration: InputDecoration(
-                labelText: 'Priority',
-                labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor),
-                ),
-              ),
-              items: ['High', 'Medium', 'Low']
-                  .map((priority) => DropdownMenuItem(
-                        value: priority,
-                        child: Text(priority),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() {
-                    selectedPriority = value;
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: selectedCategory,
-              decoration: InputDecoration(
-                labelText: 'Category',
-                labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor),
-                ),
-              ),
-              items: categories
-                  .map((category) => DropdownMenuItem(
-                        value: category,
-                        child: Text(category),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedCategory = value;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            ListTile(
-              leading: Icon(Icons.calendar_today, color: Get.theme.primaryColor),
-              title: Text(
-                dueDate == null
-                    ? 'Set Due Date'
-                    : 'Due: ${dueDate!.day}/${dueDate!.month}/${dueDate!.year}',
-                style: TextStyle(color: Get.theme.primaryColor),
-              ),
-              trailing: dueDate != null
-                  ? IconButton(
-                      icon: Icon(Icons.clear, color: Get.theme.primaryColor),
-                      onPressed: () {
-                        setState(() {
-                          dueDate = null;
-                        });
-                      },
-                    )
-                  : null,
-              onTap: () async {
-                final date = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime.now().add(const Duration(days: 365)),
-                );
-                if (date != null) {
-                  setState(() {
-                    dueDate = date;
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () {
-                final now = DateTime.now();
-                final formatted =
-                    "${now.day}/${now.month}/${now.year} - ${now.hour}:${now.minute.toString().padLeft(2, '0')}";
-                final note = Note(
-                  title: titleController.text.trim(),
-                  content: contentController.text.trim(),
-                  dateTime: formatted,
-                  id: '',
-                  priority: selectedPriority,
-                  category: selectedCategory,
-                  dueDate: dueDate?.toString(),
-                );
-                Navigator.pop(context, note);
-              },
-              icon: Icon(Icons.save),
-              label: Text('Save Note'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size.fromHeight(48),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class EditNoteScreen extends StatefulWidget {
-  final Note note;
-  EditNoteScreen({required this.note});
-
-  @override
-  _EditNoteScreenState createState() => _EditNoteScreenState();
-}
-
-class _EditNoteScreenState extends State<EditNoteScreen> {
-  late TextEditingController titleController;
-  late TextEditingController contentController;
-  late String selectedPriority;
-  String? selectedCategory;
-  DateTime? dueDate;
-
-  final List<String> categories = [
-    'Assignment',
-    'Quiz',
-    'Project',
-    'Exam',
-    'Personal',
-    'Other'
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    titleController = TextEditingController(text: widget.note.title);
-    contentController = TextEditingController(text: widget.note.content);
-    selectedPriority = widget.note.priority ?? 'Medium';
-    selectedCategory = widget.note.category;
-    if (widget.note.dueDate != null) {
-      dueDate = DateTime.parse(widget.note.dueDate!);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text('Edit Note', style: TextStyle(fontWeight: FontWeight.bold)),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              Navigator.pop(context, null);
-            },
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: titleController,
-              style: TextStyle(color: Get.theme.primaryColor),
-              decoration: InputDecoration(
-                labelText: 'Title',
-                labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: contentController,
-              style: TextStyle(color: Get.theme.primaryColor),
-              maxLines: 8,
-              decoration: InputDecoration(
-                labelText: 'Note',
-                labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: selectedPriority,
-              decoration: InputDecoration(
-                labelText: 'Priority',
-                labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor),
-                ),
-              ),
-              items: ['High', 'Medium', 'Low']
-                  .map((priority) => DropdownMenuItem(
-                        value: priority,
-                        child: Text(priority),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() {
-                    selectedPriority = value;
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: selectedCategory,
-              decoration: InputDecoration(
-                labelText: 'Category',
-                labelStyle: TextStyle(color: Get.theme.primaryColor.withOpacity(0.7)),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Get.theme.primaryColor),
-                ),
-              ),
-              items: categories
-                  .map((category) => DropdownMenuItem(
-                        value: category,
-                        child: Text(category),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedCategory = value;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            ListTile(
-              leading: Icon(Icons.calendar_today, color: Get.theme.primaryColor),
-              title: Text(
-                dueDate == null
-                    ? 'Set Due Date'
-                    : 'Due: ${dueDate!.day}/${dueDate!.month}/${dueDate!.year}',
-                style: TextStyle(color: Get.theme.primaryColor),
-              ),
-              trailing: dueDate != null
-                  ? IconButton(
-                      icon: Icon(Icons.clear, color: Get.theme.primaryColor),
-                      onPressed: () {
-                        setState(() {
-                          dueDate = null;
-                        });
-                      },
-                    )
-                  : null,
-              onTap: () async {
-                final date = await showDatePicker(
-                  context: context,
-                  initialDate: dueDate ?? DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime.now().add(const Duration(days: 365)),
-                );
-                if (date != null) {
-                  setState(() {
-                    dueDate = date;
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () {
-                final now = DateTime.now();
-                final formatted =
-                    "${now.day}/${now.month}/${now.year} - ${now.hour}:${now.minute.toString().padLeft(2, '0')}";
-                final updatedNote = Note(
-                  id: widget.note.id,
-                  title: titleController.text.trim(),
-                  content: contentController.text.trim(),
-                  dateTime: formatted,
-                  isCompleted: widget.note.isCompleted,
-                  priority: selectedPriority,
-                  category: selectedCategory,
-                  dueDate: dueDate?.toString(),
-                );
-                Navigator.pop(context, updatedNote);
-              },
-              icon: Icon(Icons.save),
-              label: Text('Update Note'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size.fromHeight(48),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}

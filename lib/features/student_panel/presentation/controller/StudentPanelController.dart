@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../../../core/utils/Utils.dart';
 import '../../domain/usecases/GetStudentPanelProfile.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
+import 'dart:async';
 import '../../../../core/services/SharedPrefService.dart';
 
 class StudentDashboardController extends GetxController {

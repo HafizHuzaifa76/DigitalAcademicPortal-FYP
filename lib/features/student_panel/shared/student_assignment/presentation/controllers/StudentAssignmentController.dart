@@ -1,11 +1,17 @@
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import '../../../../../../core/utils/Utils.dart';
 import '../../domain/entities/StudentAssignment.dart';
 import '../../../student_courses/domain/entities/StudentCourse.dart';
 import '../../../student_courses/domain/usecases/FetchStudentCoursesUseCase.dart';
 import '../../domain/usecases/GetStudentAssignmentsUseCase.dart';
 import '../../domain/usecases/SubmitStudentAssignmentUseCase.dart';
 import '../../../../presentation/pages/StudentPanelDashboardPage.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
+import 'dart:io';
 
 class StudentAssignmentController extends GetxController {
   final GetStudentAssignmentsUseCase getAssignmentsUseCase;
@@ -109,4 +115,34 @@ class StudentAssignmentController extends GetxController {
     );
     isLoading.value = false;
   }
+
+    
+Future<void> downloadAndOpenFile(String url) async {
+  try {
+    EasyLoading.show(status: 'Opening File...');
+    String fileName = url.split('/').last;
+    var response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      var dir = await getTemporaryDirectory();
+
+      File file = File('${dir.path}/$fileName');
+      await file.writeAsBytes(response.bodyBytes);
+      OpenFile.open(file.path);
+    } else {
+      Utils().showErrorSnackBar(
+        'Error',
+        'Failed to download file. Status code: ${response.statusCode}');
+    }
+  } catch (e) {
+      Utils().showErrorSnackBar(
+        'Error',
+        'Error downloading or opening file: $e');
+  }
+
+  finally {
+    EasyLoading.dismiss();
+  }
+}
+
 }
