@@ -133,7 +133,7 @@ class StudentDrawer extends StatelessWidget {
                     fontSize: 18,
                     fontWeight: FontWeight.bold)),
             onTap: () {
-              Get.toNamed('/student_NoticeBoard');
+              Get.toNamed('/studentNoticeBoard');
             },
           ),
           const Divider(),

@@ -1,4 +1,3 @@
-
 import 'package:get/get.dart';
 import '../../data/repositories/StudentNoticeBoardRepositoryImpl.dart';
 import '../../data/datasources/StudentNoticeBoardRemoteDataSource.dart';
@@ -14,5 +13,4 @@ class StudentNoticeBoardBinding extends Bindings{
     Get.lazyPut(() => StudentNoticesUseCase(Get.find()));
     Get.lazyPut(() => StudentNoticeBoardController(allNoticesUseCase: Get.find()));
   }
-
 }

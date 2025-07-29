@@ -123,7 +123,7 @@ class MyApp extends StatelessWidget {
           appBarTheme: const AppBarTheme(
               backgroundColor: Color(0xFF145849),
               iconTheme:
-                  IconThemeData(color: Colors.white), // Set icon color to white
+              IconThemeData(color: Colors.white), // Set icon color to white
               centerTitle: true,
               titleTextStyle: TextStyle(
                   color: Colors.white,
@@ -132,21 +132,21 @@ class MyApp extends StatelessWidget {
                   fontWeight: FontWeight.bold)),
           elevatedButtonTheme: ElevatedButtonThemeData(
               style: ButtonStyle(
-            fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
-            textStyle:
+                fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
+                textStyle:
                 const WidgetStatePropertyAll(TextStyle(color: Colors.white)),
-            backgroundColor: const WidgetStatePropertyAll(Color(0xFF145849)),
-            shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15))),
-          )),
+                backgroundColor: const WidgetStatePropertyAll(Color(0xFF145849)),
+                shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15))),
+              )),
           outlinedButtonTheme: OutlinedButtonThemeData(
               style: ButtonStyle(
-            fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
-            side: WidgetStatePropertyAll(
-                BorderSide(color: Theme.of(context).primaryColor, width: 2)),
-            shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15))),
-          ))),
+                fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
+                side: WidgetStatePropertyAll(
+                    BorderSide(color: Theme.of(context).primaryColor, width: 2)),
+                shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15))),
+              ))),
       initialBinding: AuthBinding(),
       builder: EasyLoading.init(),
       getPages: [
@@ -183,9 +183,9 @@ class MyApp extends StatelessWidget {
         GetPage(
             name: '/semesterStudents',
             page: () => SemesterStudentsPage(
-                  deptName: Get.arguments['deptName'],
-                  semester: Get.arguments['semester'],
-                ),
+              deptName: Get.arguments['deptName'],
+              semester: Get.arguments['semester'],
+            ),
             binding: StudentBinding()),
         GetPage(
           name: '/allStudents',
@@ -384,19 +384,19 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
 
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
 
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
 
       default:
