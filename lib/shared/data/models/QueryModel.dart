@@ -44,6 +44,18 @@ class QueryModel extends Query {
     );
   }
 
+  QueryModel.fromEntity(Query entity) : super(
+    id: entity.id,
+    studentID: entity.studentID,
+    studentName: entity.studentName,
+    subject: entity.subject,
+    message: entity.message,
+    status: entity.status,
+    createdDate: entity.createdDate,
+    response: entity.response,
+    responseDate: entity.responseDate,
+  );
+
   QueryModel copyWith({
     String? id,
     String? studentID,
