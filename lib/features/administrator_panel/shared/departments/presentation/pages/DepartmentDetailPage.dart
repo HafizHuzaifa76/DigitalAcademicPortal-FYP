@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/departments/domain/entities/Department.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/departments/presentation/pages/MoreActions.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/departments/presentation/pages/SemesterPage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -296,7 +297,8 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                             child: _buildActionButton(
                               icon: Icons.more_horiz_rounded,
                               title: 'More Options',
-                              onTap: () {},
+                              onTap: () =>
+                                  Get.to(() => const MoreActionsPage()),
                               color: Get.theme.primaryColor,
                             ),
                           ),
