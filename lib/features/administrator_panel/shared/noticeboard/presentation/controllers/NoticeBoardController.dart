@@ -10,10 +10,14 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../../../core/services/CloudinaryService.dart';
 import '../../domain/usecases/AddNoticeUseCase.dart';
-import '../../domain/usecases/AllNoticeUseCase.dart';
+import '../../domain/usecases/AllNoticesUseCase.dart';
 import '../../domain/usecases/DeleteNoticeUseCase.dart';
 import '../../domain/usecases/EditNoticeUseCase.dart';
 import '../../../../../../shared/domain/entities/MainNotice.dart';
+import '../../domain/usecases/AddDepartmentNoticeUseCase.dart';
+import '../../domain/usecases/EditDepartmentNoticeUseCase.dart';
+import '../../domain/usecases/DeleteDepartmentNoticeUseCase.dart';
+import '../../domain/usecases/AllDepartmentNoticesUseCase.dart';
 
 class NoticeBoardController extends GetxController {
   final AddNoticeUseCase addNoticeUseCase;
@@ -40,9 +44,27 @@ class NoticeBoardController extends GetxController {
   var noticeList = <MainNotice>[].obs;
   var filteredNoticeList = <MainNotice>[].obs;
 
+  // Department-level notices
+  final AddDepartmentNoticeUseCase? addDepartmentNoticeUseCase =
+      Get.isRegistered<AddDepartmentNoticeUseCase>()
+          ? Get.find<AddDepartmentNoticeUseCase>()
+          : null;
+  final EditDepartmentNoticeUseCase? editDepartmentNoticeUseCase =
+      Get.isRegistered<EditDepartmentNoticeUseCase>()
+          ? Get.find<EditDepartmentNoticeUseCase>()
+          : null;
+  final DeleteDepartmentNoticeUseCase? deleteDepartmentNoticeUseCase =
+      Get.isRegistered<DeleteDepartmentNoticeUseCase>()
+          ? Get.find<DeleteDepartmentNoticeUseCase>()
+          : null;
+  final AllDepartmentNoticesUseCase? allDepartmentNoticesUseCase =
+      Get.isRegistered<AllDepartmentNoticesUseCase>()
+          ? Get.find<AllDepartmentNoticesUseCase>()
+          : null;
+
   @override
   void onInit() {
-    showAllNotices(); // Fetch the list of Notices when the controller is initialized
+    // Fetch the list of Notices when the controller is initialized
     scrollController.addListener(_adjustTitlePadding);
     super.onInit();
   }
@@ -96,7 +118,7 @@ class NoticeBoardController extends GetxController {
 
     String? fileUrl;
     if (imageFile.value != null) {
-      fileUrl = await uploadFileToCloudinary(imageFile.value!);
+      fileUrl = await uploadImageToCloudinary(imageFile.value!);
     }
 
     var newNotice = MainNotice(
@@ -117,8 +139,8 @@ class NoticeBoardController extends GetxController {
           print(message);
         }
       }, (right) async {
-        noticeList.add(newNotice);
-        filteredNoticeList.add(newNotice);
+        noticeList.insert(0, newNotice);
+        filteredNoticeList.insert(0, newNotice);
         await sendFCMMessage('university', 'Notice',
             'A new notice from university', 'studentNoticeBoard');
         Utils().showSuccessSnackBar('Success', 'Notice added successfully.');
@@ -203,5 +225,117 @@ class NoticeBoardController extends GetxController {
   void updateNoticeDetails(MainNotice notice) {
     noticeTitleController.text = notice.title;
     noticeDescriptionController.text = notice.description;
+  }
+
+  // Department-level notices
+  void filterDepartmentNotices(String query) {
+    if (query.isEmpty) {
+      filteredNoticeList.assignAll(noticeList);
+    } else {
+      filteredNoticeList.assignAll(
+        noticeList.where(
+          (notice) => notice.title.toLowerCase().contains(query.toLowerCase()),
+        ),
+      );
+    }
+  }
+
+  Future<void> showAllDepartmentNotices(String department) async {
+    if (allDepartmentNoticesUseCase == null) return;
+    isLoading(true);
+    final result = await allDepartmentNoticesUseCase!.execute(department);
+    result.fold((left) {
+      String message = left.failure.toString();
+      Utils().showErrorSnackBar('Error', message);
+    }, (notices) {
+      noticeList.assignAll(notices);
+      filteredNoticeList.assignAll(notices);
+    });
+    isLoading(false);
+  }
+
+  Future<void> addDepartmentNotice(String department) async {
+    if (addDepartmentNoticeUseCase == null) return;
+    EasyLoading.show(status: 'Adding...');
+    String? fileUrl;
+    if (imageFile.value != null) {
+      fileUrl = await uploadImageToCloudinary(imageFile.value!);
+    }
+    var newNotice = MainNotice(
+        id: DateTime.now().toIso8601String(),
+        title: noticeTitleController.text.trim(),
+        description: noticeDescriptionController.text.trim(),
+        datePosted: DateTime.now(),
+        imageUrl: fileUrl,
+        department: department);
+    try {
+      isLoading(true);
+      final result = await addDepartmentNoticeUseCase!
+          .execute({'department': department, 'notice': newNotice});
+      result.fold((left) {
+        String message = left.failure.toString();
+        Utils().showErrorSnackBar('Error', message);
+      }, (right) async {
+        noticeList.insert(0, newNotice);
+        filteredNoticeList.insert(0, newNotice);
+
+        final deptTopic = 'Dept-$department'.toLowerCase().replaceAll(" ", "-");
+        await sendFCMMessage(deptTopic, 'Notice',
+            'A new notice from Department', 'studentNoticeBoard');
+        Utils().showSuccessSnackBar('Success', 'Notice added successfully.');
+      });
+    } finally {
+      clearFields();
+      isLoading(false);
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> editDepartmentNotice(
+      String department, MainNotice updatedNotice) async {
+    if (editDepartmentNoticeUseCase == null) return;
+    EasyLoading.show(status: 'Updating...');
+    try {
+      isLoading(true);
+      final result = await editDepartmentNoticeUseCase!
+          .execute({'department': department, 'notice': updatedNotice});
+      result.fold((left) {
+        String message = left.failure.toString();
+        Utils().showErrorSnackBar('Error', message);
+      }, (right) {
+        int index = noticeList.indexWhere((n) => n.id == updatedNotice.id);
+        if (index != -1) {
+          noticeList[index] = updatedNotice;
+          filterDepartmentNotices('');
+        }
+        Utils().showSuccessSnackBar('Success', 'Notice updated successfully.');
+      });
+    } finally {
+      clearFields();
+      isLoading(false);
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> deleteDepartmentNotice(
+      String department, MainNotice notice) async {
+    if (deleteDepartmentNoticeUseCase == null) return;
+    EasyLoading.show(status: 'Deleting...');
+    try {
+      isLoading(true);
+      final result = await deleteDepartmentNoticeUseCase!
+          .execute({'department': department, 'notice': notice});
+      result.fold((left) {
+        String message = left.failure.toString();
+        Utils().showErrorSnackBar('Error', message);
+      }, (right) {
+        noticeList.remove(notice);
+        filteredNoticeList.remove(notice);
+        Utils().showSuccessSnackBar('Success', 'Notice deleted successfully.');
+      });
+    } finally {
+      isLoading(false);
+      EasyLoading.dismiss();
+    }
   }
 }

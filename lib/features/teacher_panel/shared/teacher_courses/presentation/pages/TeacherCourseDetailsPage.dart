@@ -8,17 +8,21 @@ import '../widgets/StudentQueriesTab.dart';
 
 class TeacherCourseDetailsPage extends StatefulWidget {
   final TeacherCourse course;
-  
+  final int? detailPage;
+
   const TeacherCourseDetailsPage({
     super.key,
     required this.course,
+    this.detailPage,
   });
 
   @override
-  State<TeacherCourseDetailsPage> createState() => _TeacherCourseDetailsPageState();
+  State<TeacherCourseDetailsPage> createState() =>
+      _TeacherCourseDetailsPageState();
 }
 
-class _TeacherCourseDetailsPageState extends State<TeacherCourseDetailsPage> with SingleTickerProviderStateMixin {
+class _TeacherCourseDetailsPageState extends State<TeacherCourseDetailsPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late TeacherCourseController controller;
 
@@ -27,7 +31,8 @@ class _TeacherCourseDetailsPageState extends State<TeacherCourseDetailsPage> wit
     super.initState();
     controller = Get.find<TeacherCourseController>();
     controller.selectedCourse = widget.course;
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(
+        length: 3, vsync: this, initialIndex: widget.detailPage ?? 0);
   }
 
   @override
@@ -96,7 +101,8 @@ class _TeacherCourseDetailsPageState extends State<TeacherCourseDetailsPage> wit
               children: [
                 const SizedBox(height: 10),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   margin: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
                     color: Colors.grey[100],
@@ -189,4 +195,4 @@ class _TeacherCourseDetailsPageState extends State<TeacherCourseDetailsPage> wit
       ),
     );
   }
-} 
+}

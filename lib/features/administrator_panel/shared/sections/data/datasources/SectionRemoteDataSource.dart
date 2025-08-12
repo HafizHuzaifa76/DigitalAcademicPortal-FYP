@@ -165,11 +165,9 @@ class SectionRemoteDataSourceImpl implements SectionRemoteDataSource {
           var data = sectionSnapshot.data()!;
           if (data.containsKey('teacherID')) {
             assignedTeachers[courseName] = data['teacherID'];
-          } else {
-            assignedTeachers[courseName] = null;
           }
         } else {
-          assignedTeachers[courseName] = null;
+          assignedTeachers[courseName] = 'Course Submitted';
         }
       }
     } catch (e) {

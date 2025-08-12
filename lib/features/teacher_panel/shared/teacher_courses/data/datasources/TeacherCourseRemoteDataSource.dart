@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../presentation/pages/TeacherDashboardPage.dart';
 import '../../domain/entities/TeacherCourse.dart';
@@ -11,10 +10,12 @@ abstract class TeacherCourseRemoteDataSource {
   Future<Map<String, String>> getStudentNames(
       List<dynamic> studentIds, String courseDepartment);
   Future<List<QueryModel>> getQueries(TeacherCourse course);
-  Future<void> respondToQuery(String queryId, String response, TeacherCourse course);
+  Future<void> respondToQuery(
+      String queryId, String response, TeacherCourse course);
 }
 
-class TeacherCourseRemoteDataSourceImpl implements TeacherCourseRemoteDataSource {
+class TeacherCourseRemoteDataSourceImpl
+    implements TeacherCourseRemoteDataSource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final teacher = TeacherDashboardPage.teacherProfile;
@@ -70,33 +71,36 @@ class TeacherCourseRemoteDataSourceImpl implements TeacherCourseRemoteDataSource
   Future<Map<String, String>> getStudentNames(
       List<dynamic> studentIds, String courseDepartment) async {
     try {
-      Map<String, String> studentNames = {};
+      if (studentIds.isEmpty) return {};
 
-      if (studentIds.isEmpty) return studentNames;
+      // Convert to a clean List<String>
+      final ids = studentIds.map((id) => id.toString()).toList();
 
-      // Get students from the department
       final studentsRef = _firestore
           .collection('departments')
           .doc(courseDepartment)
           .collection('students');
 
-      // Fetch each student by their ID
-      for (var studentId in studentIds) {
+      // Run all Firestore reads in parallel
+      final futures = ids.map((studentId) async {
         try {
           final studentDoc = await studentsRef.doc(studentId).get();
           if (studentDoc.exists) {
             final data = studentDoc.data() as Map<String, dynamic>;
             final studentName = data['studentName'] as String? ?? 'Unknown';
-            studentNames[studentId] = studentName;
+            return MapEntry(studentId, studentName);
           } else {
-            studentNames[studentId] = 'Student Not Found';
+            return MapEntry(studentId, 'Student Not Found');
           }
         } catch (e) {
-          studentNames[studentId] = 'Error Loading Student';
+          return MapEntry(studentId, 'Error Loading Student');
         }
-      }
+      });
 
-      return studentNames;
+      // Wait for all requests together
+      final results = await Future.wait(futures);
+
+      return Map<String, String>.fromEntries(results);
     } catch (e) {
       throw Exception('Failed to fetch student names: ${e.toString()}');
     }
@@ -108,12 +112,16 @@ class TeacherCourseRemoteDataSourceImpl implements TeacherCourseRemoteDataSource
       if (teacher == null) {
         throw Exception('Teacher profile data not found');
       }
-      
+
       final queriesSnapshot = await _firestore
-          .collection('departments').doc(course.courseDept)
-          .collection('teachers').doc(teacher!.teacherCNIC)
-          .collection('sections').doc('${course.courseSemester}-${course.courseSection}')
-          .collection('courses').doc(course.courseName)
+          .collection('departments')
+          .doc(course.courseDept)
+          .collection('semesters')
+          .doc(course.courseSemester)
+          .collection('courses')
+          .doc(course.courseName)
+          .collection('sections')
+          .doc(course.courseSection)
           .collection('queries')
           .get();
 
@@ -126,17 +134,22 @@ class TeacherCourseRemoteDataSourceImpl implements TeacherCourseRemoteDataSource
   }
 
   @override
-  Future<void> respondToQuery(String queryId, String response, TeacherCourse course) async {
+  Future<void> respondToQuery(
+      String queryId, String response, TeacherCourse course) async {
     try {
       if (teacher == null) {
         throw Exception('Teacher profile data not found');
       }
 
       final queriesRef = _firestore
-          .collection('departments').doc(course.courseDept)
-          .collection('teachers').doc(teacher!.teacherCNIC)
-          .collection('sections').doc('${course.courseSemester}-${course.courseSection}')
-          .collection('courses').doc(course.courseName)
+          .collection('departments')
+          .doc(course.courseDept)
+          .collection('semesters')
+          .doc(course.courseSemester)
+          .collection('courses')
+          .doc(course.courseName)
+          .collection('sections')
+          .doc(course.courseSection)
           .collection('queries');
 
       await queriesRef.doc(queryId).update({
@@ -144,7 +157,6 @@ class TeacherCourseRemoteDataSourceImpl implements TeacherCourseRemoteDataSource
         'responseDate': DateTime.now().toIso8601String(),
         'status': 'responded',
       });
-
     } catch (e) {
       throw Exception('Failed to respond to query: ${e.toString()}');
     }

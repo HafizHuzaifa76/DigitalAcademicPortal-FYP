@@ -6,16 +6,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../domain/usecases/LoginUsecase.dart';
+import '../../domain/usecases/ForgetPasswordUseCase.dart';
 
 class AuthController extends GetxController {
   final LoginUseCase loginUsecase;
+  final ForgetPasswordUseCase forgetPasswordUsecase;
 
-  AuthController({required this.loginUsecase});
+  AuthController(
+      {required this.loginUsecase, required this.forgetPasswordUsecase});
 
   var isLoading = false.obs;
+  var isForgetPasswordLoading = false.obs;
   var obscureText = true.obs;
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
+  var forgetPasswordEmailController = TextEditingController();
 
   Future<void> login() async {
     try {
@@ -41,6 +46,32 @@ class AuthController extends GetxController {
       }
     } finally {
       isLoading(false);
+    }
+  }
+
+  Future<void> forgetPassword() async {
+    try {
+      isForgetPasswordLoading(true);
+      final result = await forgetPasswordUsecase
+          .execute(forgetPasswordEmailController.text);
+
+      result.fold((left) {
+        String message = left.failure.toString();
+        Utils().showErrorSnackBar(
+          'Password Reset Error',
+          message,
+        );
+      }, (successMessage) {
+        Utils().showSuccessSnackBar('Password Reset Email', 'Email sent successfully!');
+        forgetPasswordEmailController.clear();
+        Get.back(); // Go back to login page
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    } finally {
+      isForgetPasswordLoading(false);
     }
   }
 }

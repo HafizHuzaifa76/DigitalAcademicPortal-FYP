@@ -1,26 +1,36 @@
 import '../../domain/entities/MainNotice.dart';
 
-class NoticeModel extends MainNotice{
-  NoticeModel({required super.id, required super.title, required super.description, required super.datePosted, String? imageUrl});
+class NoticeModel extends MainNotice {
+  NoticeModel(
+      {required super.id,
+      required super.title,
+      required super.description,
+      required super.datePosted,
+      super.imageUrl,
+      super.department});
 
-  factory NoticeModel.fromNotice(MainNotice notice){
-    return NoticeModel(
+  factory NoticeModel.fromNotice(MainNotice notice) {
+    var model = NoticeModel(
       id: notice.id,
       title: notice.title,
       description: notice.description,
       datePosted: notice.datePosted,
       imageUrl: notice.imageUrl,
+      department: notice.department,
     );
+    return model;
   }
 
   // Convert a Notice object to a Map (for Firestore or JSON storage)
   Map<String, dynamic> toMap() {
+    print(imageUrl);
     return {
       'id': id,
       'title': title,
       'description': description,
       'datePosted': datePosted.toIso8601String(),
       'imageUrl': imageUrl,
+      'department': department
     };
   }
 
@@ -32,6 +42,7 @@ class NoticeModel extends MainNotice{
       description: map['description'] as String,
       datePosted: DateTime.parse(map['datePosted'] as String),
       imageUrl: map['imageUrl'] as String?,
+      department: map['department'] as String?,
     );
   }
 }

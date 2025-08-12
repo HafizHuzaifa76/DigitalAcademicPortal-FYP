@@ -57,7 +57,7 @@ class _StudentAttendancePageState extends State<StudentAttendancePage> {
                     value: presentPercentage,
                     title: '${(presentPercentage * 100).toStringAsFixed(1)}%',
                     color: Colors.green,
-                    radius: 80,
+                    radius: 60,
                     titleStyle: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -66,9 +66,10 @@ class _StudentAttendancePageState extends State<StudentAttendancePage> {
                   ),
                   PieChartSectionData(
                     value: 1 - presentPercentage,
-                    title: '${((1 - presentPercentage) * 100).toStringAsFixed(1)}%',
+                    title:
+                        '${((1 - presentPercentage) * 100).toStringAsFixed(1)}%',
                     color: Colors.red,
-                    radius: 80,
+                    radius: (1 - presentPercentage) * 100 == 100 ? 60 : 80,
                     titleStyle: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -77,7 +78,7 @@ class _StudentAttendancePageState extends State<StudentAttendancePage> {
                   ),
                 ],
                 sectionsSpace: 2,
-                centerSpaceRadius: 40,
+                centerSpaceRadius: 30,
                 startDegreeOffset: -90,
               ),
             ),
@@ -150,7 +151,8 @@ class _StudentAttendancePageState extends State<StudentAttendancePage> {
     );
   }
 
-  Widget _buildStatItem(String label, String value, Color color, IconData icon) {
+  Widget _buildStatItem(
+      String label, String value, Color color, IconData icon) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Column(
@@ -214,9 +216,12 @@ class _StudentAttendancePageState extends State<StudentAttendancePage> {
           );
         }
 
-        final attendancePercentage = controller.calculateAttendancePercentage() / 100;
-        final presentCount = controller.attendanceList.where((a) => a.isPresent).length;
-        final absentCount = controller.attendanceList.where((a) => !a.isPresent).length;
+        final attendancePercentage =
+            controller.calculateAttendancePercentage() / 100;
+        final presentCount =
+            controller.attendanceList.where((a) => a.isPresent).length;
+        final absentCount =
+            controller.attendanceList.where((a) => !a.isPresent).length;
 
         return SingleChildScrollView(
           child: Column(
@@ -262,7 +267,8 @@ class _StudentAttendancePageState extends State<StudentAttendancePage> {
                     }
                   },
                   underline: Container(),
-                  icon: Icon(Icons.arrow_drop_down, color: Get.theme.primaryColor),
+                  icon: Icon(Icons.arrow_drop_down,
+                      color: Get.theme.primaryColor),
                 ),
               ),
               // Attendance Stats

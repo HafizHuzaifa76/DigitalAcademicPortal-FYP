@@ -24,6 +24,7 @@ class _MainNoticeBoardPageState extends State<MainNoticeBoardPage> {
     super.initState();
     try {
       controller = Get.find<NoticeBoardController>();
+      controller?.showAllNotices();
     } catch (e) {
       print('Error finding NoticeBoardController: $e');
     }

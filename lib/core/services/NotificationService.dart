@@ -83,10 +83,6 @@ Future<String> getAccessToken() async {
           client);
   // Close the HTTP client
   client.close();
-
-  print('accessToken');
-  print(credentials.accessToken.data);
-
   return credentials.accessToken.data;
 }
 

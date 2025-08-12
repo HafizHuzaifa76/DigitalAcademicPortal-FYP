@@ -1,4 +1,4 @@
-import 'package:digital_academic_portal/features/student_panel/presentation/pages/StudentPanelDashboardPage.dart';
+import 'package:digital_academic_portal/features/student_panel/presentation/pages/StudentDashboardPage.dart';
 import 'package:digital_academic_portal/shared/domain/entities/Student.dart';
 import 'package:get/get.dart';
 import '../../../../core/utils/Utils.dart';
@@ -34,7 +34,7 @@ class StudentDashboardController extends GetxController {
       },
       (studentData) async {
         student.value = studentData;
-        StudentPortalDashboardPage.studentProfile = studentData;
+        StudentDashboardPage.studentProfile = studentData;
         print(studentData.studentCNIC);
 
         final sectionTopic =

@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:digital_academic_portal/core/utils/Utils.dart';
@@ -87,11 +86,16 @@ class StudentController extends GetxController {
     } else {
       var lowerCaseQuery = query.toLowerCase();
       var filteredResults = studentList.where((student) {
-        return student.studentName.toLowerCase().startsWith(lowerCaseQuery) || student.studentName.toLowerCase().contains(' $lowerCaseQuery') ||
-            student.studentRollNo.toLowerCase().startsWith(lowerCaseQuery) || student.studentRollNo.toLowerCase().contains('-$lowerCaseQuery') ||
-            student.studentCNIC.toLowerCase().startsWith(lowerCaseQuery) || student.studentSection.toLowerCase().startsWith(lowerCaseQuery) ||
-            student.studentEmail.toLowerCase().startsWith(lowerCaseQuery) || student.studentContactNo.toLowerCase().startsWith(lowerCaseQuery) ||
-            student.fatherName.toLowerCase().startsWith(lowerCaseQuery) || student.fatherName.toLowerCase().contains(' $lowerCaseQuery');
+        return student.studentName.toLowerCase().startsWith(lowerCaseQuery) ||
+            student.studentName.toLowerCase().contains(' $lowerCaseQuery') ||
+            student.studentRollNo.toLowerCase().startsWith(lowerCaseQuery) ||
+            student.studentRollNo.toLowerCase().contains('-$lowerCaseQuery') ||
+            student.studentCNIC.toLowerCase().startsWith(lowerCaseQuery) ||
+            student.studentSection.toLowerCase().startsWith(lowerCaseQuery) ||
+            student.studentEmail.toLowerCase().startsWith(lowerCaseQuery) ||
+            student.studentContactNo.toLowerCase().startsWith(lowerCaseQuery) ||
+            student.fatherName.toLowerCase().startsWith(lowerCaseQuery) ||
+            student.fatherName.toLowerCase().contains(' $lowerCaseQuery');
       }).toList();
       filteredStudentList.assignAll(filteredResults);
     }
@@ -103,14 +107,13 @@ class StudentController extends GetxController {
 
     result.fold((left) {
       String message = left.failure.toString();
-      Get.snackbar(
-          'Error', message,
+      Get.snackbar('Error', message,
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white,
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-      );
+          icon: const Icon(CupertinoIcons.clear_circled_solid,
+              color: Colors.white));
     }, (students) {
       studentList.assignAll(students);
       filteredStudentList.assignAll(students); // Show all students initially
@@ -122,19 +125,18 @@ class StudentController extends GetxController {
 
   Future<void> showSemesterStudents(String semester) async {
     isLoading(true);
-    final result = await semesterStudentsUseCase.execute(SemesterParams(deptName, semester));
+    final result = await semesterStudentsUseCase
+        .execute(SemesterParams(deptName, semester));
 
     result.fold((left) {
       String message = left.failure.toString();
-      Get.snackbar(
-          'Error', message,
+      Get.snackbar('Error', message,
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white,
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-      );
-
+          icon: const Icon(CupertinoIcons.clear_circled_solid,
+              color: Colors.white));
     }, (students) {
       studentList.assignAll(students);
       filteredStudentList.assignAll(students);
@@ -173,30 +175,25 @@ class StudentController extends GetxController {
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
+        Get.snackbar('Error', message,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
             colorText: Colors.white,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+            icon: const Icon(CupertinoIcons.clear_circled_solid,
+                color: Colors.white));
       }, (right) {
-        Get.snackbar(
-            'Success',
-            'Student added successfully...',
+        Get.snackbar('Success', 'Student added successfully...',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Get.theme.primaryColor,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white)
-        );
+            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill,
+                color: Colors.white));
 
         clearAllControllers();
         showDepartmentStudents();
-
       });
-
     } finally {
       isLoading(false);
       EasyLoading.dismiss();
@@ -232,70 +229,63 @@ class StudentController extends GetxController {
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
+        Get.snackbar('Error', message,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
             colorText: Colors.white,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+            icon: const Icon(CupertinoIcons.clear_circled_solid,
+                color: Colors.white));
       }, (right) {
-        Get.snackbar(
-            'Success',
-            'Student added successfully...',
+        Get.snackbar('Success', 'Student added successfully...',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Get.theme.primaryColor,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white)
-        );
+            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill,
+                color: Colors.white));
 
         clearAllControllers();
         showDepartmentStudents();
-
       });
-
     } finally {
       isLoading(false);
       EasyLoading.dismiss();
     }
   }
 
-  Future<void> addStudentList(List<Student> studentsList, bool isNewStudent) async {
+  Future<void> addStudentList(
+      List<Student> studentsList, bool isNewStudent) async {
     try {
       isLoading(true);
-      EasyLoading.show(status: 'Adding Students\nIt take some time\nPlease wait...');
+      EasyLoading.show(
+          status: 'Adding Students\nIt take some time\nPlease wait...');
 
-      final result = await addStudentListUseCase.execute(StudentListParams(studentsList, isNewStudent));
+      final result = await addStudentListUseCase
+          .execute(StudentListParams(studentsList, isNewStudent));
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
+        Get.snackbar('Error', message,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
             colorText: Colors.white,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+            icon: const Icon(CupertinoIcons.clear_circled_solid,
+                color: Colors.white));
       }, (right) {
-        Get.snackbar(
-            'Success',
-            'Students added successfully...',
+        Get.snackbar('Success', 'Students added successfully...',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Get.theme.primaryColor,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white)
-        );
+            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill,
+                color: Colors.white));
 
         clearAllControllers();
         showDepartmentStudents();
         Get.back();
-
       });
-
     } finally {
       isLoading(false);
       EasyLoading.dismiss();
@@ -304,7 +294,6 @@ class StudentController extends GetxController {
   }
 
   Future<void> editStudent(Student newStudent) async {
-
     try {
       isLoading(true);
       EasyLoading.show(status: 'Updating...');
@@ -312,28 +301,26 @@ class StudentController extends GetxController {
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
+        Get.snackbar('Error', message,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
             colorText: Colors.white,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+            icon: const Icon(CupertinoIcons.clear_circled_solid,
+                color: Colors.white));
       }, (right) {
-        Get.snackbar(
-            'Success',
-            'Student updated successfully...',
+        Get.snackbar('Success', 'Student updated successfully...',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Get.theme.primaryColor,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
-        );
+            icon: const Icon(
+              CupertinoIcons.checkmark_alt_circle_fill,
+              color: Colors.white,
+            ));
         // Get.to(HomeScreen());
         clearAllControllers();
       });
-
     } finally {
       isLoading(false);
       EasyLoading.dismiss();
@@ -341,34 +328,31 @@ class StudentController extends GetxController {
   }
 
   Future<void> deleteStudent(Student student) async {
-
     try {
       isLoading(true);
       final result = await deleteStudentUseCase.execute(student);
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
+        Get.snackbar('Error', message,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
             colorText: Colors.white,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+            icon: const Icon(CupertinoIcons.clear_circled_solid,
+                color: Colors.white));
       }, (right) {
-        Get.snackbar(
-            'Success',
-            'Student deleted successfully...',
+        Get.snackbar('Success', 'Student deleted successfully...',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Get.theme.primaryColor,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
-        );
+            icon: const Icon(
+              CupertinoIcons.checkmark_alt_circle_fill,
+              color: Colors.white,
+            ));
         // Get.to(HomeScreen());
       });
-
     } finally {
       isLoading(false);
     }
@@ -380,15 +364,13 @@ class StudentController extends GetxController {
 
     result.fold((left) {
       String message = left.failure.toString();
-      Get.snackbar(
-          'Error', message,
+      Get.snackbar('Error', message,
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white,
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-      );
-
+          icon: const Icon(CupertinoIcons.clear_circled_solid,
+              color: Colors.white));
     }, (students) {
       departmentWiseStudents.value = students;
       filteredStudentList.assignAll(students.values.expand((list) => list));
@@ -396,6 +378,16 @@ class StudentController extends GetxController {
     });
 
     isLoading(false);
+  }
+
+  void showSectionStudents(String semester, String section) async {
+    isLoading.value = true;
+    // Fetch students for the semester and filter by section
+    await showSemesterStudents(semester); // existing method
+    filteredStudentList.value = studentList
+        .where((student) => student.studentSection == section)
+        .toList();
+    isLoading.value = false;
   }
 
   void setControllerValues(Student student) {
@@ -410,21 +402,21 @@ class StudentController extends GetxController {
   Future<void> setSectionLimit(String semester, int sectionLimit) async {
     try {
       isLoading(true);
-      final result = await setSectionLimitUseCase.execute(SectionLimitParams(deptName: deptName, semester: semester, sectionLimit: sectionLimit));
+      final result = await setSectionLimitUseCase.execute(SectionLimitParams(
+          deptName: deptName, semester: semester, sectionLimit: sectionLimit));
 
       result.fold((left) {
         String message = left.failure.toString();
         Utils().showErrorSnackBar('Error', message);
-
       }, (right) {
-        Utils().showSuccessSnackBar('Success', 'Limit set successfully...\nNow you can add students');
+        Utils().showSuccessSnackBar(
+            'Success', 'Limit set successfully...\nNow you can add students');
 
-        if(semesterList.isNotEmpty){
+        if (semesterList.isNotEmpty) {
           semesterList.first.sectionLimit = sectionLimit;
         }
         Get.back();
       });
-
     } finally {
       isLoading(false);
       Get.back();
@@ -498,18 +490,24 @@ class StudentController extends GetxController {
         students.add(Student(
           studentRollNo: rollNo,
           studentName: row[headerIndexMap["Name"]!]?.value.toString() ?? "",
-          fatherName: row[headerIndexMap["Father Name"]!]?.value.toString() ?? "",
+          fatherName:
+              row[headerIndexMap["Father Name"]!]?.value.toString() ?? "",
           studentCNIC: row[headerIndexMap["CNIC"]!]?.value.toString() ?? "",
-          studentContactNo: row[headerIndexMap["Contact No"]!]?.value.toString() ?? "",
+          studentContactNo:
+              row[headerIndexMap["Contact No"]!]?.value.toString() ?? "",
           studentEmail: row[headerIndexMap["Email"]!]?.value.toString() ?? "",
           studentGender: row[headerIndexMap["Gender"]!]?.value.toString() ?? "",
-          studentAddress: row[headerIndexMap["Address"]!]?.value.toString() ?? "",
+          studentAddress:
+              row[headerIndexMap["Address"]!]?.value.toString() ?? "",
           studentDepartment: deptName,
           studentSemester: semester,
           studentShift: row[headerIndexMap["Shift"]!]?.value.toString() ?? "",
           studentAcademicYear: '$year - ${int.parse(year) + 4}',
-          studentSection: row[headerIndexMap["Section"]!]?.value.toString() ?? "",
-          studentCGPA: double.tryParse(row[headerIndexMap["CGPA"]!]?.value.toString() ?? "0") ?? 0.0,
+          studentSection:
+              row[headerIndexMap["Section"]!]?.value.toString() ?? "",
+          studentCGPA: double.tryParse(
+                  row[headerIndexMap["CGPA"]!]?.value.toString() ?? "0") ??
+              0.0,
         ));
       }
 
@@ -571,21 +569,32 @@ class StudentController extends GetxController {
       }
 
       int morningIndex = 1, eveningIndex = 201;
-      List<Student> morningStudentsList = studentList.where((student) => student.studentShift.toLowerCase() == 'morning').toList();
-      List<Student> eveningStudentsList = studentList.where((student) => student.studentShift.toLowerCase() == 'evening').toList();
+      List<Student> morningStudentsList = studentList
+          .where((student) => student.studentShift.toLowerCase() == 'morning')
+          .toList();
+      List<Student> eveningStudentsList = studentList
+          .where((student) => student.studentShift.toLowerCase() == 'evening')
+          .toList();
 
       // Iterate through rows (skip header row)
       for (int i = 1; i < sheet.rows.length; i++) {
         final row = sheet.rows[i];
 
         String currentRoll;
-        row[headerIndexMap["Shift"]!]?.value.toString().toLowerCase() == 'morning' ? {
-          currentRoll = (morningStudentsList.length + morningIndex).toString().padLeft(4, '0'),
-          morningIndex++
-        } : {
-          currentRoll = (eveningStudentsList.length + eveningIndex).toString().padLeft(4, '0'),
-          eveningIndex++
-        };
+        row[headerIndexMap["Shift"]!]?.value.toString().toLowerCase() ==
+                'morning'
+            ? {
+                currentRoll = (morningStudentsList.length + morningIndex)
+                    .toString()
+                    .padLeft(4, '0'),
+                morningIndex++
+              }
+            : {
+                currentRoll = (eveningStudentsList.length + eveningIndex)
+                    .toString()
+                    .padLeft(4, '0'),
+                eveningIndex++
+              };
 
         String rollNo = '$currentRoll-$courseCode-${DateTime.now().year}';
         if (kDebugMode) {
@@ -595,16 +604,20 @@ class StudentController extends GetxController {
         students.add(Student(
           studentRollNo: rollNo,
           studentName: row[headerIndexMap["Name"]!]?.value.toString() ?? "",
-          fatherName: row[headerIndexMap["Father Name"]!]?.value.toString() ?? "",
+          fatherName:
+              row[headerIndexMap["Father Name"]!]?.value.toString() ?? "",
           studentCNIC: row[headerIndexMap["CNIC"]!]?.value.toString() ?? "",
-          studentContactNo: row[headerIndexMap["Contact No"]!]?.value.toString() ?? "",
+          studentContactNo:
+              row[headerIndexMap["Contact No"]!]?.value.toString() ?? "",
           studentEmail: row[headerIndexMap["Email"]!]?.value.toString() ?? "",
           studentGender: row[headerIndexMap["Gender"]!]?.value.toString() ?? "",
-          studentAddress: row[headerIndexMap["Address"]!]?.value.toString() ?? "",
+          studentAddress:
+              row[headerIndexMap["Address"]!]?.value.toString() ?? "",
           studentShift: row[headerIndexMap["Shift"]!]?.value.toString() ?? "",
           studentDepartment: deptName,
           studentSemester: 'SEM-I',
-          studentAcademicYear: "${DateTime.now().year} - ${DateTime.now().year + 4}",
+          studentAcademicYear:
+              "${DateTime.now().year} - ${DateTime.now().year + 4}",
           studentSection: "",
           studentCGPA: 0.0,
         ));

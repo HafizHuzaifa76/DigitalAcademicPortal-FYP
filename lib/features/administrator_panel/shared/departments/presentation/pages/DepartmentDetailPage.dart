@@ -284,7 +284,10 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                             child: _buildActionButton(
                               icon: FontAwesomeIcons.bullhorn,
                               title: 'Notice Board',
-                              onTap: () => Get.toNamed('/teachers'),
+                              onTap: () => Get.toNamed('/departmentNoticeBoard',
+                                  arguments: {
+                                    'department': dept.departmentName
+                                  }),
                               color: Get.theme.primaryColor,
                             ),
                           ),
@@ -518,8 +521,12 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                ...controller.semestersList
-                    .map((semester) => Container(
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: controller.semestersList.length,
+                      itemBuilder: (context, index) {
+                        final semester = controller.semestersList[index];
+                        return Container(
                           margin: const EdgeInsets.only(bottom: 12),
                           child: Material(
                             color: Colors.transparent,
@@ -528,7 +535,8 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                               onTap: () {
                                 Get.off(SemesterPage(
                                     department: dept,
-                                    semester: semester.semesterName));
+                                    semester: semester,
+                                    numOfTeachers: dept.totalTeachers));
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(16),
@@ -565,8 +573,9 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                               ),
                             ),
                           ),
-                        ))
-                    .toList(),
+                        );
+                      }),
+                ),
                 const SizedBox(height: 16),
               ],
             ),

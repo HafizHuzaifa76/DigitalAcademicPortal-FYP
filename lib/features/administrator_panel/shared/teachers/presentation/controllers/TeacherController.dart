@@ -107,13 +107,13 @@ class TeacherController extends GetxController{
     }
   }
 
-  Future<void> editTeacher(String teacherID) async {
+  Future<void> editTeacher(Teacher teacher) async {
 
     var newTeacher = Teacher(
       teacherName: teacherNameController.text,
-      teacherDept: 'dept',
-      teacherEmail: teacherEmailController.text,
-      teacherCNIC: teacherCNICController.text,
+      teacherDept: teacher.teacherDept,
+      teacherEmail: teacher.teacherEmail,
+      teacherCNIC: teacher.teacherCNIC,
       teacherContact: teacherContactController.text,
       teacherAddress: teacherAddressController.text,
       teacherType: selectedType.value,
@@ -199,6 +199,7 @@ class TeacherController extends GetxController{
 
       isLoading(false);
   }
+ 
   Future<List<Teacher>> fetchTeachersFromExcel(String deptName) async {
     try {
       // Open file picker to select an Excel file
@@ -283,5 +284,13 @@ class TeacherController extends GetxController{
     teacherAddressController.clear();
     selectedGender.value = '';
     selectedType.value = '';
+  }
+
+  void editControllers(Teacher teacher) {
+    teacherNameController.text = teacher.teacherName;
+    teacherContactController.text = teacher.teacherContact;
+    teacherAddressController.text = teacher.teacherAddress;
+    selectedGender.value = teacher.teacherGender;
+    selectedType.value = teacher.teacherType;
   }
 }

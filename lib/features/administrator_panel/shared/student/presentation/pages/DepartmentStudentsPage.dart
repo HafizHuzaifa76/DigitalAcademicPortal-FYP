@@ -49,7 +49,7 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
             if (currentSemester.totalCourses > currentSemester.numOfCourses ||
                 currentSemester.totalCourses == 0) {
               Utils().showErrorSnackBar('ERROR',
-                  'First Add All Courses of \\${currentSemester.semesterName}');
+                  'First Add All Courses of ${currentSemester.semesterName}');
             } else {
               addStudentOptionsBottomSheet(context);
               // addStudentBottomSheet(context);
@@ -83,7 +83,7 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                         fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 5),
-                  Text('Department of \\${widget.deptName}',
+                  Text('Department of ${widget.deptName}',
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14.0,
@@ -299,7 +299,7 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            'Name: \\${student.studentName}\\nFather: \\${student.fatherName}',
+                                            'Name: ${student.studentName}\nFather: ${student.fatherName}',
                                             style: TextStyle(
                                               color: Colors.grey[600],
                                               fontSize: 14,
@@ -333,34 +333,99 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
   Future addStudentBottomSheet(BuildContext context) {
     return showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Ensures that the bottom sheet is full height
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32.0)),
       ),
       builder: (BuildContext context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context)
-                .viewInsets
-                .bottom, // Handles soft keyboard
-            left: 16.0,
-            right: 16.0,
-            top: 16.0,
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.85,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(32.0)),
           ),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.6,
-            child: Column(
-              children: [
-                Text(
-                  'Add Student',
-                  style: TextStyle(
-                      fontFamily: 'Ubuntu',
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor),
+          child: Column(
+            children: [
+              // Modern handle bar
+              Container(
+                margin: const EdgeInsets.only(top: 12),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
                 ),
-                const SizedBox(height: 16),
-                Expanded(
+              ),
+
+              // Header with gradient background
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Theme.of(context).primaryColor,
+                      const Color(0xFF1B7660),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(32.0)),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.person_add_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Add New Student',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Ubuntu',
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Fill in the student details below',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: 14,
+                              fontFamily: 'Ubuntu',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Form content
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                    left: 16.0,
+                    right: 16.0,
+                  ),
                   child: Scrollbar(
                     thumbVisibility: true,
                     radius: const Radius.circular(30),
@@ -369,28 +434,19 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                       padding: const EdgeInsets.only(right: 13.0),
                       child: SingleChildScrollView(
                         child: Form(
-                          key:
-                              addStudentKey, // Assuming you have defined a GlobalKey<FormState>
+                          key: addStudentKey,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              TextFormField(
+                              const SizedBox(height: 24),
+
+                              // Student Name Field
+                              _buildModernTextField(
                                 controller: controller.studentNameController,
+                                label: 'Student Name',
+                                icon: Icons.person_outline,
                                 keyboardType: TextInputType.name,
                                 textCapitalization: TextCapitalization.words,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  labelText: 'Student Name',
-                                  hintText:
-                                      'Enter the full name of the student',
-                                ),
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Student\'s name is required.';
@@ -398,23 +454,14 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 10),
-                              TextFormField(
+
+                              // Father's Name Field
+                              _buildModernTextField(
                                 controller: controller.fatherNameController,
+                                label: 'Father\'s Name',
+                                icon: Icons.person_outline,
                                 keyboardType: TextInputType.name,
                                 textCapitalization: TextCapitalization.words,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  labelText: 'Father\'s Name',
-                                  hintText: 'Enter the father\'s full name',
-                                ),
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Father\'s name is required.';
@@ -422,23 +469,13 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 10),
-                              TextFormField(
+
+                              // CNIC Field
+                              _buildModernTextField(
                                 controller: controller.studentCNICController,
+                                label: 'CNIC',
+                                icon: Icons.credit_card_outlined,
                                 keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  labelText: 'CNIC',
-                                  hintText:
-                                      'Enter the student\'s CNIC number (without dashes)',
-                                ),
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'CNIC is required.';
@@ -446,24 +483,14 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 10),
-                              TextFormField(
+
+                              // Contact Number Field
+                              _buildModernTextField(
                                 controller:
                                     controller.studentContactNoController,
+                                label: 'Contact Number',
+                                icon: Icons.phone_outlined,
                                 keyboardType: TextInputType.phone,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  labelText: 'Contact Number',
-                                  hintText:
-                                      'Enter a valid phone number (e.g., 03XX-XXXXXXX)',
-                                ),
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'A valid contact number is required.';
@@ -471,23 +498,13 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 10),
-                              TextFormField(
+
+                              // Email Field
+                              _buildModernTextField(
                                 controller: controller.studentEmailController,
+                                label: 'Email',
+                                icon: Icons.email_outlined,
                                 keyboardType: TextInputType.emailAddress,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  labelText: 'Email',
-                                  hintText:
-                                      'Enter the student\'s email address',
-                                ),
                                 validator: (value) {
                                   if (value!.isEmpty || !value.contains('@')) {
                                     return 'A valid email is required.';
@@ -495,25 +512,14 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 10),
 
-                              // Dropdown for Gender
-                              DropdownButtonFormField<String>(
+                              // Gender Dropdown
+                              _buildModernDropdown(
                                 value: controller.selectedGender.isEmpty
                                     ? null
                                     : controller.selectedGender,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  labelText: 'Gender',
-                                  hintText: 'Select the student\'s gender',
-                                ),
+                                label: 'Gender',
+                                icon: Icons.person_outline,
                                 items: ['Male', 'Female'].map((String gender) {
                                   return DropdownMenuItem<String>(
                                     value: gender,
@@ -530,26 +536,14 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 10),
 
-                              // Dropdown for Shift
-                              DropdownButtonFormField<String>(
+                              // Shift Dropdown
+                              _buildModernDropdown(
                                 value: controller.selectedShift.isEmpty
                                     ? null
                                     : controller.selectedShift,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  labelText: 'Shift',
-                                  hintText:
-                                      'Select the shift (Morning or Evening)',
-                                ),
+                                label: 'Shift',
+                                icon: Icons.schedule_outlined,
                                 items:
                                     ['Morning', 'Evening'].map((String shift) {
                                   return DropdownMenuItem<String>(
@@ -567,25 +561,14 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 10),
 
-                              // Dropdown for Academic Year with dynamic last 4 years
-                              DropdownButtonFormField<String>(
+                              // Academic Year Dropdown
+                              _buildModernDropdown(
                                 value: controller.selectedYear.isEmpty
                                     ? null
                                     : controller.selectedYear,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  labelText: 'Academic Year',
-                                  hintText: 'Select the academic year',
-                                ),
+                                label: 'Academic Year',
+                                icon: Icons.calendar_today_outlined,
                                 items: List.generate(4, (index) {
                                   int year = DateTime.now().year - index;
                                   return DropdownMenuItem<String>(
@@ -603,22 +586,14 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 10),
-                              TextFormField(
+
+                              // Address Field
+                              _buildModernTextField(
                                 controller: controller.studentAddressController,
+                                label: 'Address',
+                                icon: Icons.location_on_outlined,
                                 keyboardType: TextInputType.streetAddress,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  labelText: 'Address',
-                                  hintText: 'Enter the student\'s home address',
-                                ),
+                                maxLines: 3,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Address is required.';
@@ -626,6 +601,8 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                                   return null;
                                 },
                               ),
+
+                              const SizedBox(height: 24),
                             ],
                           ),
                         ),
@@ -633,33 +610,152 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+              ),
 
-                // Save button
-                ElevatedButton(
-                  style: const ButtonStyle(
-                      fixedSize:
-                          WidgetStatePropertyAll(Size(double.maxFinite, 45))),
-                  onPressed: () {
-                    if (addStudentKey.currentState!.validate()) {
-                      controller.addStudent('BS${widget.deptCode}');
-                      Get.back(); // Closes the bottom sheet after saving
-                    }
-                  },
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(
+              // Modern save button
+              Container(
+                padding: const EdgeInsets.all(24),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (addStudentKey.currentState!.validate()) {
+                        controller.addStudent('BS${widget.deptCode}');
+                        Get.back();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      shadowColor:
+                          Theme.of(context).primaryColor.withOpacity(0.3),
+                    ),
+                    child: const Text(
+                      'Save Student',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                         fontFamily: 'Ubuntu',
-                        fontSize: 20,
-                        color: Colors.white),
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 10),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
+    );
+  }
+
+// Helper method for modern text fields
+  Widget _buildModernTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    TextInputType? keyboardType,
+    TextCapitalization? textCapitalization,
+    int? maxLines,
+    String? Function(String?)? validator,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: TextFormField(
+        controller: controller,
+        keyboardType: keyboardType,
+        textCapitalization: textCapitalization ?? TextCapitalization.none,
+        maxLines: maxLines ?? 1,
+        validator: validator,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Container(
+            margin: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              color: Theme.of(context).primaryColor,
+              size: 18,
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey[300]!),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: Theme.of(context).primaryColor,
+              width: 2,
+            ),
+          ),
+          filled: true,
+          fillColor: Colors.grey[50],
+        ),
+      ),
+    );
+  }
+
+// Helper method for modern dropdowns
+  Widget _buildModernDropdown({
+    required String? value,
+    required String label,
+    required IconData icon,
+    required List<DropdownMenuItem<String>> items,
+    required void Function(String?) onChanged,
+    String? Function(String?)? validator,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: DropdownButtonFormField<String>(
+        value: value,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Container(
+            margin: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              color: Theme.of(context).primaryColor,
+              size: 18,
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey[300]!),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: Theme.of(context).primaryColor,
+              width: 2,
+            ),
+          ),
+          filled: true,
+          fillColor: Colors.grey[50],
+        ),
+        items: items,
+        onChanged: onChanged,
+        validator: validator,
+      ),
     );
   }
 
@@ -995,326 +1091,6 @@ class _DepartmentStudentsPageState extends State<DepartmentStudentsPage> {
               ),
               const SizedBox(height: 10),
             ],
-          ),
-        );
-      },
-    );
-  }
-
-  Future editStudentBottomSheet(BuildContext context, Student student) {
-    controller.setControllerValues(student);
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled:
-          true, // Ensures the bottom sheet adjusts for the keyboard
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-      ),
-      builder: (BuildContext context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context)
-                .viewInsets
-                .bottom, // Handles soft keyboard
-            left: 16.0,
-            right: 16.0,
-            top: 16.0,
-          ),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.6,
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Form(
-                      key: addStudentKey, // GlobalKey for validation
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Edit Student',
-                            style: TextStyle(
-                                fontFamily: 'Ubuntu',
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            controller: controller.studentNameController,
-                            keyboardType: TextInputType.name,
-                            textCapitalization: TextCapitalization.words,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.grey),
-                              ),
-                              labelText: 'Student Name',
-                              hintText: 'Enter the full name of the student',
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Student\'s name is required.';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          TextFormField(
-                            controller: controller.fatherNameController,
-                            keyboardType: TextInputType.name,
-                            textCapitalization: TextCapitalization.words,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.grey),
-                              ),
-                              labelText: 'Father\'s Name',
-                              hintText: 'Enter the father\'s full name',
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Father\'s name is required.';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          TextFormField(
-                            controller: controller.studentCNICController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.grey),
-                              ),
-                              labelText: 'CNIC',
-                              hintText:
-                                  'Enter the student\'s CNIC number (without dashes)',
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'CNIC is required.';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          TextFormField(
-                            controller: controller.studentContactNoController,
-                            keyboardType: TextInputType.phone,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.grey),
-                              ),
-                              labelText: 'Contact Number',
-                              hintText:
-                                  'Enter a valid phone number (e.g., 03XX-XXXXXXX)',
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'A valid contact number is required.';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 10),
-
-                          // Dropdown for Gender
-                          DropdownButtonFormField<String>(
-                            value: controller.selectedGender.isEmpty
-                                ? null
-                                : controller.selectedGender,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.grey),
-                              ),
-                              labelText: 'Gender',
-                              hintText: 'Select the student\'s gender',
-                            ),
-                            items: ['Male', 'Female'].map((String gender) {
-                              return DropdownMenuItem<String>(
-                                value: gender,
-                                child: Text(gender),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              controller.selectedGender = newValue!;
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Gender is required.';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 10),
-
-                          // Dropdown for Shift
-                          DropdownButtonFormField<String>(
-                            value: controller.selectedShift.isEmpty
-                                ? null
-                                : controller.selectedShift,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.grey),
-                              ),
-                              labelText: 'Shift',
-                              hintText: 'Select the shift (Morning or Evening)',
-                            ),
-                            items: ['Morning', 'Evening'].map((String shift) {
-                              return DropdownMenuItem<String>(
-                                value: shift,
-                                child: Text(shift),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              controller.selectedShift = newValue!;
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Shift selection is required.';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 10),
-
-                          // Dropdown for Academic Year with dynamic last 4 years
-                          DropdownButtonFormField<String>(
-                            value: controller.selectedYear.isEmpty
-                                ? null
-                                : controller.selectedYear,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.grey),
-                              ),
-                              labelText: 'Academic Year',
-                              hintText: 'Select the academic year',
-                            ),
-                            items: List.generate(4, (index) {
-                              int year = DateTime.now().year - index;
-                              return DropdownMenuItem<String>(
-                                value: year.toString(),
-                                child: Text(year.toString()),
-                              );
-                            }),
-                            onChanged: (String? newValue) {
-                              controller.selectedYear = newValue!;
-                            },
-                            validator: (value) {
-                              if (value == null) {
-                                return 'Academic year is required.';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          TextFormField(
-                            controller: controller.studentAddressController,
-                            keyboardType: TextInputType.streetAddress,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.grey),
-                              ),
-                              labelText: 'Address',
-                              hintText: 'Enter the student\'s home address',
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Address is required.';
-                              }
-                              return null;
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                // Save Button
-                ElevatedButton(
-                  style: const ButtonStyle(
-                      fixedSize:
-                          WidgetStatePropertyAll(Size(double.maxFinite, 45))),
-                  onPressed: () {
-                    if (addStudentKey.currentState!.validate()) {
-                      var updatedStudent = Student(
-                        studentRollNo: student.studentRollNo,
-                        studentName: controller.studentNameController.text,
-                        fatherName: controller.fatherNameController.text,
-                        studentCNIC: controller.studentCNICController.text,
-                        studentContactNo:
-                            controller.studentContactNoController.text,
-                        studentEmail:
-                            student.studentEmail, // Keeping original email
-                        studentGender:
-                            controller.selectedGender, // Updated gender field
-                        studentShift:
-                            controller.selectedShift, // Updated shift field
-                        studentAcademicYear: controller
-                            .selectedYear, // Updated academic year field
-                        studentAddress:
-                            controller.studentAddressController.text,
-                        studentDepartment: student.studentDepartment,
-                        studentSemester: student.studentSemester,
-                        studentSection: student.studentSection,
-                        studentCGPA: student.studentCGPA,
-                      );
-                      controller.editStudent(updatedStudent);
-                      Get.back(); // Close bottom sheet after saving
-                    }
-                  },
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(
-                        fontFamily: 'Ubuntu',
-                        fontSize: 20,
-                        color: Colors.white),
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
           ),
         );
       },

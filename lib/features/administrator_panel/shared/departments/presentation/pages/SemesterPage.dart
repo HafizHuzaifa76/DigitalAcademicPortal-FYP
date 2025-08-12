@@ -1,16 +1,19 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/departments/domain/entities/Department.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
-import '../controllers/DepartmentController.dart';
+import '../../domain/entities/Semester.dart';
 
 class SemesterPage extends StatefulWidget {
   final Department department;
-  final String semester;
+  final Semester semester;
+  final int numOfTeachers;
   const SemesterPage(
-      {super.key, required this.department, required this.semester});
+      {super.key,
+      required this.department,
+      required this.semester,
+      required this.numOfTeachers});
 
   @override
   State<SemesterPage> createState() => _SemesterPageState();
@@ -21,6 +24,7 @@ class _SemesterPageState extends State<SemesterPage> {
   Widget build(BuildContext context) {
     var dept = widget.department;
     var semester = widget.semester;
+    var semesterName = semester.semesterName;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
@@ -48,13 +52,13 @@ class _SemesterPageState extends State<SemesterPage> {
               titlePadding: const EdgeInsets.only(bottom: 16),
               centerTitle: true,
               title: Stack(
-            children: [
+                children: [
                   Positioned(
                     bottom: 78,
                     left: 65,
                     right: 65,
                     child: Text(
-                      '${dept.departmentName}\n$semester',
+                      '${dept.departmentName}\n$semesterName',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 15.0,
@@ -97,7 +101,7 @@ class _SemesterPageState extends State<SemesterPage> {
                       left: -20,
                       child: Container(
                         width: 80,
-                      height: 80,
+                        height: 80,
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.1),
                           shape: BoxShape.circle,
@@ -115,19 +119,19 @@ class _SemesterPageState extends State<SemesterPage> {
                           _buildStatCard(
                             icon: Icons.book_rounded,
                             title: 'Courses',
-                            value: '${dept.totalSemesters}',
+                            value: '${semester.totalCourses}',
                             color: Colors.white,
                           ),
                           _buildStatCard(
-                            icon: Icons.person_rounded,
-                            title: 'Teachers',
-                            value: '${dept.totalTeachers}',
+                            icon: Icons.account_tree_rounded,
+                            title: 'Sections',
+                            value: '${semester.numOfSections}',
                             color: Colors.white,
                           ),
                           _buildStatCard(
                             icon: Icons.people_rounded,
                             title: 'Students',
-                            value: '${dept.totalStudents}',
+                            value: '${semester.numOfStudents}',
                             color: Colors.white,
                           ),
                         ],
@@ -135,17 +139,17 @@ class _SemesterPageState extends State<SemesterPage> {
                     ),
                   ],
                 ),
-                            ),
-                          ),
-                        ),
+              ),
+            ),
+          ),
 
           // Main content
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-                            child: Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                children: [
                   // Department Info Cards
                   Container(
                     padding: const EdgeInsets.all(20),
@@ -159,8 +163,8 @@ class _SemesterPageState extends State<SemesterPage> {
                           offset: const Offset(0, 4),
                         ),
                       ],
-                ),
-                child: Column(
+                    ),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -188,18 +192,18 @@ class _SemesterPageState extends State<SemesterPage> {
                                 icon: Icons.person_rounded,
                                 title: 'Head of Department',
                                 value: dept.headOfDepartment,
-                          ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
                         const SizedBox(height: 12),
-                    Row(
-                      children: [
+                        Row(
+                          children: [
                             Expanded(
                               child: _buildInfoCard(
-                                icon: Icons.account_tree_rounded,
-                                title: 'Sections',
-                                value: '0',
+                                icon: Icons.people_rounded,
+                                title: 'Teachers',
+                                value: '${widget.numOfTeachers}',
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -222,17 +226,17 @@ class _SemesterPageState extends State<SemesterPage> {
                   Column(
                     children: [
                       // First row (3 items)
-                    Row(
-                      children: [
+                      Row(
+                        children: [
                           Expanded(
                             child: _buildActionButton(
                               icon: FontAwesomeIcons.userGraduate,
                               title: 'Students',
                               onTap: () =>
                                   Get.toNamed('/semesterStudents', arguments: {
-                            'deptName': dept.departmentName,
-                            'semester': semester,
-                          }),
+                                'deptName': dept.departmentName,
+                                'semester': semesterName,
+                              }),
                               color: Get.theme.primaryColor,
                             ),
                           ),
@@ -241,7 +245,11 @@ class _SemesterPageState extends State<SemesterPage> {
                             child: _buildActionButton(
                               icon: Icons.school_rounded,
                               title: 'Teachers',
-                              onTap: () => Get.toNamed('/teachers'),
+                              onTap: () =>
+                                  Get.toNamed('/semesterTeachers', arguments: {
+                                'deptName': dept.departmentName,
+                                'semester': semesterName,
+                              }),
                               color: Get.theme.primaryColor,
                             ),
                           ),
@@ -252,29 +260,31 @@ class _SemesterPageState extends State<SemesterPage> {
                               title: 'Courses',
                               onTap: () => Get.toNamed('/semesterCourses',
                                   arguments: {
-                            'deptName': dept.departmentName,
-                            'semester': semester
-                          }),
+                                    'deptName': dept.departmentName,
+                                    'semester': semesterName
+                                  }),
                               color: Get.theme.primaryColor,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                       const SizedBox(height: 8),
                       // Second row (2 items) - centered
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
                           SizedBox(
                             width: (MediaQuery.of(context).size.width - 56) / 3,
                             child: _buildActionButton(
                               icon: Icons.account_tree_rounded,
                               title: 'Sections',
-                              onTap: () => Get.toNamed('/allSections',
-                                  arguments: {
-                              'deptName': dept.departmentName,
-                              'semester': semester
-                            }),
+                              onTap: () =>
+                                  Get.toNamed('/allSections', arguments: {
+                                'deptName': dept.departmentName,
+                                'semester': semesterName,
+                                'numOfTeachers': widget.numOfTeachers,
+                                'numOfCourses': semester.totalCourses,
+                              }),
                               color: Get.theme.primaryColor,
                             ),
                           ),
@@ -286,16 +296,16 @@ class _SemesterPageState extends State<SemesterPage> {
                               title: 'Time Table',
                               onTap: () => Get.toNamed('/semesterTimeTablePage',
                                   arguments: {
-                              'deptName': dept.departmentName,
-                              'semester': semester
-                            }),
+                                    'deptName': dept.departmentName,
+                                    'semester': semesterName
+                                  }),
                               color: Get.theme.primaryColor,
                             ),
                           ),
                         ],
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
 
                   const SizedBox(height: 24),
                 ],

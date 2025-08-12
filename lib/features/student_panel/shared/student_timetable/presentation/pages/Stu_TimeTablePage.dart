@@ -1,58 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../student_courses/domain/entities/StudentCourse.dart';
-import '../../../student_courses/presentation/controllers/StudentCoursesController.dart';
-import '../../../student_courses/presentation/bindings/StudentCoursesBinding.dart';
-import 'dart:math';
+import '../../../../../../shared/domain/entities/TimeTable.dart';
+import '../controllers/StudentTimetableController.dart';
+import '../bindings/StudentTimetableBinding.dart';
 
 class Stu_TimeTablePage extends StatefulWidget {
-  final String studentDept;
-  const Stu_TimeTablePage({Key? key, required this.studentDept}) : super(key: key);
+  const Stu_TimeTablePage({Key? key}) : super(key: key);
 
   @override
   State<Stu_TimeTablePage> createState() => _Stu_TimeTablePageState();
 }
 
 class _Stu_TimeTablePageState extends State<Stu_TimeTablePage> {
-  late final StudentCoursesController coursesController;
+  late final StudentTimetableController timetableController;
 
   @override
   void initState() {
     super.initState();
-    // Initialize the binding
-    StudentCoursesBinding().dependencies();
-    // Get the controller instance
-    coursesController = Get.find<StudentCoursesController>();
-    // Fetch courses for the student's department
-    coursesController.fetchStudentCourses(widget.studentDept);
+    StudentTimetableBinding().dependencies();
+    timetableController = Get.find<StudentTimetableController>();
+    timetableController.loadStudentTimetable();
   }
 
-  final List<String> weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-  final List<String> timeSlots = [
-    '8:30 - 10:00',
-    '10:15 - 11:45',
-    '12:00 - 1:30',
-    '2:00 - 3:30',
-    '3:45 - 5:15'
-  ];
+  /// Organizes timetable into a day -> slot -> entry map
+  Map<String, Map<String, TimeTableEntry?>> organizeTimetable(
+      List<TimeTableEntry> entries) {
+    final Map<String, Map<String, TimeTableEntry?>> timetable = {};
 
-  // Generate a random timetable based on available courses
-  Map<String, Map<String, String>> generateTimeTable(List<StudentCourse> courses) {
-    final Map<String, Map<String, String>> timetable = {};
-    final List<String> courseNames = courses.map((c) => c.courseName).toList();
-    
-    // Initialize timetable structure
-    for (String day in weekDays) {
+    // Get unique days & slots
+    final days = entries.map((e) => e.day.trim()).toSet().toList();
+    final slots = entries.map((e) => e.timeSlot.trim()).toSet().toList();
+
+    // Sort days in Monday → Sunday order
+    final dayOrder = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
+    ];
+    days.sort((a, b) => dayOrder.indexOf(a) != -1 && dayOrder.indexOf(b) != -1
+        ? dayOrder.indexOf(a).compareTo(dayOrder.indexOf(b))
+        : a.compareTo(b));
+
+    // Sort slots in ascending time order (lexical fallback)
+    slots.sort();
+
+    // Initialize timetable
+    for (String day in days) {
       timetable[day] = {};
-      for (String slot in timeSlots) {
-        // Randomly assign courses to slots
-        if (courseNames.isNotEmpty) {
-          final randomIndex = DateTime.now().millisecondsSinceEpoch % courseNames.length;
-          timetable[day]![slot] = courseNames[randomIndex];
-        }
+      for (String slot in slots) {
+        timetable[day]![slot] = null;
       }
     }
-    
+
+    // Fill timetable
+    for (var entry in entries) {
+      final day = entry.day.trim();
+      final slot = entry.timeSlot.trim();
+      if (timetable.containsKey(day) && timetable[day]!.containsKey(slot)) {
+        timetable[day]![slot] = entry;
+      }
+    }
+
     return timetable;
   }
 
@@ -60,7 +72,7 @@ class _Stu_TimeTablePageState extends State<Stu_TimeTablePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Timetable'),
+        title: const Text('Student Timetable'),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -75,15 +87,29 @@ class _Stu_TimeTablePageState extends State<Stu_TimeTablePage> {
         ),
       ),
       body: Obx(() {
-        if (coursesController.isLoading.value) {
+        if (timetableController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (coursesController.coursesList.isEmpty) {
-          return const Center(child: Text('No courses available'));
+        if (timetableController.timeTableEntries.isEmpty) {
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.schedule_outlined, size: 64, color: Colors.grey),
+                SizedBox(height: 16),
+                Text('No timetable available',
+                    style: TextStyle(fontSize: 18, color: Colors.grey)),
+              ],
+            ),
+          );
         }
 
-        final timetable = generateTimeTable(coursesController.coursesList);
+        final timetable =
+            organizeTimetable(timetableController.timeTableEntries);
+        final weekDays = timetable.keys.toList();
+        final timeSlots =
+            weekDays.isNotEmpty ? timetable[weekDays.first]!.keys.toList() : [];
 
         return SingleChildScrollView(
           child: Column(
@@ -125,11 +151,8 @@ class _Stu_TimeTablePageState extends State<Stu_TimeTablePage> {
                           ),
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.calendar_today,
-                                color: Get.theme.primaryColor,
-                                size: 20,
-                              ),
+                              Icon(Icons.calendar_today,
+                                  color: Get.theme.primaryColor, size: 20),
                               const SizedBox(width: 8),
                               Text(
                                 day,
@@ -142,28 +165,30 @@ class _Stu_TimeTablePageState extends State<Stu_TimeTablePage> {
                             ],
                           ),
                         ),
-                        ...timeSlots.map((slot) {
-                          final course = timetable[day]![slot];
+
+                        // Only show slots that actually have a class
+                        ...timeSlots
+                            .where((slot) => timetable[day]![slot] != null)
+                            .map((slot) {
+                          final entry = timetable[day]![slot]!;
                           return Container(
                             margin: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
+                                horizontal: 16, vertical: 8),
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: Colors.grey.withOpacity(0.2),
-                                width: 1,
-                              ),
+                                  color: Colors.grey.withOpacity(0.2),
+                                  width: 1),
                             ),
                             child: Row(
                               children: [
                                 Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: Get.theme.primaryColor.withOpacity(0.1),
+                                    color:
+                                        Get.theme.primaryColor.withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
@@ -177,10 +202,11 @@ class _Stu_TimeTablePageState extends State<Stu_TimeTablePage> {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        course ?? 'No Class',
+                                        entry.courseName,
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
@@ -188,7 +214,15 @@ class _Stu_TimeTablePageState extends State<Stu_TimeTablePage> {
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        'Room: ${_getRandomRoom()}',
+                                        'Teacher: ${entry.teacherName}',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        'Room: ${entry.room}',
                                         style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.grey[600],
@@ -201,6 +235,7 @@ class _Stu_TimeTablePageState extends State<Stu_TimeTablePage> {
                             ),
                           );
                         }).toList(),
+
                         const SizedBox(height: 16),
                       ],
                     );
@@ -208,48 +243,52 @@ class _Stu_TimeTablePageState extends State<Stu_TimeTablePage> {
                 ),
               ),
               const SizedBox(height: 16),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Weekend',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Get.theme.primaryColor,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        _buildWeekendDay('Saturday'),
-                        const SizedBox(width: 16),
-                        _buildWeekendDay('Sunday'),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              _buildWeekendSection(),
               const SizedBox(height: 16),
             ],
           ),
         );
       }),
+    );
+  }
+
+  Widget _buildWeekendSection() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Weekend',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Get.theme.primaryColor,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              _buildWeekendDay('Saturday'),
+              const SizedBox(width: 16),
+              _buildWeekendDay('Sunday'),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -263,11 +302,7 @@ class _Stu_TimeTablePageState extends State<Stu_TimeTablePage> {
         ),
         child: Column(
           children: [
-            Icon(
-              Icons.weekend,
-              color: Get.theme.primaryColor,
-              size: 24,
-            ),
+            Icon(Icons.weekend, color: Get.theme.primaryColor, size: 24),
             const SizedBox(height: 8),
             Text(
               day,
@@ -290,100 +325,4 @@ class _Stu_TimeTablePageState extends State<Stu_TimeTablePage> {
     );
   }
 
-  String _getRandomRoom() {
-    final rooms = ['Room 101', 'Room 102', 'Room 201', 'Room 202', 'Lab 1', 'Lab 2'];
-    return rooms[DateTime.now().millisecondsSinceEpoch % rooms.length];
-  }
-
-  Widget _buildTimeTable() {
-    // Get courses from controller
-    final courses = coursesController.coursesList;
-    
-    // Create a list of time slots
-    final timeSlots = [
-      '8:30 - 9:50',
-      '10:00 - 11:20',
-      '11:30 - 12:50',
-      '2:00 - 3:20',
-      '3:30 - 4:50',
-    ];
-
-    // Create a list of days
-    final days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-
-    // Create a map to store the timetable
-    final Map<String, Map<String, String>> timetable = {};
-
-    // Initialize timetable with empty slots
-    for (var day in days) {
-      timetable[day] = {};
-      for (var slot in timeSlots) {
-        timetable[day]![slot] = 'No Lecture';
-      }
-    }
-
-    // Create a list of all possible course combinations
-    final List<String> allCourseCombinations = [];
-    if (courses.isNotEmpty) {
-      for (var course in courses) {
-        allCourseCombinations.add('${course.courseName}\n${course.courseCode}');
-      }
-    }
-    // Add some empty slots to the combinations
-    allCourseCombinations.addAll(List.filled(5, 'No Lecture'));
-
-    // Randomly assign different courses to each day
-    final random = Random();
-    for (var day in days) {
-      // Create a copy of course combinations for this day
-      List<String> dayCourses = List.from(allCourseCombinations);
-      // Shuffle the courses for this day
-      dayCourses.shuffle(random);
-      
-      // Assign courses to slots for this day
-      for (var i = 0; i < timeSlots.length; i++) {
-        if (i < dayCourses.length) {
-          timetable[day]![timeSlots[i]] = dayCourses[i];
-        }
-      }
-    }
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: SingleChildScrollView(
-        child: DataTable(
-          headingRowColor: MaterialStateProperty.all(Get.theme.primaryColor),
-          headingTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          dataRowColor: MaterialStateProperty.all(Colors.white),
-          columns: [
-            const DataColumn(label: Text('Time')),
-            ...days.map((day) => DataColumn(label: Text(day))).toList(),
-          ],
-          rows: timeSlots.map((slot) {
-            return DataRow(
-              cells: [
-                DataCell(Text(slot)),
-                ...days.map((day) => DataCell(
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      timetable[day]![slot]!,
-                      style: TextStyle(
-                        color: timetable[day]![slot] == 'No Lecture' 
-                          ? Colors.grey 
-                          : Get.theme.primaryColor,
-                        fontWeight: timetable[day]![slot] == 'No Lecture' 
-                          ? FontWeight.normal 
-                          : FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                )).toList(),
-              ],
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
 }

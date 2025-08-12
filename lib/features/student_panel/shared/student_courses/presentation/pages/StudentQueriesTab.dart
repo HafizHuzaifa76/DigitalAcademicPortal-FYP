@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../presentation/pages/StudentPanelDashboardPage.dart';
+import '../../../../presentation/pages/StudentDashboardPage.dart';
 import '../../domain/entities/StudentCourse.dart';
 import '../controllers/StudentQueryController.dart';
 import '../bindings/StudentQueryBinding.dart';
 import 'package:digital_academic_portal/shared/domain/entities/Query.dart'
     as student_query_entity;
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StudentQueriesTab extends StatelessWidget {
   final StudentCourse course;
@@ -15,7 +14,8 @@ class StudentQueriesTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<StudentQueryController>(
-      init: Get.put(StudentQueryController(getQueriesUseCase: Get.find(), askQueryUseCase: Get.find())),
+      init: Get.put(StudentQueryController(
+          getQueriesUseCase: Get.find(), askQueryUseCase: Get.find())),
       builder: (controller) {
         controller.fetchQueries(course.courseDept, course.courseSemester,
             course.courseName, course.courseSection);
@@ -136,10 +136,9 @@ class StudentQueriesTab extends StatelessWidget {
 // Pending Queries Screen
 class PendingQueriesScreen extends StatelessWidget {
   final StudentCourse course;
-  PendingQueriesScreen({Key? key, required this.course})
-      : super(key: key);
+  PendingQueriesScreen({Key? key, required this.course}) : super(key: key);
 
-  final student = StudentPortalDashboardPage.studentProfile;
+  final student = StudentDashboardPage.studentProfile;
 
   void _showAskQuerySheet(
       BuildContext context, StudentQueryController controller) {
@@ -312,7 +311,8 @@ class RespondedQueriesScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
               child: ListTile(
-                leading: const Icon(Icons.check_circle_outline, color: Colors.green),
+                leading:
+                    const Icon(Icons.check_circle_outline, color: Colors.green),
                 title: Text(query.subject,
                     style: const TextStyle(fontWeight: FontWeight.bold)),
                 subtitle: Column(

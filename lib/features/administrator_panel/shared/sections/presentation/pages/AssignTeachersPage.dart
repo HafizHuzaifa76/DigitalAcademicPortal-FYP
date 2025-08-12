@@ -33,7 +33,8 @@ class _AssignTeachersPageState extends State<AssignTeachersPage> {
     super.initState();
     controller.selectedTeachers.value = {};
     Future.delayed(Duration.zero, () {
-      controller.init(widget.deptName, widget.semester, widget.section.sectionName);
+      controller.init(
+          widget.deptName, widget.semester, widget.section.sectionName);
     });
   }
 
@@ -72,7 +73,9 @@ class _AssignTeachersPageState extends State<AssignTeachersPage> {
                               width: screenSize.width * 0.93,
                               child: Text(
                                 '$dept\n$semester\nSection ${section.sectionName.replaceFirst(section.shift, '')}',
-                                style: Theme.of(context).appBarTheme.titleTextStyle,
+                                style: Theme.of(context)
+                                    .appBarTheme
+                                    .titleTextStyle,
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -154,100 +157,159 @@ class _AssignTeachersPageState extends State<AssignTeachersPage> {
                             children: [
                               Expanded(
                                 child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      ...controller.coursesList.map((course) => Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                        child: FormField<Teacher>(
-                                          validator: (value) {
-                                            if (controller.selectedTeachers[course.courseName] == null) {
-                                              return 'Please select a teacher';
-                                            }
-                                            return null;
-                                          },
-                                          builder: (FormFieldState<Teacher> state) {
-                                            return Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Expanded(
-                                                  child: Text(
-                                                    course.courseName,
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.bold,
+                                  child: Column(children: [
+                                    ...controller.coursesList.map((course) =>
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: FormField<Teacher>(
+                                            validator: (value) {
+                                              if (controller.selectedTeachers[
+                                                      course.courseName] ==
+                                                  null) {
+                                                return 'Please select a teacher';
+                                              }
+                                              return null;
+                                            },
+                                            builder: (FormFieldState<Teacher>
+                                                state) {
+                                                  
+                                              return Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      course.courseName,
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-
-                                                Container(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                      color: state.hasError ? Colors.red: Colors.grey,
-                                                      width: 1,
+                                                  Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 10),
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color: state.hasError
+                                                            ? Colors.red
+                                                            : Colors.grey,
+                                                        width: 1,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
                                                     ),
-                                                    borderRadius: BorderRadius.circular(8),
-                                                  ),
-                                                  child: DropdownButton<dynamic>(
-                                                    hint: const Text("Select Teacher"),
-                                                    value: controller.selectedTeachers[course.courseName],
-                                                    underline: null,
+                                                    child: controller
+                                                                    .selectedTeachers[
+                                                                course
+                                                                    .courseName] ==
+                                                            'Course Submitted'
+                                                        ? Text(
+                                                            'Course Submitted',
+                                                            style: TextStyle(
+                                                                color: Get.theme
+                                                                    .primaryColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                          )
+                                                        : DropdownButton<
+                                                            dynamic>(
+                                                            hint: const Text(
+                                                                "Select Teacher"),
+                                                            value: controller
+                                                                    .selectedTeachers[
+                                                                course
+                                                                    .courseName],
+                                                            underline: null,
+                                                            items: controller
+                                                                .teacherList
+                                                                .map((teacher) {
+                                                              return DropdownMenuItem<
+                                                                  Teacher>(
+                                                                value: teacher,
+                                                                child: Text(teacher
+                                                                    .teacherName),
+                                                              );
+                                                            }).toList(),
+                                                            onChanged:
+                                                                (selectedTeacher) {
+                                                              if (selectedTeacher ==
+                                                                  controller
+                                                                          .selectedTeachers[
+                                                                      course
+                                                                          .courseName])
+                                                                return;
 
-                                                    items: controller.teacherList.map((teacher) {
-                                                      return DropdownMenuItem<Teacher>(
-                                                        value: teacher,
-                                                        child: Text(teacher.teacherName),
-                                                      );
-                                                    }).toList(),
-                                                    onChanged: (selectedTeacher) {
-                                                      if(selectedTeacher == controller.selectedTeachers[course.courseName]) return ;
-
-                                                      if (controller.isEdit.value == false) {
-                                                        controller.changeCourseTeacher(course.courseName, selectedTeacher!);
-                                                        state.didChange(selectedTeacher);
-                                                      }
-                                                      else {
-                                                        showConfirmationBottomSheet(context, dept, semester, section.sectionName, course.courseName, selectedTeacher!);
-                                                        state.didChange(selectedTeacher);
-                                                      }
-                                                      _formKey.currentState!.validate();
-                                                    },
+                                                              if (controller
+                                                                      .isEdit
+                                                                      .value ==
+                                                                  false) {
+                                                                controller.changeCourseTeacher(
+                                                                    course
+                                                                        .courseName,
+                                                                    selectedTeacher!);
+                                                                state.didChange(
+                                                                    selectedTeacher);
+                                                              } else {
+                                                                showConfirmationBottomSheet(
+                                                                    context,
+                                                                    dept,
+                                                                    semester,
+                                                                    section
+                                                                        .sectionName,
+                                                                    course
+                                                                        .courseName,
+                                                                    selectedTeacher!);
+                                                                state.didChange(
+                                                                    selectedTeacher);
+                                                              }
+                                                              _formKey
+                                                                  .currentState!
+                                                                  .validate();
+                                                            },
+                                                          ),
                                                   ),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                      ))
-                                    ]
-                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
+                                        ))
+                                  ]),
                                 ),
                               ),
                               const SizedBox(height: 20),
-
                               if (controller.isEdit.value == false)
                                 ElevatedButton(
-                                onPressed: () {
-                                  print(controller.selectedTeachers);
-                                  if (_formKey.currentState!.validate()) {
-                                    controller.assignTeacherToCourse(
-                                      dept, semester, section.sectionName,
-                                    );
-                                  } else {
-                                    Utils().showErrorSnackBar(
-                                      'Validation Error',
-                                      'Please select a teacher for all courses'
-                                    );
-                                  }
-                                },
-                                child: Text(
-                                  controller.isEdit.value ? 'Update' : 'Assign',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
+                                  onPressed: () {
+                                    print(controller.selectedTeachers);
+                                    if (_formKey.currentState!.validate()) {
+                                      controller.assignTeacherToCourse(
+                                        dept,
+                                        semester,
+                                        section.sectionName,
+                                      );
+                                    } else {
+                                      Utils().showErrorSnackBar(
+                                          'Validation Error',
+                                          'Please select a teacher for all courses');
+                                    }
+                                  },
+                                  child: Text(
+                                    controller.isEdit.value
+                                        ? 'Update'
+                                        : 'Assign',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -263,7 +325,8 @@ class _AssignTeachersPageState extends State<AssignTeachersPage> {
     );
   }
 
-  void showConfirmationBottomSheet(BuildContext context, String deptName, String semester, String section, String courseName, Teacher teacher) {
+  void showConfirmationBottomSheet(BuildContext context, String deptName,
+      String semester, String section, String courseName, Teacher teacher) {
     Get.defaultDialog(
       title: 'Are you sure you want to change?',
       content: const SizedBox(),
@@ -271,20 +334,19 @@ class _AssignTeachersPageState extends State<AssignTeachersPage> {
         onPressed: () {
           Get.back();
         },
-        child: const Text('Cancel', style: TextStyle(fontWeight: FontWeight.bold)),
+        child:
+            const Text('Cancel', style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       confirm: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            fixedSize: const Size(100, 0)
-        ),
+        style: ElevatedButton.styleFrom(fixedSize: const Size(100, 0)),
         onPressed: () {
-          controller.editAssignedTeacher(deptName, semester, section, courseName, teacher);
+          controller.editAssignedTeacher(
+              deptName, semester, section, courseName, teacher);
           Get.back();
-
         },
-        child: const Text('Change', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        child: const Text('Change',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
       ),
     );
   }
-
 }

@@ -69,9 +69,11 @@ class TeacherGradeController extends GetxController {
       }
 
       // Initialize obtained marks for all students
+      var random = Random();
       final initialMarks = <String, dynamic>{};
       for (var studentId in selectedCourse.value!.studentIds) {
-        initialMarks[studentId] = 0;
+        initialMarks[studentId] = (grade.totalMarks * 0.4).toInt() +
+            random.nextInt((grade.totalMarks * 0.6).toInt());
       }
 
       // Create grade with initial marks

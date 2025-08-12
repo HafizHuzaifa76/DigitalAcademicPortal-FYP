@@ -174,6 +174,7 @@ class FinalResultsPage extends StatelessWidget {
       );
     }).toList();
 
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Final Results'),

@@ -22,7 +22,8 @@ class SemesterWiseCourseScreen extends StatefulWidget {
   });
 
   @override
-  State<SemesterWiseCourseScreen> createState() => _SemesterWiseCourseScreenState();
+  State<SemesterWiseCourseScreen> createState() =>
+      _SemesterWiseCourseScreenState();
 }
 
 class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
@@ -46,78 +47,77 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
       body: CustomScrollView(
         controller: scrollController,
         slivers: [
-         Obx(()=> SliverAppBar(
-            expandedHeight: 150.0,
-            floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: EdgeInsets.only(bottom: controller.titlePadding.value),
-              centerTitle: true,
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'Courses',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontFamily: 'Ubuntu',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-
-                  Text(
-                    'Department of ${widget.deptName}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.0,
-                      fontFamily: 'Ubuntu',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).primaryColor,
-                      const Color(0xFF1B7660),
+          Obx(() => SliverAppBar(
+                expandedHeight: 150.0,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  titlePadding:
+                      EdgeInsets.only(bottom: controller.titlePadding.value),
+                  centerTitle: true,
+                  title: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        'Courses',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                          fontFamily: 'Ubuntu',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        'Department of ${widget.deptName}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.0,
+                          fontFamily: 'Ubuntu',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
                   ),
-                ),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: 55,
-                      child: TextField(
-                        controller: searchController,
-                        onChanged: (query) {
-                          controller.filterCourses(query);
-                        },
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(2),
-                          hintText: 'Search Courses...',
-                          prefixIcon: const Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50.0),
+                  background: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(context).primaryColor,
+                          const Color(0xFF1B7660),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: 55,
+                          child: TextField(
+                            controller: searchController,
+                            onChanged: (query) {
+                              controller.filterCourses(query);
+                            },
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.all(2),
+                              hintText: 'Search Courses...',
+                              prefixIcon: const Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                            ),
                           ),
-                          filled: true,
-                          fillColor: Colors.white,
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          )),
-
+              )),
           Obx(() {
             print(controller.filteredSemesterCourseList.length);
             if (controller.isLoading.value) {
@@ -132,127 +132,134 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                 ),
               );
             } else {
-                return SliverList(
-                  delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    final semester = controller.semesterList[index];
+                    final semesterCourses = controller
+                        .filteredSemesterCourseList
+                        .where((course) =>
+                            course.courseSemester == semester.semesterName)
+                        .toList();
 
-                      final semester = controller.semesterList[index];
-                      final semesterCourses = controller.filteredSemesterCourseList
-                          .where((course) => course.courseSemester == semester.semesterName)
-                          .toList();
-
-                      // Build the list of courses for this semester
-                      List<Widget> courseWidgets = semesterCourses.map((course) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5.0),
-                          child: Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
+                    // Build the list of courses for this semester
+                    List<Widget> courseWidgets = semesterCourses.map((course) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: ListTile(
+                            title: Text(
+                              course.courseName,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                                fontFamily: 'Ubuntu',
+                              ),
                             ),
-                            child: ListTile(
-                              title: Text(
-                                course.courseName,
+                            subtitle: Text(
+                                'Code: ${course.courseCode}, Subject: ${course.courseType}'),
+                            trailing: const Icon(Icons.arrow_forward_ios),
+                            onTap: () {
+                              Get.to(() => CourseDetailPage(
+                                  deptName: widget.deptName, course: course));
+                            },
+                          ),
+                        ),
+                      );
+                    }).toList();
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 5),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                semester.semesterName
+                                    .replaceFirst('SEM', 'SEMESTER'),
                                 style: TextStyle(
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Theme.of(context).primaryColor,
                                   fontFamily: 'Ubuntu',
                                 ),
                               ),
-                              subtitle: Text('Code: ${course.courseCode}, Subject: ${course.courseType}'),
-                              trailing: const Icon(Icons.arrow_forward_ios),
-                              onTap: () {
-                                Get.to(() => CourseDetailPage(
-                                    deptName: widget.deptName, course: course));
-                              },
-                            ),
+
+                              // Text(
+                              //   'Remaining: ${semester.totalCourses - semesterCourses.length}',
+                              //   style: TextStyle(
+                              //     fontSize: 15,
+                              //     fontWeight: FontWeight.w500,
+                              //     color: Theme.of(context).primaryColor,
+                              //     fontFamily: 'Ubuntu',
+                              //   ),
+                              // ),
+                              IconButton(
+                                  onPressed: () {
+                                    if (semester.totalCourses == 0) {
+                                      selectCourseOptionsBottomSheet(
+                                          context, semester);
+                                    } else if (semester.totalCourses <=
+                                        semester.numOfCourses) {
+                                      Utils().showErrorSnackBar(
+                                        'Error',
+                                        'Limit Already Completed...',
+                                      );
+                                    } else {
+                                      if (semester.numOfElectiveCourses != 0) {
+                                        _showAddCourseOptions(semester);
+                                      } else {
+                                        // addCourseBottomSheet(context, semester);
+                                        showCourseSelectionBottomSheet(
+                                            context,
+                                            semester.totalCourses,
+                                            semester.semesterName,
+                                            'compulsory');
+                                      }
+                                    }
+                                  },
+                                  icon: Icon(
+                                    CupertinoIcons.plus,
+                                    color: Get.theme.primaryColor,
+                                  ))
+                            ],
                           ),
-                        );
-                      }).toList();
-
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  semester.semesterName.replaceFirst('SEM', 'SEMESTER'),
+                          const SizedBox(height: 2),
+                          if (semesterCourses.isNotEmpty)
+                            ...courseWidgets
+                          else
+                            Container(
+                              width: double.infinity,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColorDark,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'No Courses Exist',
                                   style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryColor,
-                                    fontFamily: 'Ubuntu',
-                                  ),
-                                ),
-
-                                // Text(
-                                //   'Remaining: ${semester.totalCourses - semesterCourses.length}',
-                                //   style: TextStyle(
-                                //     fontSize: 15,
-                                //     fontWeight: FontWeight.w500,
-                                //     color: Theme.of(context).primaryColor,
-                                //     fontFamily: 'Ubuntu',
-                                //   ),
-                                // ),
-                                IconButton(
-                                    onPressed: (){
-                                      if (semester.totalCourses == 0) {
-                                        selectCourseOptionsBottomSheet(context, semester);
-                                      }
-                                      else if(semester.totalCourses <= semester.numOfCourses) {
-                                        Utils().showErrorSnackBar(
-                                          'Error', 'Limit Already Completed...',
-                                        );
-                                      }
-                                      else {
-                                        if (semester.numOfElectiveCourses != 0) {
-                                          _showAddCourseOptions(semester);
-                                        }
-                                        else {
-                                          // addCourseBottomSheet(context, semester);
-                                          showCourseSelectionBottomSheet(context, semester.totalCourses, semester.semesterName, 'compulsory');
-                                        }
-                                      }
-                                    },
-                                    icon: Icon(CupertinoIcons.plus, color: Get.theme.primaryColor,)
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 2),
-
-                            if (semesterCourses.isNotEmpty)
-                              ...courseWidgets
-                            else
-                              Container(
-                                width: double.infinity,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColorDark,
-                                  borderRadius: BorderRadius.circular(20),
-
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'No Courses Exist',
-                                    style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: Theme.of(context).primaryColor,
                                       fontFamily: 'Ubuntu',
-                                      fontSize: 17
-                                    ),
-                                  ),
+                                      fontSize: 17),
                                 ),
                               ),
-                          ],
-                        ),
-                      );
-                    },
-                    childCount: controller.semesterList.length,
-                  ),
-                );
-
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                  childCount: controller.semesterList.length,
+                ),
+              );
             }
           }),
         ],
@@ -261,8 +268,18 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
   }
 
   void _showAddCourseOptions(Semester semester) {
-    var electiveCourses = controller.semesterCourseList.where((index) => index.courseSemester == semester.semesterName && index.courseType == 'elective').toList().length;
-    var compulsoryCourses = controller.semesterCourseList.where((index) => index.courseSemester == semester.semesterName && index.courseType == 'compulsory').toList().length;
+    var electiveCourses = controller.semesterCourseList
+        .where((index) =>
+            index.courseSemester == semester.semesterName &&
+            index.courseType == 'elective')
+        .toList()
+        .length;
+    var compulsoryCourses = controller.semesterCourseList
+        .where((index) =>
+            index.courseSemester == semester.semesterName &&
+            index.courseType == 'compulsory')
+        .toList()
+        .length;
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -274,12 +291,17 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
               onTap: () {
                 Get.back();
                 // addCourseBottomSheet(context, semester);
-                if (semester.totalCourses - semester.numOfElectiveCourses > compulsoryCourses) {
-                  showCourseSelectionBottomSheet(context, semester.totalCourses - semester.numOfElectiveCourses, semester.semesterName, 'compulsory');
-                }
-                else {
+                if (semester.totalCourses - semester.numOfElectiveCourses >
+                    compulsoryCourses) {
+                  showCourseSelectionBottomSheet(
+                      context,
+                      semester.totalCourses - semester.numOfElectiveCourses,
+                      semester.semesterName,
+                      'compulsory');
+                } else {
                   Utils().showErrorSnackBar(
-                    'Error', 'Limit Already Completed...',
+                    'Error',
+                    'Limit Already Completed...',
                   );
                 }
               },
@@ -291,10 +313,10 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                 Get.back();
                 if (semester.numOfElectiveCourses > electiveCourses) {
                   addElectiveCourseBottomSheet(context, semester);
-                }
-                else {
+                } else {
                   Utils().showErrorSnackBar(
-                    'Error', 'Limit Already Completed...',
+                    'Error',
+                    'Limit Already Completed...',
                   );
                 }
               },
@@ -308,7 +330,9 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
   Future addCourseBottomSheet(BuildContext context, Semester semester) async {
     final List<int> creditHoursOptions = [1, 2, 3];
     int selectedCreditHours = creditHoursOptions.last;
-    var filteredList = controller.semesterCourseList.where((element) => element.courseSemester == semester.semesterName).toList();
+    var filteredList = controller.semesterCourseList
+        .where((element) => element.courseSemester == semester.semesterName)
+        .toList();
 
     return showModalBottomSheet(
       context: context,
@@ -319,19 +343,13 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
       builder: (BuildContext context) {
         return Padding(
           padding: EdgeInsets.only(
-            bottom: MediaQuery
-                .of(context)
-                .viewInsets
-                .bottom,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
             left: 16.0,
             right: 16.0,
             top: 16.0,
           ),
           child: SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height * 0.6,
+            height: MediaQuery.of(context).size.height * 0.6,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -342,9 +360,7 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                       fontFamily: 'Ubuntu',
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
+                      color: Theme.of(context).primaryColor,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -358,12 +374,24 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text('Courses Added : ${filteredList.length}', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold),),
-                            Text('Remaining : ${semester.totalCourses - filteredList.length}', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold)),
+                            Text(
+                              'Courses Added : ${filteredList.length}',
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontFamily: 'Ubuntu',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                                'Remaining : ${semester.totalCourses - filteredList.length}',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold)),
                           ],
                         ),
                         const SizedBox(height: 10),
-
                         TextField(
                           controller: controller.courseCodeController,
                           decoration: InputDecoration(
@@ -372,13 +400,13 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor),
                             ),
                             labelText: 'Course Code',
                           ),
                         ),
                         const SizedBox(height: 10),
-
                         TextField(
                           controller: controller.courseNameController,
                           decoration: InputDecoration(
@@ -387,13 +415,13 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor),
                             ),
                             labelText: 'Course Name',
                           ),
                         ),
                         const SizedBox(height: 10),
-
                         DropdownButtonFormField<int>(
                           value: selectedCreditHours,
                           decoration: InputDecoration(
@@ -402,7 +430,8 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor),
                             ),
                             labelText: 'Credit Hours',
                           ),
@@ -419,9 +448,9 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                           },
                         ),
                         const SizedBox(height: 10),
-
                         TextField(
-                          controller: TextEditingController(text: semester.semesterName),
+                          controller: TextEditingController(
+                              text: semester.semesterName),
                           readOnly: true,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -429,7 +458,8 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor),
                             ),
                             labelText: 'Course Semester',
                           ),
@@ -440,11 +470,14 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  style: const ButtonStyle(fixedSize: WidgetStatePropertyAll(Size(double.maxFinite, 45))),
+                  style: const ButtonStyle(
+                      fixedSize:
+                          WidgetStatePropertyAll(Size(double.maxFinite, 45))),
                   onPressed: () {
                     if (filteredList.length < semester.totalCourses) {
                       var newCourse = SemesterCourse(
-                        courseCode: '${widget.deptCode}-${controller.courseCodeController.text}',
+                        courseCode:
+                            '${widget.deptCode}-${controller.courseCodeController.text}',
                         courseName: controller.courseNameController.text,
                         courseDept: widget.deptName,
                         courseCreditHours: selectedCreditHours,
@@ -454,14 +487,18 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
 
                       controller.addCourse(newCourse);
                       Get.back();
-
                     } else {
                       Utils().showErrorSnackBar(
-                          'Error', 'Limit Already Completed...',
+                        'Error',
+                        'Limit Already Completed...',
                       );
                     }
                   },
-                  child: const Text('Add', style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20, color: Colors.white)),
+                  child: const Text('Add',
+                      style: TextStyle(
+                          fontFamily: 'Ubuntu',
+                          fontSize: 20,
+                          color: Colors.white)),
                 ),
                 const SizedBox(height: 10),
               ],
@@ -472,10 +509,12 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
     );
   }
 
-  Future addElectiveCourseBottomSheet(BuildContext context, Semester semester) async {
+  Future addElectiveCourseBottomSheet(
+      BuildContext context, Semester semester) async {
     int selectionCourses = semester.numOfElectiveCourses;
     TextEditingController electiveController = TextEditingController();
-    TextEditingController selectionController = TextEditingController(text: '$selectionCourses');
+    TextEditingController selectionController =
+        TextEditingController(text: '$selectionCourses');
     String selectionDescription = "Enter number of selections";
 
     return showModalBottomSheet(
@@ -484,7 +523,6 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
-
       builder: (BuildContext context) {
         return Padding(
           padding: EdgeInsets.only(
@@ -520,7 +558,8 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                        borderSide:
+                            BorderSide(color: Theme.of(context).primaryColor),
                       ),
                       labelText: "Total Elective Courses",
                       hintText: "Enter total electives",
@@ -528,12 +567,13 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                     onChanged: (value) {
                       setState(() {
                         int total = int.tryParse(value) ?? 0;
-                        selectionDescription = total > 0 ? "Select number of courses (1 to $total)" : "Enter number of selections";
+                        selectionDescription = total > 0
+                            ? "Select number of courses (1 to $total)"
+                            : "Enter number of selections";
                       });
                     },
                   ),
                   const SizedBox(height: 20),
-
                   TextField(
                     controller: selectionController,
                     keyboardType: TextInputType.number,
@@ -543,7 +583,8 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                        borderSide:
+                            BorderSide(color: Theme.of(context).primaryColor),
                       ),
                       labelText: "Number of Selection Courses",
                       hintText: selectionDescription,
@@ -554,18 +595,22 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 style: const ButtonStyle(
-                  fixedSize: WidgetStatePropertyAll(
-                      Size(double.maxFinite, 45)),
+                  fixedSize: WidgetStatePropertyAll(Size(double.maxFinite, 45)),
                 ),
                 onPressed: () {
-                  int totalElectives = int.tryParse(electiveController.text) ?? 0;
-                  int numSelections = int.tryParse(selectionController.text) ?? 0;
+                  int totalElectives =
+                      int.tryParse(electiveController.text) ?? 0;
+                  int numSelections =
+                      int.tryParse(selectionController.text) ?? 0;
 
                   if (numSelections > totalElectives) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Selections cannot exceed total electives")));
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content:
+                            Text("Selections cannot exceed total electives")));
                   } else {
                     Get.back();
-                    showCourseSelectionBottomSheet(context, totalElectives, semester.semesterName, 'elective');
+                    showCourseSelectionBottomSheet(context, totalElectives,
+                        semester.semesterName, 'elective');
                     // Navigator.push(
                     //   context,
                     //   MaterialPageRoute(
@@ -607,45 +652,51 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                   ),
                 ),
                 const SizedBox(height: 6.5),
-
                 Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: controller.semesterList.map((semester) =>
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 6.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            var filteredCourses = controller.filteredSemesterCourseList.where((course) => course.courseSemester == semester.semesterName).toList();
+                  children: controller.semesterList
+                      .map((semester) => Padding(
+                            padding: const EdgeInsets.only(bottom: 6.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                var filteredCourses = controller
+                                    .filteredSemesterCourseList
+                                    .where((course) =>
+                                        course.courseSemester ==
+                                        semester.semesterName)
+                                    .toList();
 
-                            if (semester.totalCourses == 0) {
-                              selectCourseOptionsBottomSheet(context, semester);
-                            } else {
-                              if (semester.numOfElectiveCourses != 0) {
-                                _showAddCourseOptions(semester);
-                              }
-                              else {
-                                addCourseBottomSheet(context, semester);
-                              }
-                            }
-                          },
-                          child: Text(
-                            semester.semesterName,
-                            style: const TextStyle(color: Colors.white,
-                                fontSize: 20,
-                                fontFamily: 'Ubuntu'),
-                          ),
-                        ),
-                      )).toList(),
+                                if (semester.totalCourses == 0) {
+                                  selectCourseOptionsBottomSheet(
+                                      context, semester);
+                                } else {
+                                  if (semester.numOfElectiveCourses != 0) {
+                                    _showAddCourseOptions(semester);
+                                  } else {
+                                    addCourseBottomSheet(context, semester);
+                                  }
+                                }
+                              },
+                              child: Text(
+                                semester.semesterName,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontFamily: 'Ubuntu'),
+                              ),
+                            ),
+                          ))
+                      .toList(),
                 ),
               ],
             ),
           );
-        }
-    );
+        });
   }
 
-  Future selectCourseOptionsBottomSheet(BuildContext context, Semester currentSemester) {
+  Future selectCourseOptionsBottomSheet(
+      BuildContext context, Semester currentSemester) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -655,10 +706,7 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
       builder: (BuildContext context) {
         return Padding(
           padding: EdgeInsets.only(
-            bottom: MediaQuery
-                .of(context)
-                .viewInsets
-                .bottom,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
             left: 16.0,
             right: 16.0,
             top: 16.0,
@@ -674,9 +722,7 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                     fontFamily: 'Ubuntu',
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Theme
-                        .of(context)
-                        .primaryColor,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
               ),
@@ -696,22 +742,22 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                 child: CupertinoPicker(
                   itemExtent: 30,
                   onSelectedItemChanged: (int value) {
-                    controller.updateTotalCourses(value); // Adjust value based on index
+                    controller.updateTotalCourses(
+                        value); // Adjust value based on index
                   },
                   scrollController: FixedExtentScrollController(
                     initialItem: 4,
                   ),
                   children: List.generate(
                     10,
-                        (index) =>
-                        Text(
-                          "${index + 1} Courses",
-                          style: const TextStyle(
-                            fontFamily: 'Ubuntu',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                    (index) => Text(
+                      "${index + 1} Courses",
+                      style: const TextStyle(
+                        fontFamily: 'Ubuntu',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -732,22 +778,22 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                   return CupertinoPicker(
                     itemExtent: 30,
                     onSelectedItemChanged: (int value) {
-                      controller.updateElectiveCourses(value); // Adjust value based on index
+                      controller.updateElectiveCourses(
+                          value); // Adjust value based on index
                     },
                     scrollController: FixedExtentScrollController(
                       initialItem: 3,
                     ),
                     children: List.generate(
                       controller.selectedTotalCourses.value + 1,
-                          (index) =>
-                          Text(
-                            "$index Elective Courses",
-                            style: const TextStyle(
-                              fontFamily: 'Ubuntu',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                      (index) => Text(
+                        "$index Elective Courses",
+                        style: const TextStyle(
+                          fontFamily: 'Ubuntu',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   );
                 }),
@@ -761,15 +807,12 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                     Text(
                       'Total Courses: ${controller.selectedTotalCourses.value}',
                       style: TextStyle(
-                        color: Theme
-                            .of(context)
-                            .primaryColor,
+                        color: Theme.of(context).primaryColor,
                         fontFamily: 'Ubuntu',
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-
                     Text(
                       'Compulsory: ${controller.selectedTotalCourses.value - controller.selectedElectiveCourses.value}',
                       style: TextStyle(
@@ -779,7 +822,6 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-
                     Text(
                       'Elective: ${controller.selectedElectiveCourses.value}',
                       style: TextStyle(
@@ -796,8 +838,7 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
               // Save Button
               ElevatedButton(
                 style: const ButtonStyle(
-                  fixedSize: WidgetStatePropertyAll(
-                      Size(double.maxFinite, 45)),
+                  fixedSize: WidgetStatePropertyAll(Size(double.maxFinite, 45)),
                 ),
                 onPressed: () {
                   Semester updatedSemester = Semester(
@@ -805,11 +846,12 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                       sectionLimit: currentSemester.sectionLimit,
                       totalCourses: controller.selectedTotalCourses.value,
                       numOfCourses: currentSemester.numOfCourses,
-                      numOfElectiveCourses: controller.selectedElectiveCourses.value,
+                      numOfElectiveCourses:
+                          controller.selectedElectiveCourses.value,
                       numOfStudents: currentSemester.numOfStudents,
-                      numOfTeachers: currentSemester.numOfTeachers
-                  );
-                  showCourseSelectionDialog(context, currentSemester, updatedSemester);
+                      numOfSections: currentSemester.numOfSections);
+                  showCourseSelectionDialog(
+                      context, currentSemester, updatedSemester);
                 },
                 child: const Text(
                   'Next',
@@ -828,14 +870,22 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
     );
   }
 
-  showCourseSelectionDialog(BuildContext context, Semester currentSemester, Semester updatedSemester) {
-    int totalCourses = updatedSemester.totalCourses, compulsoryCourses = updatedSemester.totalCourses - updatedSemester.numOfElectiveCourses, electiveCourses = updatedSemester.numOfElectiveCourses;
+  showCourseSelectionDialog(BuildContext context, Semester currentSemester,
+      Semester updatedSemester) {
+    int totalCourses = updatedSemester.totalCourses,
+        compulsoryCourses =
+            updatedSemester.totalCourses - updatedSemester.numOfElectiveCourses,
+        electiveCourses = updatedSemester.numOfElectiveCourses;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: const Center(child: Text('Courses', style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Ubuntu'),)),
+          title: const Center(
+              child: Text(
+            'Courses',
+            style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Ubuntu'),
+          )),
           content: Container(
             width: double.maxFinite,
             child: Row(
@@ -846,32 +896,80 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Total', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 20),),
-                      Text('$totalCourses', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 18),),
+                      Text(
+                        'Total',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                      Text(
+                        '$totalCourses',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
                     ],
                   ),
                 ),
-                Container(color: Colors.black, height: 50, width: 2,),
-
+                Container(
+                  color: Colors.black,
+                  height: 50,
+                  width: 2,
+                ),
                 SizedBox(
                   width: 105,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Compulsory', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 18),),
-                      Text('$compulsoryCourses', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 18),),
+                      Text(
+                        'Compulsory',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                      Text(
+                        '$compulsoryCourses',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
                     ],
                   ),
                 ),
-                Container(color: Colors.black, height: 50, width: 2,),
-
+                Container(
+                  color: Colors.black,
+                  height: 50,
+                  width: 2,
+                ),
                 SizedBox(
                   width: 80,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Elective', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 20),),
-                      Text('$electiveCourses', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 18),),
+                      Text(
+                        'Elective',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                      Text(
+                        '$electiveCourses',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
                     ],
                   ),
                 ),
@@ -883,23 +981,39 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
               children: [
                 OutlinedButton(
                   style: ButtonStyle(
-                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-                    side: WidgetStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2))
-                  ),
+                      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15))),
+                      side: WidgetStatePropertyAll(BorderSide(
+                          color: Theme.of(context).primaryColor, width: 2))),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Cancel', style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold),),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                        fontFamily: 'Ubuntu',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    var semesterIndex = controller.semesterList.indexOf(currentSemester);
+                    var semesterIndex =
+                        controller.semesterList.indexOf(currentSemester);
 
-                    controller.updateSemester(widget.deptName, semesterIndex, updatedSemester);
+                    controller.updateSemester(
+                        widget.deptName, semesterIndex, updatedSemester);
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Confirm', style: TextStyle(color: Colors.white, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold),),
+                  child: const Text(
+                    'Confirm',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Ubuntu',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
@@ -909,11 +1023,14 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
     );
   }
 
-  Future showCourseSelectionBottomSheet(BuildContext context, int number, String semester, String courseType) {
-    List<DepartmentCourse?> selectedCourses = List.filled(number, null); // To track selected courses
+  Future showCourseSelectionBottomSheet(
+      BuildContext context, int number, String semester, String courseType) {
+    List<DepartmentCourse?> selectedCourses =
+        List.filled(number, null); // To track selected courses
     List<DepartmentCourse> courses = controller.allCoursesList;
     for (var semesterCourse in controller.semesterCourseList) {
-      courses.removeWhere((course) => course.courseCode == semesterCourse.courseCode);
+      courses.removeWhere(
+          (course) => course.courseCode == semesterCourse.courseCode);
     }
 
     return showModalBottomSheet(
@@ -956,25 +1073,37 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-
-                        items: courses.where((course) => !selectedCourses.contains(course) || course == selectedCourses[i])
+                        items: courses
+                            .where((course) =>
+                                !selectedCourses.contains(course) ||
+                                course == selectedCourses[i])
                             .map((course) => DropdownMenuItem(
-                          value: course,
-                          child: selectedCourses.contains(course) ? SizedBox(
-                              width: Get.width * 0.7,
-                              child: AutoSizeText(course.courseName, style: const TextStyle(fontWeight: FontWeight.w500), maxLines: 2, )
-                          )
-                              : Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                  width: Get.width * 0.7,
-                                  child: AutoSizeText(course.courseName, style: const TextStyle(fontWeight: FontWeight.w500), maxLines: 2, )
-                              ),
-                              const Divider(),
-                            ],
-                          ),
-                        ))
+                                  value: course,
+                                  child: selectedCourses.contains(course)
+                                      ? SizedBox(
+                                          width: Get.width * 0.7,
+                                          child: AutoSizeText(
+                                            course.courseName,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w500),
+                                            maxLines: 2,
+                                          ))
+                                      : Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SizedBox(
+                                                width: Get.width * 0.7,
+                                                child: AutoSizeText(
+                                                  course.courseName,
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                  maxLines: 2,
+                                                )),
+                                            const Divider(),
+                                          ],
+                                        ),
+                                ))
                             .toList(),
                         onChanged: (value) {
                           setState(() {
@@ -994,18 +1123,22 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
                     onPressed: () {
                       if (selectedCourses.contains(null)) {
                         Get.snackbar("Error", "Please select all courses",
-                            backgroundColor: Colors.red, colorText: Colors.white);
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white);
                       } else {
                         Get.back(); // Close BottomSheet
                         List<SemesterCourse> nonNullCourses = [];
-                         for (var course in selectedCourses) {
-                           nonNullCourses.add(SemesterCourse.fromDeptCourse(course!, semester, courseType));
-                         }
+                        for (var course in selectedCourses) {
+                          nonNullCourses.add(SemesterCourse.fromDeptCourse(
+                              course!, semester, courseType));
+                        }
                         controller.addSemesterCourseList(nonNullCourses);
                         print("Selected Courses: $selectedCourses");
                       }
                     },
-                    child: const Text("Confirm Selection", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    child: const Text("Confirm Selection",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                   const SizedBox(height: 10),
                 ],
@@ -1016,7 +1149,6 @@ class _SemesterWiseCourseScreenState extends State<SemesterWiseCourseScreen> {
       },
     );
   }
-
 }
 
 class ElectiveCourseScreen extends StatelessWidget {

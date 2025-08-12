@@ -3,8 +3,8 @@ import 'package:digital_academic_portal/core/usecases/UseCase.dart';
 import '../../../../../../shared/domain/entities/MainNotice.dart';
 import '../repositories/NoticeBoardRepository.dart';
 
-class DeleteNoticeUseCase implements UseCase<void, MainNotice>{
-  final NoticeRepository repository;
+class DeleteNoticeUseCase implements UseCase<void, MainNotice> {
+  final NoticeBoardRepository repository;
 
   DeleteNoticeUseCase(this.repository);
 

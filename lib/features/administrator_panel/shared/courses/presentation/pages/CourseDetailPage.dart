@@ -1,319 +1,244 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:digital_academic_portal/features/administrator_panel/shared/departments/domain/entities/Department.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-
 import '../../../../../../shared/domain/entities/SemesterCourse.dart';
 
-class CourseDetailPage extends StatefulWidget {
+class CourseDetailPage extends StatelessWidget {
   final String deptName;
   final SemesterCourse course;
-  const CourseDetailPage({super.key, required this.deptName, required this.course});
-
-  @override
-  State<CourseDetailPage> createState() => _CourseDetailPageState();
-}
-
-class _CourseDetailPageState extends State<CourseDetailPage> {
+  const CourseDetailPage(
+      {super.key, required this.deptName, required this.course});
 
   @override
   Widget build(BuildContext context) {
-    var dept = widget.deptName;
-    var course = widget.course;
-    var screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
-      body: Center(
-        child: Container(
-          color: Theme.of(context).primaryColor,
-          child: Column(
-            children: [
-              Container(
-                height: screenSize.height * .25,
-                width: screenSize.width,
-                padding: EdgeInsets.only(top: 35, left: screenSize.width *0.035, right: screenSize.width *0.035, bottom: 8),
-                decoration: const BoxDecoration(
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          // Modern SliverAppBar with gradient
+          SliverAppBar(
+            expandedHeight: 250.0,
+            floating: false,
+            pinned: true,
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            leading: IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              onPressed: () => Get.back(),
+            ),
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Get.theme.primaryColor,
+                      const Color(0xFF1B7660),
+                    ],
+                  ),
+                ),
+                child: Stack(
                   children: [
-                    Container(
-                      height: 80,
-                      width: double.infinity,
-                      child: Stack(
+                    Positioned(
+                      top: -50,
+                      right: -50,
+                      child: Container(
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.1),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -30,
+                      left: -30,
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.1),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Positioned(
-                            top: 20,
-                            child: Container(
-                                width: screenSize.width * 0.93,
-                                child: Text('$dept\n${course.courseName}', style: Theme.of(context).appBarTheme.titleTextStyle, textAlign: TextAlign.center,)),
-                          ),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 30,
-                                child: IconButton(
-                                    padding: const EdgeInsets.all(8),
-                                    onPressed: (){
-                                      Get.back();
-                                    },
-                                    icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28,)
-                                ),
+                          const SizedBox(height: 60),
+                          Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white.withOpacity(0.2),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.3),
+                                width: 2,
                               ),
-
-                              // IconButton(
-                              //   icon: const CircleAvatar(
-                              //     child: Icon(FontAwesomeIcons.userShield),
-                              //   ),
-                              //   onPressed: () => _showCustomMenu(context),
-                              // ),
-                            ],
+                            ),
+                            child: const Icon(
+                              Icons.menu_book_rounded,
+                              size: 40,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            course.courseName,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Ubuntu',
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              'Department: $deptName',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Ubuntu',
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Card(
-                          color: const Color(0xFF128771),
-                          borderOnForeground: true,
-                          semanticContainer: true,
-                          shadowColor: Colors.black,
-                          child: SizedBox(
-                            height: 70,
-                            width: screenSize.width * 0.30,
-                            child: Center(
-                              child: Text('Sections\n0', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, fontFamily: 'Ubuntu', color: Theme.of(context).primaryColorDark), textAlign: TextAlign.center,),
-                            ),
-                          ),
-                        ),
-
-                        Card(
-                          color: const Color(0xFF128771),
-                          child: SizedBox(
-                            height: 70,
-                            width: screenSize.width * 0.28,
-                            child: Center(
-                              child: Text('Teachers\n0', style: TextStyle(fontSize: 17, color: Theme.of(context).primaryColorDark, fontWeight: FontWeight.bold, fontFamily: 'Ubuntu'), textAlign: TextAlign.center,),
-                            ),
-                          ),
-                        ),
-
-                        Card(
-                          color: const Color(0xFF128771),
-                          surfaceTintColor: Colors.black,
-                          shadowColor: Theme.of(context).primaryColorLight,
-                          child: SizedBox(
-                            height: 70,
-                            width: screenSize.width * 0.28,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text('Students\n0', style: TextStyle(fontSize: 17, color: Theme.of(context).primaryColorDark, fontWeight: FontWeight.bold, fontFamily: 'Ubuntu'), textAlign: TextAlign.center,),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
                   ],
                 ),
               ),
-
-              Container(
-                height: screenSize.height * .75,
-                width: screenSize.width,
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30)
-                    )
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-
-                    const SizedBox(height: 10),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          width: screenSize.width * 0.4,
-                          height: 80,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Theme.of(context).primaryColor, width: 2)
-                          ),
-                          child: Card(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                AutoSizeText('Course Code', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 17, fontWeight: FontWeight.bold), maxLines: 1,),
-                                AutoSizeText(course.courseCode, style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        Container(
-                          width: screenSize.width * 0.4,
-                          height: 80,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Theme.of(context).primaryColor, width: 2)
-                          ),
-                          child: Card(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                AutoSizeText('Semester', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                                AutoSizeText(course.courseSemester, style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          width: screenSize.width * 0.4,
-                          height: 80,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Theme.of(context).primaryColor, width: 2)
-                          ),
-                          child: Card(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                AutoSizeText('Dept', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                                AutoSizeText(course.courseDept, style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        Container(
-                          width: screenSize.width * 0.4,
-                          height: 80,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Theme.of(context).primaryColor, width: 2)
-                          ),
-                          child: Card(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                AutoSizeText('Credit Hr', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                                AutoSizeText('${course.courseCreditHours}', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'Ubuntu', fontSize: 20, fontWeight: FontWeight.bold), maxLines: 1,),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-
-                    const SizedBox(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .45, 100)),
-                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
-                          ),
-                          onPressed: ()=> Get.toNamed('/semesterStudents', arguments: {
-                            'deptName': dept,
-                            'semester': course.courseSemester,
-                          }),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(FontAwesomeIcons.userGraduate, color: Theme.of(context).primaryColorLight, size: 35,),
-                              AutoSizeText('Students', style: TextStyle(color: Theme.of(context).primaryColorLight, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
-                            ],
-                          ),
-                        ),
-
-                        ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .45, 100)),
-                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
-                          ),
-                          onPressed: ()=> Get.toNamed('/teachers'),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(Icons.school, color: Theme.of(context).primaryColorLight, size: 35,),
-                              AutoSizeText('Teachers', style: TextStyle(color: Theme.of(context).primaryColorLight, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .45, 100)),
-                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
-                          ),
-                          onPressed: () {
-
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(Icons.account_tree, color: Theme.of(context).primaryColorDark, size: 35,),
-                              AutoSizeText(' Sections ', style: TextStyle(color: Theme.of(context).primaryColorDark, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
-                            ],
-                          ),
-                        ),
-
-                        ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-                              fixedSize: WidgetStatePropertyAll(Size(screenSize.width * .45, 100)),
-                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
-                          ),
-                          onPressed: () {},
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(Icons.table_view_rounded, color: Theme.of(context).primaryColorDark, size: 35,),
-                              AutoSizeText(' TimeTable ', style: TextStyle(color: Theme.of(context).primaryColorDark, fontFamily: 'Ubuntu', fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1,),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildInfoCard(
+                    icon: Icons.code,
+                    title: 'Course Code',
+                    value: course.courseCode,
+                    color: const Color(0xFF4CAF50),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildInfoCard(
+                    icon: Icons.calendar_today,
+                    title: 'Semester',
+                    value: course.courseSemester,
+                    color: const Color(0xFF2196F3),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildInfoCard(
+                    icon: Icons.business,
+                    title: 'Department',
+                    value: course.courseDept,
+                    color: const Color(0xFFFF9800),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildInfoCard(
+                    icon: Icons.timer,
+                    title: 'Credit Hours',
+                    value: '${course.courseCreditHours}',
+                    color: const Color(0xFF9C27B0),
+                  ),
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoCard({
+    required IconData icon,
+    required String title,
+    required String value,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              icon,
+              color: color,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Ubuntu',
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Ubuntu',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

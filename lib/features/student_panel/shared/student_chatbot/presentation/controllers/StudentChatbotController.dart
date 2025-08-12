@@ -17,11 +17,25 @@ class StudentChatbotController extends GetxController {
   var messages = <ChatMessageEntity>[].obs;
   var faqs = <StudentFAQ>[].obs;
   var isLoading = false.obs;
+  var isLoadingFAQs = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    faqs.value = getFAQsUseCase();
+    loadFAQs();
+  }
+
+  Future<void> loadFAQs() async {
+    isLoadingFAQs.value = true;
+    try {
+      final faqsList = await getFAQsUseCase();
+      faqs.value = faqsList;
+    } catch (e) {
+      print('Error loading FAQs: $e');
+      // Keep existing FAQs if loading fails
+    } finally {
+      isLoadingFAQs.value = false;
+    }
   }
 
   Future<void> sendMessage(String text) async {

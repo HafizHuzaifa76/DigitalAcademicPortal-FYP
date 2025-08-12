@@ -7,7 +7,9 @@ import '../controllers/SectionController.dart';
 class MainSectionsListPage extends StatefulWidget {
   final String deptName;
   final String semester;
-  const MainSectionsListPage({super.key, required this.deptName, required this.semester});
+  final int numOfTeachers;
+  final int numOfCourses;
+  const MainSectionsListPage({super.key, required this.deptName, required this.semester, required this.numOfTeachers, required this.numOfCourses});
 
   @override
   State<MainSectionsListPage> createState() => _MainSectionsListPageState();
@@ -125,7 +127,7 @@ class _MainSectionsListPageState extends State<MainSectionsListPage> {
                             ),
                             subtitle: Text('Total Students: ${section.totalStudents}'),
                             trailing: const Icon(Icons.arrow_forward_ios),
-                            onTap: () => Get.to(()=> SectionDetailPage(deptName: widget.deptName, semester: widget.semester, section: section)),
+                            onTap: () => Get.to(()=> SectionDetailPage(deptName: widget.deptName, semester: widget.semester, section: section, numOfTeachers: widget.numOfTeachers, numOfCourses: widget.numOfCourses)),
                           ),
                         ),
                       );

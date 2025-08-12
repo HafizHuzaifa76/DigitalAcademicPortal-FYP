@@ -7,7 +7,7 @@ class SemesterModel extends Semester {
       required super.totalCourses,
       required super.numOfCourses,
       required super.numOfStudents,
-      required super.numOfTeachers,
+      required super.numOfSections,
       required super.numOfElectiveCourses});
 
   factory SemesterModel.fromSemester(Semester semester) {
@@ -18,7 +18,7 @@ class SemesterModel extends Semester {
       numOfCourses: semester.numOfCourses,
       numOfElectiveCourses: semester.numOfElectiveCourses,
       numOfStudents: semester.numOfStudents,
-      numOfTeachers: semester.numOfTeachers,
+      numOfSections: semester.numOfSections,
     );
   }
 
@@ -30,19 +30,20 @@ class SemesterModel extends Semester {
       'numOfCourses': numOfCourses,
       'numOfElectiveCourses': numOfElectiveCourses,
       'numOfStudents': numOfStudents,
-      'numOfTeachers': numOfTeachers,
+      'numOfSections': numOfSections,
     };
   }
 
-  factory SemesterModel.fromMap(Map<String, dynamic> map) {
+  factory SemesterModel.fromMap(
+      Map<String, dynamic> map, int sectionCount, int studentCount) {
     return SemesterModel(
       semesterName: map['semesterName'] as String,
       sectionLimit: map['sectionLimit'].toInt(),
       totalCourses: map['totalCourses'].toInt(),
       numOfCourses: map['numOfCourses'].toInt(),
       numOfElectiveCourses: map['numOfElectiveCourses'].toInt(),
-      numOfStudents: map['numOfStudents'].toInt(),
-      numOfTeachers: map['numOfTeachers'].toInt(),
+      numOfStudents: studentCount,
+      numOfSections: sectionCount,
     );
   }
 }

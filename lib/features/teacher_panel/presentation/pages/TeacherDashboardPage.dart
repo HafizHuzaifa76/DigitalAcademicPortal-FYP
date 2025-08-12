@@ -6,8 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../auth/presentation/pages/LoginPage.dart';
 import '../widgets/TeacherDrawer.dart';
 
 class TeacherDashboardPage extends StatefulWidget {
@@ -347,7 +345,7 @@ class TeacherDashboardPageState extends State<TeacherDashboardPage> {
                               title: 'Calendar',
                               onTap: () {
                                 if (controller.teacher.value != null) {
-                                  Get.toNamed('/teacherCalendarPage');
+                                  Get.toNamed('/calendarViewPage');
                                 } else {
                                   Utils().showErrorSnackBar('Error',
                                       'Teacher data not loaded. Please wait or refresh.');

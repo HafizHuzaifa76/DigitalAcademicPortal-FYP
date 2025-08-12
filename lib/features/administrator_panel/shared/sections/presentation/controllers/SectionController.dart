@@ -246,9 +246,15 @@ class SectionController extends GetxController {
       }, (assignedTeachersMap) {
         if (assignedTeachersMap.isNotEmpty) {
           isEdit.value = true;
+        } else {
+          isEdit.value = false;
         }
         for (var item in assignedTeachersMap.entries) {
-          selectedTeachers[item.key] = teachersIDMap[item.value];
+          if (item.value == 'Course Submitted') {
+            selectedTeachers[item.key] = 'Course Submitted';
+          } else {
+            selectedTeachers[item.key] = teachersIDMap[item.value];
+          }
         }
 
         Utils().showSuccessSnackBar(

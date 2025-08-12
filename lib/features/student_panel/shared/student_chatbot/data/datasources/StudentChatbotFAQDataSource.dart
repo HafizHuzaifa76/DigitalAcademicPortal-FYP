@@ -1,7 +1,35 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domain/entities/StudentFAQ.dart';
 
 class StudentChatbotFAQDataSource {
-  List<StudentFAQ> getFAQs() {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Get FAQs from Firestore (admin-managed)
+  Future<List<StudentFAQ>> getFAQsFromFirestore() async {
+    try {
+      final QuerySnapshot snapshot = await _firestore
+          .collection('chatbot_faqs')
+          .where('isActive', isEqualTo: true)
+          .get();
+
+      var adminFAQs = snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return StudentFAQ(
+          question: data['question'] ?? '',
+          answer: data['answer'] ?? '',
+        );
+      }).toList();
+
+      return adminFAQs + getHardcodedFAQs();
+    } catch (e) {
+      print('Error fetching FAQs from Firestore: $e');
+      // Fallback to hardcoded FAQs if Firestore fails
+      return getHardcodedFAQs();
+    }
+  }
+
+  // Fallback hardcoded FAQs (original data)
+  List<StudentFAQ> getHardcodedFAQs() {
     return [
       StudentFAQ(
           question: 'How do I check my attendance?',
@@ -44,6 +72,14 @@ class StudentChatbotFAQDataSource {
           answer:
               'To reset your password, go to the Account Settings and select Reset Password.'),
       StudentFAQ(
+          question: 'Prevoius courses',
+          answer:
+              'Student Dashboard -> Courses -> It contains data of previous courses and current courses'),
+      StudentFAQ(
+          question: 'Transcript generation',
+          answer:
+              "Student Dashboard -> Courses -> Previous courses: It show result of courses that are submitted and it allows to view and generate transcript."),
+      StudentFAQ(
           question: 'How do I report an issue?',
           answer:
               'Student Dashboard -> Drawer -> Report (here user ;ncan report any issue).'),
@@ -52,5 +88,12 @@ class StudentChatbotFAQDataSource {
           answer:
               'If you forgot your password, use the "Forgot Password" link on the login page to reset it. Follow the instructions sent to your registered email.'),
     ];
+  }
+
+  // Legacy method for backward compatibility
+  List<StudentFAQ> getFAQs() {
+    // This method now returns hardcoded FAQs as fallback
+    // The actual implementation should use getFAQsFromFirestore()
+    return getHardcodedFAQs();
   }
 }

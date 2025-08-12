@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import '../controller/StudentDiaryController.dart';
 
 import '../../domain/entities/Note.dart';
@@ -10,7 +11,8 @@ class StudentDiaryPage extends StatelessWidget {
   final String deptName;
   final String studentRollNo;
 
-  StudentDiaryPage({super.key, required this.deptName, required this.studentRollNo});
+  StudentDiaryPage(
+      {super.key, required this.deptName, required this.studentRollNo});
 
   final StudentDiaryController controller = Get.find();
 
@@ -21,7 +23,8 @@ class StudentDiaryPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Student Diary', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Student Diary',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
             icon: Icon(Icons.sort, color: Get.theme.primaryColor),
@@ -50,16 +53,19 @@ class StudentDiaryPage extends StatelessWidget {
                   controller: controller.searchController,
                   decoration: InputDecoration(
                     hintText: 'Search notes...',
-                    prefixIcon: Icon(Icons.search, color: Get.theme.primaryColor),
+                    prefixIcon:
+                        Icon(Icons.search, color: Get.theme.primaryColor),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
+                      borderSide: BorderSide(
+                          color: Get.theme.primaryColor.withOpacity(0.5)),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide(color: Get.theme.primaryColor.withOpacity(0.5)),
+                      borderSide: BorderSide(
+                          color: Get.theme.primaryColor.withOpacity(0.5)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
@@ -88,21 +94,27 @@ class StudentDiaryPage extends StatelessWidget {
           Expanded(
             child: Obx(() {
               if (controller.filteredNotes.isEmpty) {
+                if (controller.isLoading.value) {
+                  return Center(
+                      child: Lottie.asset(
+                    'assets/animations/loading_animation4.json',
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.scaleDown,
+                  ));
+                }
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.note_alt_outlined, 
-                        size: 64, 
-                        color: Get.theme.primaryColor.withOpacity(0.5)
-                      ),
+                      Icon(Icons.note_alt_outlined,
+                          size: 64,
+                          color: Get.theme.primaryColor.withOpacity(0.5)),
                       const SizedBox(height: 16),
                       Text('No notes found.',
                           style: TextStyle(
-                            color: Get.theme.primaryColor.withOpacity(0.7),
-                            fontSize: 16
-                          )
-                      ),
+                              color: Get.theme.primaryColor.withOpacity(0.7),
+                              fontSize: 16)),
                     ],
                   ),
                 );
@@ -119,7 +131,10 @@ class StudentDiaryPage extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        icon: const Icon(Icons.add, color: Colors.white,),
+        icon: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
         backgroundColor: Get.theme.primaryColor,
         label: const Text('New Note', style: TextStyle(color: Colors.white)),
         onPressed: () async {
@@ -133,8 +148,8 @@ class StudentDiaryPage extends StatelessWidget {
   }
 
   Widget _buildFilterChip(String label, bool isSelected) {
-    return Obx(()=>
-      Padding(
+    return Obx(
+      () => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
         child: FilterChip(
           label: Text(label),
@@ -146,8 +161,12 @@ class StudentDiaryPage extends StatelessWidget {
           selectedColor: Get.theme.primaryColor.withOpacity(0.2),
           checkmarkColor: Get.theme.primaryColor,
           labelStyle: TextStyle(
-            color: controller.currentFilter.value == label ? Get.theme.primaryColor : Colors.black54,
-            fontWeight: controller.currentFilter.value == label ? FontWeight.bold : FontWeight.normal,
+            color: controller.currentFilter.value == label
+                ? Get.theme.primaryColor
+                : Colors.black54,
+            fontWeight: controller.currentFilter.value == label
+                ? FontWeight.bold
+                : FontWeight.normal,
           ),
         ),
       ),
@@ -206,7 +225,8 @@ class StudentDiaryPage extends StatelessWidget {
               if (note.category != null && note.category!.isNotEmpty) ...[
                 const SizedBox(height: 4),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: Get.theme.primaryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -303,8 +323,8 @@ class StudentDiaryPage extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: Text('Cancel',
-                style: TextStyle(color: Get.theme.primaryColor)),
+            child:
+                Text('Cancel', style: TextStyle(color: Get.theme.primaryColor)),
           ),
           TextButton(
             onPressed: () {
@@ -419,8 +439,8 @@ class StudentDiaryPage extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.pending_actions,
-                  color: Get.theme.primaryColor),
+              leading:
+                  Icon(Icons.pending_actions, color: Get.theme.primaryColor),
               title: const Text('Pending'),
               onTap: () {
                 controller.setFilter('Pending');
@@ -477,4 +497,3 @@ class StudentDiaryPage extends StatelessWidget {
     );
   }
 }
-

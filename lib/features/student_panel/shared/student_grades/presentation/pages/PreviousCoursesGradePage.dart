@@ -272,42 +272,23 @@ class PreviousCoursesGradePage extends GetView<StudentGradeController> {
                     _iconText(Icons.school, 'Credit Hours',
                         grade.credithour.toString()),
                     _iconText(
-                        Icons.assignment,
-                        'Sessional',
-                        (grade.sessionalMarks % 1 == 0)
-                            ? grade.sessionalMarks.toStringAsFixed(0)
-                            : grade.sessionalMarks.toStringAsFixed(2)),
-                    _iconText(
-                      Icons.assignment_turned_in,
-                      'Final',
-                      (grade.finalMarks % 1 == 0)
-                          ? grade.finalMarks.toStringAsFixed(0)
-                          : grade.finalMarks.toStringAsFixed(2),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    _iconText(
                       Icons.calculate,
                       'Total',
                       (grade.totalMarks % 1 == 0)
                           ? grade.totalMarks.toStringAsFixed(0)
                           : grade.totalMarks.toStringAsFixed(2),
                     ),
-                    _iconText(Icons.grade, 'Grade', grade.grade),
                     _iconText(Icons.star, 'GPA', grade.gpa.toStringAsFixed(2)),
                   ],
                 ),
                 const SizedBox(height: 10),
                 Row(
                   children: [
+                    _iconText(Icons.grade, 'Grade', grade.grade),
                     _iconText(Icons.verified, 'Status', grade.status),
-                    _iconText(Icons.calendar_today, 'Semester', grade.semester),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 if (grade.remarks != null && grade.remarks.trim().isNotEmpty)
                   Row(
                     children: [
@@ -391,13 +372,8 @@ class PreviousCoursesGradePage extends GetView<StudentGradeController> {
                   height: 60,
                   decoration: pw.BoxDecoration(
                     borderRadius: pw.BorderRadius.circular(30),
-                    border: pw.Border.all(color: themeColor, width: 2),
                   ),
-                  child: pw.ClipRRect(
-                    horizontalRadius: 30,
-                    verticalRadius: 30,
-                    child: pw.Image(logo, fit: pw.BoxFit.cover),
-                  ),
+                  child: pw.Image(logo, fit: pw.BoxFit.contain),
                 ),
                 pw.SizedBox(width: 16),
                 pw.Column(
@@ -496,7 +472,7 @@ class PreviousCoursesGradePage extends GetView<StudentGradeController> {
               mainAxisAlignment: pw.MainAxisAlignment.end,
               children: [
                 pw.Text(
-                  'CGPA: ${controller.calculateGPA().toStringAsFixed(2)}',
+                  'CGPA: ${_calculateCGPA(gradesBySemester).toStringAsFixed(2)}',
                   style: pw.TextStyle(
                     fontWeight: pw.FontWeight.bold,
                     color: themeColor,
@@ -521,6 +497,21 @@ class PreviousCoursesGradePage extends GetView<StudentGradeController> {
       totalGpa += grade.gpa;
     }
     return totalGpa / grades.length;
+  }
+
+  double _calculateCGPA(Map<String, List<dynamic>> gradesBySemester) {
+    if (gradesBySemester.isEmpty) return 0.0;
+
+    double totalSgpa = 0;
+    int semesterCount = 0;
+
+    for (var semester in gradesBySemester.keys) {
+      final sgpa = _calculateSGPA(gradesBySemester[semester]!);
+      totalSgpa += sgpa;
+      semesterCount++;
+    }
+
+    return semesterCount > 0 ? totalSgpa / semesterCount : 0.0;
   }
 }
 

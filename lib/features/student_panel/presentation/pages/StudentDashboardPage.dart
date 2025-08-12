@@ -10,17 +10,15 @@ import '../../../../core/services/SharedPrefService.dart';
 import '../../../../shared/domain/entities/Student.dart';
 import '../controller/StudentPanelController.dart';
 
-class StudentPortalDashboardPage extends StatefulWidget {
+class StudentDashboardPage extends StatefulWidget {
   static Student? studentProfile;
-  const StudentPortalDashboardPage({super.key});
+  const StudentDashboardPage({super.key});
 
   @override
-  State<StudentPortalDashboardPage> createState() =>
-      StudentPortalDashboardPageState();
+  State<StudentDashboardPage> createState() => StudentDashboardPageState();
 }
 
-class StudentPortalDashboardPageState
-    extends State<StudentPortalDashboardPage> {
+class StudentDashboardPageState extends State<StudentDashboardPage> {
   final StudentDashboardController controller = Get.find();
 
   int count = 0;
@@ -292,7 +290,7 @@ class StudentPortalDashboardPageState
                                   arguments: {
                                     'studentDept': controller
                                             .student.value?.studentDepartment ??
-                                        ''
+                                        '',
                                   }),
                               color: Theme.of(context).primaryColor,
                             ),

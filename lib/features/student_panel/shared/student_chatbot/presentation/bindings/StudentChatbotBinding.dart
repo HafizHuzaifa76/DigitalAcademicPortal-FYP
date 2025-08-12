@@ -11,7 +11,7 @@ class StudentChatbotBinding extends Bindings {
   @override
   void dependencies() {
     // TODO: Replace with your actual OpenAI API key
-    const openAIApiKey = 'YOUR_OPENAI_API_KEY';
+    const openAIApiKey = 'AIzaSyCwMqs2oeKcpxTlDiOyC7zmvAOiF07KMQE';
     Get.lazyPut(
         () => StudentChatbotRemoteDataSource(openAIApiKey: openAIApiKey));
     Get.lazyPut(() => StudentChatbotFAQDataSource());

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../../presentation/pages/StudentPanelDashboardPage.dart';
+import '../../../../presentation/pages/StudentDashboardPage.dart';
 import '../../../student_courses/domain/entities/StudentCourse.dart';
 import '../models/StudentAssignmentModel.dart';
 
@@ -12,7 +12,7 @@ abstract class StudentAssignmentRemoteDataSource {
 class StudentAssignmentRemoteDataSourceImpl
     implements StudentAssignmentRemoteDataSource {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  var student = StudentPortalDashboardPage.studentProfile;
+  var student = StudentDashboardPage.studentProfile;
 
   @override
   Future<List<StudentAssignmentModel>> getAssignments(
@@ -34,8 +34,6 @@ class StudentAssignmentRemoteDataSourceImpl
     return snapshot.docs
         .map((doc) => StudentAssignmentModel.fromMap(doc.data(), doc.id,
             course.courseCode, course.courseName, student!.studentRollNo))
-        .toList()
-        .reversed
         .toList();
   }
 

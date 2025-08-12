@@ -27,7 +27,8 @@ class StudentChatbotRepositoryImpl implements StudentChatbotRepository {
   }
 
   @override
-  List<StudentFAQ> getFAQs() {
-    return faqDataSource.getFAQs();
+  Future<List<StudentFAQ>> getFAQs() async {
+    // Use the new Firestore method to get admin-managed FAQs
+    return await faqDataSource.getFAQsFromFirestore();
   }
 }

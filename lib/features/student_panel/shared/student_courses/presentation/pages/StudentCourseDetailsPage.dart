@@ -8,7 +8,9 @@ import '../bindings/StudentQueryBinding.dart';
 
 class StudentCourseDetailsPage extends StatefulWidget {
   final StudentCourse course;
-  const StudentCourseDetailsPage({Key? key, required this.course})
+  final int? detailPage;
+  const StudentCourseDetailsPage(
+      {Key? key, required this.course, this.detailPage})
       : super(key: key);
 
   @override
@@ -23,7 +25,8 @@ class _StudentCourseDetailsPageState extends State<StudentCourseDetailsPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(
+        length: 3, vsync: this, initialIndex: widget.detailPage ?? 0);
     StudentQueryBinding().dependencies();
   }
 

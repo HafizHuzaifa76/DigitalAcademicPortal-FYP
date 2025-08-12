@@ -1,4 +1,4 @@
-import 'package:digital_academic_portal/features/student_panel/presentation/pages/StudentPanelDashboardPage.dart';
+import 'package:digital_academic_portal/features/student_panel/presentation/pages/StudentDashboardPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../../../shared/data/models/AttendanceModel.dart';
 
@@ -10,7 +10,7 @@ abstract class StudentAttendanceRemoteDataSource {
 class StudentAttendanceRemoteDataSourceImpl
     implements StudentAttendanceRemoteDataSource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  var student = StudentPortalDashboardPage.studentProfile;
+  var student = StudentDashboardPage.studentProfile;
 
   @override
   Future<List<AttendanceModel>> getStudentAttendance(String courseId) async {

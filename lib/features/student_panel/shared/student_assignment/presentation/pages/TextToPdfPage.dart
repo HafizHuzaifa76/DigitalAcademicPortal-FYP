@@ -11,7 +11,6 @@ import '../controllers/StudentAssignmentController.dart';
 import '../../domain/entities/StudentAssignment.dart';
 import 'package:open_file/open_file.dart';
 
-
 class TextToPdfPage extends StatefulWidget {
   final StudentAssignment assignment;
   final StudentAssignmentController controller;
@@ -299,61 +298,55 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
       int listIndex = 1;
       String? bufferText;
       pw.TextStyle? bufferStyle;
-
       pw.TextAlign? bufferAlign;
 
+      // Helpers
+      PdfColor? getColor(Map? attrs) {
+        if (attrs?['color'] != null) {
+          final hex = attrs!['color'].toString().replaceFirst('FF', '');
+          return PdfColor.fromHex(hex);
+        }
+        return null;
+      }
+
+      PdfColor? getBgColor(Map? attrs) {
+        if (attrs?['background'] != null) {
+          final hex = attrs!['background'].toString().replaceFirst('FF', '');
+          return PdfColor.fromHex(hex);
+        }
+        return null;
+      }
+
+      pw.TextAlign getAlign(Map? attrs) {
+        switch (attrs?['align']) {
+          case 'center':
+            return pw.TextAlign.center;
+          case 'right':
+            return pw.TextAlign.right;
+          case 'justify':
+            return pw.TextAlign.justify;
+          default:
+            return pw.TextAlign.left;
+        }
+      }
+
+      double getFontSize(Map? attrs) {
+        switch (attrs?['size']) {
+          case 'small':
+            return 10;
+          case 'large':
+            return 18;
+          case 'huge':
+            return 24;
+          default:
+            return 14;
+        }
+      }
+
+      // Main parsing loop
       for (int i = 0; i < ops.length; i++) {
         final op = ops[i];
         final attrs = op.attributes ?? {};
-
-        // Helper for color
-        PdfColor? getColor(Map? attrs) {
-          if (attrs?['color'] != null) {
-            final hex = attrs!['color'].toString().replaceFirst('FF', '');
-            print(hex);
-            return PdfColor.fromHex(hex);
-          }
-          return null;
-        }
-
-        // Helper for background color
-        PdfColor? getBgColor(Map? attrs) {
-          if (attrs?['background'] != null) {
-            final hex = attrs!['background'].toString().replaceFirst('FF', '');
-            print('hex');
-            print(hex);
-            return PdfColor.fromHex(hex);
-          }
-          return null;
-        }
-
-        // Helper for alignment
-        pw.TextAlign getAlign(Map? attrs) {
-          switch (attrs?['align']) {
-            case 'center':
-              return pw.TextAlign.center;
-            case 'right':
-              return pw.TextAlign.right;
-            case 'justify':
-              return pw.TextAlign.justify;
-            default:
-              return pw.TextAlign.left;
-          }
-        }
-
-        // Helper for font size
-        double getFontSize(Map? attrs) {
-          switch (attrs?['size']) {
-            case 'small':
-              return 10;
-            case 'large':
-              return 18;
-            case 'huge':
-              return 24;
-            default:
-              return 14;
-          }
-        }
 
         pw.TextStyle style = pw.TextStyle(
           fontSize: getFontSize(attrs),
@@ -373,37 +366,28 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
           color: getColor(attrs),
         );
 
-        // If this op is a string (not just newline), buffer it
         if (op.data is String && op.data != '\n') {
           bufferText = (op.data as String).replaceAll('\n', '');
           bufferStyle = style;
-          bufferAlign =
-              null; // Will be set by the next newline op if it has align
+          bufferAlign = null;
           continue;
         }
 
-        // If this op is a newline, check for block attributes (align, list, etc.)
         if (op.data == '\n') {
-          // Alignment
           final align = getAlign(attrs);
 
-          // List
-          if (attrs['list'] == 'bullet' &&
-              bufferText != null &&
-              bufferStyle != null) {
+          if (attrs['list'] == 'bullet' && bufferText != null) {
             children.add(
               pw.Bullet(
-                text: bufferText,
-                style: bufferStyle,
+                text: bufferText!,
+                style: bufferStyle!,
               ),
             );
             bufferText = null;
             bufferStyle = null;
             bufferAlign = null;
             continue;
-          } else if (attrs['list'] == 'ordered' &&
-              bufferText != null &&
-              bufferStyle != null) {
+          } else if (attrs['list'] == 'ordered' && bufferText != null) {
             children.add(
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -411,8 +395,8 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
                   pw.Text('${listIndex++}. ', style: bufferStyle),
                   pw.Expanded(
                     child: pw.Text(
-                      bufferText,
-                      style: bufferStyle,
+                      bufferText!,
+                      style: bufferStyle!,
                       textAlign: align,
                     ),
                   ),
@@ -425,12 +409,11 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
             continue;
           }
 
-          // Normal paragraph with alignment
           if (bufferText != null && bufferStyle != null) {
             final bgColor = getBgColor(attrs);
             final textWidget = pw.Text(
-              bufferText,
-              style: bufferStyle,
+              bufferText!,
+              style: bufferStyle!,
               textAlign: align,
             );
 
@@ -453,6 +436,17 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
         }
       }
 
+      // Flush leftover text (handles simple text with no newline at end)
+      if (bufferText != null && bufferStyle != null) {
+        children.add(
+          pw.Text(
+            bufferText!,
+            style: bufferStyle!,
+            textAlign: bufferAlign ?? pw.TextAlign.left,
+          ),
+        );
+      }
+
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
@@ -468,7 +462,8 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
 
       final output = await getExternalStorageDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final file = File("${output?.path}/${widget.assignment.title}_$timestamp.pdf");
+      final file =
+          File("${output?.path}/${widget.assignment.title}_$timestamp.pdf");
       await file.writeAsBytes(await pdf.save());
       OpenFile.open(file.path);
 
@@ -487,7 +482,6 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
 
       Get.back();
       Get.back();
-
     } catch (e) {
       setState(() {
         isGeneratingPdf = false;
@@ -567,5 +561,4 @@ class _TextToPdfPageState extends State<TextToPdfPage> {
       );
     }
   }
-
 }

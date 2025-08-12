@@ -25,11 +25,12 @@ class StudentDiaryController extends GetxController {
   RxList<Note> notes = <Note>[].obs;
   RxList<Note> filteredNotes = <Note>[].obs;
   TextEditingController searchController = TextEditingController();
-  
+
   // Filter and sort state
   RxString currentFilter = 'All'.obs;
   RxString currentSort = 'Date Created'.obs;
   RxBool sortAscending = true.obs;
+  RxBool isLoading = false.obs;
 
   String deptName = '';
   String rollNo = '';
@@ -60,8 +61,8 @@ class StudentDiaryController extends GetxController {
         filtered = filtered.where((note) => !note.isCompleted);
       } else if (currentFilter.value.contains('Priority')) {
         final priority = currentFilter.value.split(' ')[0].toLowerCase();
-        filtered = filtered.where((note) => 
-          note.priority?.toLowerCase() == priority);
+        filtered =
+            filtered.where((note) => note.priority?.toLowerCase() == priority);
       }
     }
 
@@ -76,8 +77,10 @@ class StudentDiaryController extends GetxController {
       case 'Priority':
         sorted.sort((a, b) {
           final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
-          final aPriority = priorityOrder[a.priority?.toLowerCase() ?? 'medium'] ?? 1;
-          final bPriority = priorityOrder[b.priority?.toLowerCase() ?? 'medium'] ?? 1;
+          final aPriority =
+              priorityOrder[a.priority?.toLowerCase() ?? 'medium'] ?? 1;
+          final bPriority =
+              priorityOrder[b.priority?.toLowerCase() ?? 'medium'] ?? 1;
           return sortAscending.value
               ? aPriority.compareTo(bPriority)
               : bPriority.compareTo(aPriority);
@@ -105,15 +108,20 @@ class StudentDiaryController extends GetxController {
   }
 
   Future<void> loadNotes() async {
-    final result = await allNotesUseCase.execute(
-        NoteParams(deptName: deptName, studentRollNo: rollNo, note: null));
-    result.fold(
-      (failure) => Utils().showErrorSnackBar('Error', failure.toString()),
-      (data) {
-        notes.value = data;
-        filterNotes();
-      },
-    );
+    isLoading.value = true;
+    try {
+      final result = await allNotesUseCase.execute(
+          NoteParams(deptName: deptName, studentRollNo: rollNo, note: null));
+      result.fold(
+        (failure) => Utils().showErrorSnackBar('Error', failure.toString()),
+        (data) {
+          notes.value = data;
+          filterNotes();
+        },
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> addNote(Note note) async {
