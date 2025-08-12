@@ -14,7 +14,7 @@ A few resources to get you started if this is your first Flutter project:
 ## Admin Credentials:
 
     Email: hafizm.huzaifa1234gf@gmail.com
-    Password: 123456
+    Password: 1234567
 
 ## Teacher Credentials:
 

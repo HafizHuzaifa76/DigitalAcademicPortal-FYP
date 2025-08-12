@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../shared/domain/entities/Teacher.dart';
+import '../controllers/TeacherController.dart';
 
 class TeacherDetailPage extends StatelessWidget {
   final Teacher teacher;
+  final TeacherController controller = Get.find();
+  final addTeacherKey = GlobalKey<FormState>();
 
-  const TeacherDetailPage({Key? key, required this.teacher}) : super(key: key);
+  TeacherDetailPage({Key? key, required this.teacher}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +30,8 @@ class TeacherDetailPage extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                        Get.theme.primaryColor,
-                         const Color(0xFF1B7660),
+                      Get.theme.primaryColor,
+                      const Color(0xFF1B7660),
                     ],
                   ),
                 ),
@@ -130,8 +133,9 @@ class TeacherDetailPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                        Get.theme.primaryColor,
-                         const Color(0xFF1B7660),],
+                          Get.theme.primaryColor,
+                          const Color(0xFF1B7660),
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -284,14 +288,7 @@ class TeacherDetailPage extends StatelessWidget {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(16),
                               onTap: () {
-                                // TODO: Implement edit functionality
-                                Get.snackbar(
-                                  'Edit Teacher',
-                                  'Edit functionality will be implemented',
-                                  snackPosition: SnackPosition.BOTTOM,
-                                  backgroundColor: const Color(0xFF667eea),
-                                  colorText: Colors.white,
-                                );
+                                editTeacherBottomSheet(context, teacher);
                               },
                               child: const Center(
                                 child: Row(
@@ -356,31 +353,16 @@ class TeacherDetailPage extends StatelessWidget {
                                           const TextStyle(fontFamily: 'Ubuntu'),
                                     ),
                                     actions: [
-                                      TextButton(
-                                        onPressed: () => Get.back(),
-                                        child: const Text(
-                                          'Cancel',
-                                          style: TextStyle(
-                                            color: Color(0xFF667eea),
-                                            fontFamily: 'Ubuntu',
-                                          ),
-                                        ),
-                                      ),
-                                      TextButton(
+                                      ElevatedButton(
                                         onPressed: () {
                                           Get.back();
-                                          Get.snackbar(
-                                            'Delete Teacher',
-                                            'Delete functionality will be implemented',
-                                            snackPosition: SnackPosition.BOTTOM,
-                                            backgroundColor: Colors.red,
-                                            colorText: Colors.white,
-                                          );
+                                          controller.deleteTeacher(teacher);
+                                          Get.back();
                                         },
                                         child: const Text(
                                           'Delete',
                                           style: TextStyle(
-                                            color: Colors.red,
+                                            color: Colors.white,
                                             fontFamily: 'Ubuntu',
                                           ),
                                         ),
@@ -425,6 +407,353 @@ class TeacherDetailPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Future editTeacherBottomSheet(BuildContext context, Teacher teacher) {
+    controller.editControllers(teacher);
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Ensures that the bottom sheet is full height
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context)
+                .viewInsets
+                .bottom, // Handles soft keyboard
+            left: 16.0,
+            right: 16.0,
+            top: 16.0,
+          ),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: Column(
+              children: [
+                Text(
+                  'Edit Teacher',
+                  style: TextStyle(
+                    fontFamily: 'Ubuntu',
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: Scrollbar(
+                    thumbVisibility: true,
+                    radius: const Radius.circular(30),
+                    thickness: 6,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 13.0),
+                      child: SingleChildScrollView(
+                        child: Form(
+                          key:
+                              addTeacherKey, // Assuming you have defined a GlobalKey<FormState>
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextFormField(
+                                controller: controller.teacherNameController,
+                                keyboardType: TextInputType.name,
+                                textCapitalization: TextCapitalization.words,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
+                                  ),
+                                  labelText: 'Teacher Name',
+                                  hintText:
+                                      'Enter the full name of the teacher',
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Teacher\'s name is required.';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              TextFormField(
+                                controller: controller.teacherContactController,
+                                keyboardType: TextInputType.phone,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
+                                  ),
+                                  labelText: 'Contact Number',
+                                  hintText:
+                                      'Enter a valid phone number (e.g., 03XX-XXXXXXX)',
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'A valid contact number is required.';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              TextFormField(
+                                controller: controller.teacherAddressController,
+                                keyboardType: TextInputType.streetAddress,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
+                                  ),
+                                  labelText: 'Address',
+                                  hintText: 'Enter the teacher\'s address',
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Address is required.';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              Obx(() {
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    const Text(' Gender:',
+                                        style: TextStyle(
+                                          fontFamily: 'Ubuntu',
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    Row(
+                                      children: [
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  WidgetStatePropertyAll(
+                                                      controller.selectedGender
+                                                                  .value
+                                                                  .toString() ==
+                                                              'Male'
+                                                          ? Theme.of(context)
+                                                              .primaryColor
+                                                          : Colors.white),
+                                              fixedSize:
+                                                  const WidgetStatePropertyAll(
+                                                      Size(120, 45)),
+                                              shape: WidgetStatePropertyAll(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(10))),
+                                              side: WidgetStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2))),
+                                          onPressed: () {
+                                            controller.selectedGender.value =
+                                                'Male';
+                                          },
+                                          child: Text(
+                                            'Male',
+                                            style: TextStyle(
+                                                color: controller.selectedGender
+                                                            .value
+                                                            .toString() ==
+                                                        'Male'
+                                                    ? Colors.white
+                                                    : Theme.of(context)
+                                                        .primaryColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  WidgetStatePropertyAll(
+                                                controller.selectedGender.value
+                                                            .toString() ==
+                                                        'Female'
+                                                    ? Theme.of(context)
+                                                        .primaryColor
+                                                    : Colors.white,
+                                              ),
+                                              fixedSize:
+                                                  const WidgetStatePropertyAll(
+                                                      Size(120, 45)),
+                                              shape: WidgetStatePropertyAll(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10))),
+                                              side: WidgetStatePropertyAll(
+                                                  BorderSide(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      width: 2))),
+                                          onPressed: () {
+                                            controller.selectedGender.value =
+                                                'Female';
+                                          },
+                                          child: Text(
+                                            'Female',
+                                            style: TextStyle(
+                                                color: controller.selectedGender
+                                                            .value
+                                                            .toString() ==
+                                                        'Female'
+                                                    ? Colors.white
+                                                    : Theme.of(context)
+                                                        .primaryColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              }),
+                              const SizedBox(height: 10),
+                              Obx(() {
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    const Text(' Teacher Type:',
+                                        style: TextStyle(
+                                          fontFamily: 'Ubuntu',
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    Row(
+                                      children: [
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  WidgetStatePropertyAll(
+                                                      controller.selectedType
+                                                                  .value
+                                                                  .toString() ==
+                                                              'Dept'
+                                                          ? Theme.of(context)
+                                                              .primaryColor
+                                                          : Colors.white),
+                                              fixedSize:
+                                                  const WidgetStatePropertyAll(
+                                                      Size(120, 45)),
+                                              shape: WidgetStatePropertyAll(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(10))),
+                                              side: WidgetStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2))),
+                                          onPressed: () {
+                                            controller.selectedType.value =
+                                                'Dept';
+                                          },
+                                          child: Text(
+                                            'Dept',
+                                            style: TextStyle(
+                                                color: controller
+                                                            .selectedType.value
+                                                            .toString() ==
+                                                        'Dept'
+                                                    ? Colors.white
+                                                    : Theme.of(context)
+                                                        .primaryColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  WidgetStatePropertyAll(
+                                                controller.selectedType.value
+                                                            .toString() ==
+                                                        'Visitor'
+                                                    ? Theme.of(context)
+                                                        .primaryColor
+                                                    : Colors.white,
+                                              ),
+                                              fixedSize:
+                                                  const WidgetStatePropertyAll(
+                                                      Size(120, 45)),
+                                              shape: WidgetStatePropertyAll(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10))),
+                                              side: WidgetStatePropertyAll(
+                                                  BorderSide(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      width: 2))),
+                                          onPressed: () {
+                                            controller.selectedType.value =
+                                                'Visitor';
+                                          },
+                                          child: Text(
+                                            'Visitor',
+                                            style: TextStyle(
+                                                color: controller
+                                                            .selectedType.value
+                                                            .toString() ==
+                                                        'Visitor'
+                                                    ? Colors.white
+                                                    : Theme.of(context)
+                                                        .primaryColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              }),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    if (addTeacherKey.currentState!.validate()) {
+                      controller.editTeacher(teacher);
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text(
+                    'Add Teacher',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

@@ -4,8 +4,8 @@ import 'package:digital_academic_portal/core/usecases/UseCase.dart';
 import '../../../../../../shared/domain/entities/MainNotice.dart';
 import '../repositories/NoticeBoardRepository.dart';
 
-class AddNoticeUseCase implements UseCase<MainNotice, MainNotice>{
-  final NoticeRepository repository;
+class AddNoticeUseCase implements UseCase<MainNotice, MainNotice> {
+  final NoticeBoardRepository repository;
 
   AddNoticeUseCase(this.repository);
 

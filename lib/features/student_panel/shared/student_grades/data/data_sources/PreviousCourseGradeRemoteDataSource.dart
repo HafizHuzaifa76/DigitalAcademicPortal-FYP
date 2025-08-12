@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../../../shared/data/models/PreviousCourseGradeModel.dart';
 import 'package:digital_academic_portal/shared/domain/entities/Student.dart';
-import '../../../../../student_panel/presentation/pages/StudentPanelDashboardPage.dart';
+import '../../../../../student_panel/presentation/pages/StudentDashboardPage.dart';
 
 abstract class PreviousCourseGradeRemoteDataSource {
   Future<List<PreviousCourseGradeModel>> getPreviousCourseGrades(
@@ -13,7 +13,7 @@ abstract class PreviousCourseGradeRemoteDataSource {
 class PreviousCourseGradeRemoteDataSourceImpl
     implements PreviousCourseGradeRemoteDataSource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final Student? student = StudentPortalDashboardPage.studentProfile;
+  final Student? student = StudentDashboardPage.studentProfile;
 
   @override
   Future<List<PreviousCourseGradeModel>> getPreviousCourseGrades(

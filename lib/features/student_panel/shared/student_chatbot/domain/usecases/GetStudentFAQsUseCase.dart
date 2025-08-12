@@ -5,7 +5,7 @@ class GetStudentFAQsUseCase {
   final StudentChatbotRepository repository;
   GetStudentFAQsUseCase(this.repository);
 
-  List<StudentFAQ> call() {
-    return repository.getFAQs();
+  Future<List<StudentFAQ>> call() async {
+    return await repository.getFAQs();
   }
 }

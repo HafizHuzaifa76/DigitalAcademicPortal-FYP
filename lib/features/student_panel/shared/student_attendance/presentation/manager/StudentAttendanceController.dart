@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import '../../../../presentation/pages/StudentPanelDashboardPage.dart';
+import '../../../../presentation/pages/StudentDashboardPage.dart';
 import '../../../../../../shared/domain/entities/Attendance.dart';
 import '../../domain/use_cases/GetStudentAttendanceUseCase.dart';
 import '../../domain/use_cases/GetStudentCourses.dart';
@@ -18,7 +18,7 @@ class StudentAttendanceController extends GetxController {
 
   var isLoading = false.obs;
   var studentCourses = <StudentCourse>[].obs;
-  var student = StudentPortalDashboardPage.studentProfile;
+  var student = StudentDashboardPage.studentProfile;
   var attendanceList = <Attendance>[].obs;
   var selectedCourse = Rxn<StudentCourse>();
 

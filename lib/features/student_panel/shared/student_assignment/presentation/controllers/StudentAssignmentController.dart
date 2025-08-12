@@ -7,7 +7,7 @@ import '../../../student_courses/domain/entities/StudentCourse.dart';
 import '../../../student_courses/domain/usecases/FetchStudentCoursesUseCase.dart';
 import '../../domain/usecases/GetStudentAssignmentsUseCase.dart';
 import '../../domain/usecases/SubmitStudentAssignmentUseCase.dart';
-import '../../../../presentation/pages/StudentPanelDashboardPage.dart';
+import '../../../../presentation/pages/StudentDashboardPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
@@ -29,7 +29,7 @@ class StudentAssignmentController extends GetxController {
   var error = ''.obs;
   var studentCourses = <StudentCourse>[].obs;
   var selectedCourse = Rxn<StudentCourse>();
-  var student = StudentPortalDashboardPage.studentProfile;
+  var student = StudentDashboardPage.studentProfile;
 
   @override
   void onInit() {
@@ -116,33 +116,27 @@ class StudentAssignmentController extends GetxController {
     isLoading.value = false;
   }
 
-    
-Future<void> downloadAndOpenFile(String url) async {
-  try {
-    EasyLoading.show(status: 'Opening File...');
-    String fileName = url.split('/').last;
-    var response = await http.get(Uri.parse(url));
+  Future<void> downloadAndOpenFile(String url) async {
+    try {
+      EasyLoading.show(status: 'Opening File...');
+      String fileName = url.split('/').last;
+      var response = await http.get(Uri.parse(url));
 
-    if (response.statusCode == 200) {
-      var dir = await getTemporaryDirectory();
+      if (response.statusCode == 200) {
+        var dir = await getTemporaryDirectory();
 
-      File file = File('${dir.path}/$fileName');
-      await file.writeAsBytes(response.bodyBytes);
-      OpenFile.open(file.path);
-    } else {
-      Utils().showErrorSnackBar(
-        'Error',
-        'Failed to download file. Status code: ${response.statusCode}');
+        File file = File('${dir.path}/$fileName');
+        await file.writeAsBytes(response.bodyBytes);
+        OpenFile.open(file.path);
+      } else {
+        Utils().showErrorSnackBar('Error',
+            'Failed to download file. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      Utils()
+          .showErrorSnackBar('Error', 'Error downloading or opening file: $e');
+    } finally {
+      EasyLoading.dismiss();
     }
-  } catch (e) {
-      Utils().showErrorSnackBar(
-        'Error',
-        'Error downloading or opening file: $e');
   }
-
-  finally {
-    EasyLoading.dismiss();
-  }
-}
-
 }

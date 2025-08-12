@@ -1,12 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../../../../../../shared/domain/entities/Student.dart'; // Make sure to replace the path accordingly
+import '../../../../../../shared/domain/entities/Student.dart';
+import '../controllers/StudentController.dart'; // Make sure to replace the path accordingly
 
 class StudentDetailPage extends StatelessWidget {
   final Student student;
 
-  const StudentDetailPage({super.key, required this.student});
+  StudentDetailPage({super.key, required this.student});
 
+  final StudentController controller = Get.find();
+  final addStudentKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,7 +141,52 @@ class StudentDetailPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              fixedSize: Size(Get.size.width * 0.35, 50)),
+                          onPressed: () {
+                            editStudentBottomSheet(context, student);
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                'Edit',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              Icon(
+                                CupertinoIcons.settings,
+                                color: Colors.white,
+                              ),
+                            ],
+                          )),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              fixedSize: Size(Get.size.width * 0.35, 50)),
+                          onPressed: () {
+                            deleteDialog(student);
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                'Delete',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              Icon(
+                                CupertinoIcons.delete,
+                                color: Colors.white,
+                              ),
+                            ],
+                          )),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
 
                   // Personal Information Card
                   _buildInfoCard(
@@ -301,5 +351,356 @@ class StudentDetailPage extends StatelessWidget {
       default:
         return Icons.info;
     }
+  }
+
+  Future deleteDialog(Student student) {
+    return Get.dialog(
+      AlertDialog(
+        title: const Text(
+          'Delete Student',
+          style: TextStyle(fontFamily: 'Ubuntu'),
+        ),
+        content: const Text(
+          'Are you sure you want to delete?',
+          style: TextStyle(fontFamily: 'Ubuntu'),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+              controller.deleteStudent(student);
+              Get.back();
+            },
+            child: const Text(
+              'Delete',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Ubuntu',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future editStudentBottomSheet(BuildContext context, Student student) {
+    controller.setControllerValues(student);
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled:
+          true, // Ensures the bottom sheet adjusts for the keyboard
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context)
+                .viewInsets
+                .bottom, // Handles soft keyboard
+            left: 16.0,
+            right: 16.0,
+            top: 16.0,
+          ),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: addStudentKey, // GlobalKey for validation
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Edit Student',
+                            style: TextStyle(
+                                fontFamily: 'Ubuntu',
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: controller.studentNameController,
+                            keyboardType: TextInputType.name,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              labelText: 'Student Name',
+                              hintText: 'Enter the full name of the student',
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Student\'s name is required.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: controller.fatherNameController,
+                            keyboardType: TextInputType.name,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              labelText: 'Father\'s Name',
+                              hintText: 'Enter the father\'s full name',
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Father\'s name is required.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: controller.studentCNICController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              labelText: 'CNIC',
+                              hintText:
+                                  'Enter the student\'s CNIC number (without dashes)',
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'CNIC is required.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: controller.studentContactNoController,
+                            keyboardType: TextInputType.phone,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              labelText: 'Contact Number',
+                              hintText:
+                                  'Enter a valid phone number (e.g., 03XX-XXXXXXX)',
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'A valid contact number is required.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+
+                          // Dropdown for Gender
+                          DropdownButtonFormField<String>(
+                            value: controller.selectedGender.isEmpty
+                                ? null
+                                : controller.selectedGender,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              labelText: 'Gender',
+                              hintText: 'Select the student\'s gender',
+                            ),
+                            items: ['Male', 'Female'].map((String gender) {
+                              return DropdownMenuItem<String>(
+                                value: gender,
+                                child: Text(gender),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              controller.selectedGender = newValue!;
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Gender is required.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+
+                          // Dropdown for Shift
+                          DropdownButtonFormField<String>(
+                            value: controller.selectedShift.isEmpty
+                                ? null
+                                : controller.selectedShift,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              labelText: 'Shift',
+                              hintText: 'Select the shift (Morning or Evening)',
+                            ),
+                            items: ['Morning', 'Evening'].map((String shift) {
+                              return DropdownMenuItem<String>(
+                                value: shift,
+                                child: Text(shift),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              controller.selectedShift = newValue!;
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Shift selection is required.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+
+                          // Dropdown for Academic Year with dynamic last 4 years
+                          DropdownButtonFormField<String>(
+                            value: controller.selectedYear.isEmpty
+                                ? null
+                                : controller.selectedYear,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              labelText: 'Academic Year',
+                              hintText: 'Select the academic year',
+                            ),
+                            items: List.generate(4, (index) {
+                              int year = DateTime.now().year - index;
+                              return DropdownMenuItem<String>(
+                                value: year.toString(),
+                                child: Text(year.toString()),
+                              );
+                            }),
+                            onChanged: (String? newValue) {
+                              controller.selectedYear = newValue!;
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Academic year is required.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: controller.studentAddressController,
+                            keyboardType: TextInputType.streetAddress,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              labelText: 'Address',
+                              hintText: 'Enter the student\'s home address',
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Address is required.';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Save Button
+                ElevatedButton(
+                  style: const ButtonStyle(
+                      fixedSize:
+                          WidgetStatePropertyAll(Size(double.maxFinite, 45))),
+                  onPressed: () {
+                    if (addStudentKey.currentState!.validate()) {
+                      var updatedStudent = Student(
+                        studentRollNo: student.studentRollNo,
+                        studentName: controller.studentNameController.text,
+                        fatherName: controller.fatherNameController.text,
+                        studentCNIC: controller.studentCNICController.text,
+                        studentContactNo:
+                            controller.studentContactNoController.text,
+                        studentEmail:
+                            student.studentEmail, // Keeping original email
+                        studentGender:
+                            controller.selectedGender, // Updated gender field
+                        studentShift:
+                            controller.selectedShift, // Updated shift field
+                        studentAcademicYear: controller
+                            .selectedYear, // Updated academic year field
+                        studentAddress:
+                            controller.studentAddressController.text,
+                        studentDepartment: student.studentDepartment,
+                        studentSemester: student.studentSemester,
+                        studentSection: student.studentSection,
+                        studentCGPA: student.studentCGPA,
+                      );
+                      controller.editStudent(updatedStudent);
+                      Get.back(); // Close bottom sheet after saving
+                    }
+                  },
+                  child: const Text(
+                    'Save',
+                    style: TextStyle(
+                        fontFamily: 'Ubuntu',
+                        fontSize: 20,
+                        color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

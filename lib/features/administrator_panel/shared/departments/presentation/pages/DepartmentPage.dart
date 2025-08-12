@@ -358,8 +358,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
                                               editDepartmentBottomSheet(
                                                   context, department);
                                             } else if (value == 'delete') {
-                                              controller
-                                                  .deleteDepartment(department);
+                                              deleteDialog(department);
                                             }
                                           },
                                         ),
@@ -412,6 +411,36 @@ class _DepartmentPageState extends State<DepartmentPage> {
     );
   }
 
+  Future deleteDialog(department) {
+    return Get.dialog(
+      AlertDialog(
+        title: const Text(
+          'Delete Department',
+          style: TextStyle(fontFamily: 'Ubuntu'),
+        ),
+        content: const Text(
+          'Are you sure you want to delete?',
+          style: TextStyle(fontFamily: 'Ubuntu'),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+              controller.deleteDepartment(department);
+            },
+            child: const Text(
+              'Delete',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Ubuntu',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future addDepartmentBottomSheet(BuildContext context) {
     controller.clearFields();
     return showModalBottomSheet(
@@ -442,7 +471,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
                 Row(
                   children: [
                     Container(
@@ -469,53 +498,55 @@ class _DepartmentPageState extends State<DepartmentPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
-                Form(
-                  key: addDeptKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildTextField(
-                        controller: controller.departmentNameController,
-                        label: 'Department Name',
-                        icon: Icons.school_rounded,
-                        keyboardType: TextInputType.name,
-                        textCapitalization: TextCapitalization.words,
-                      ),
-                      const SizedBox(height: 16),
-                      _buildTextField(
-                        controller: controller.departmentCodeController,
-                        label: 'Department Code',
-                        icon: Icons.code_rounded,
-                        keyboardType: TextInputType.name,
-                        textCapitalization: TextCapitalization.characters,
-                      ),
-                      const SizedBox(height: 16),
-                      _buildTextField(
-                        controller: controller.headOfDepartmentController,
-                        label: 'Head of Department',
-                        icon: Icons.person_rounded,
-                        keyboardType: TextInputType.name,
-                        textCapitalization: TextCapitalization.words,
-                      ),
-                      const SizedBox(height: 16),
-                      _buildTextField(
-                        controller: controller.contactPhoneController,
-                        label: 'Contact Phone',
-                        icon: Icons.phone_rounded,
-                        keyboardType: TextInputType.phone,
-                      ),
-                      const SizedBox(height: 16),
-                      _buildTextField(
-                        controller: controller.semesterController,
-                        label: 'Semesters',
-                        icon: Icons.schedule_rounded,
-                        keyboardType: TextInputType.number,
-                      ),
-                    ],
+                const SizedBox(height: 16),
+                SingleChildScrollView(
+                  child: Form(
+                    key: addDeptKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildTextField(
+                          controller: controller.departmentNameController,
+                          label: 'Department Name',
+                          icon: Icons.school_rounded,
+                          keyboardType: TextInputType.name,
+                          textCapitalization: TextCapitalization.words,
+                        ),
+                        const SizedBox(height: 10),
+                        _buildTextField(
+                          controller: controller.departmentCodeController,
+                          label: 'Department Code',
+                          icon: Icons.code_rounded,
+                          keyboardType: TextInputType.name,
+                          textCapitalization: TextCapitalization.characters,
+                        ),
+                        const SizedBox(height: 10),
+                        _buildTextField(
+                          controller: controller.headOfDepartmentController,
+                          label: 'Head of Department',
+                          icon: Icons.person_rounded,
+                          keyboardType: TextInputType.name,
+                          textCapitalization: TextCapitalization.words,
+                        ),
+                        const SizedBox(height: 10),
+                        _buildTextField(
+                          controller: controller.contactPhoneController,
+                          label: 'Contact Phone',
+                          icon: Icons.phone_rounded,
+                          keyboardType: TextInputType.phone,
+                        ),
+                        const SizedBox(height: 10),
+                        _buildTextField(
+                          controller: controller.semesterController,
+                          label: 'Semesters',
+                          icon: Icons.schedule_rounded,
+                          keyboardType: TextInputType.number,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
                   height: 56,
@@ -713,6 +744,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
     TextCapitalization textCapitalization = TextCapitalization.none,
   }) {
     return Container(
+      height: 65,
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(12),

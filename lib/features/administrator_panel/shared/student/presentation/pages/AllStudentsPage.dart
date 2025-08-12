@@ -28,8 +28,7 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
       body: CustomScrollView(
         controller: controller.scrollController,
         slivers: [
-          Obx(() {
-            return SliverAppBar(
+          SliverAppBar(
               expandedHeight: 180.0,
               floating: true,
               pinned: true,
@@ -129,8 +128,8 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                   ),
                 ),
               ),
-            );
-          }),
+            ),
+    
           Obx(() {
             if (controller.isLoading.value) {
               return SliverFillRemaining(

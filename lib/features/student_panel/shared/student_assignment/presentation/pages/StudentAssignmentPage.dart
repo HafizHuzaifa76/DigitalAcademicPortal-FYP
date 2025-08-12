@@ -1,4 +1,3 @@
-import 'package:digital_academic_portal/features/student_panel/shared/student_assignment/domain/usecases/SubmitStudentAssignmentUseCase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
@@ -431,7 +430,8 @@ class StudentAssignmentPage extends StatelessWidget {
 
   Widget _buildAssignmentCard(
       StudentAssignment assignment, StudentAssignmentController controller) {
-    final isOverdue = DateTime.now().isAfter(assignment.dueDate);
+    final isOverdue = DateTime.now().isAfter(DateTime(assignment.dueDate.year,
+        assignment.dueDate.month, assignment.dueDate.day, 23, 59));
     final statusColor = _getStatusColor(assignment.status);
 
     return Container(
@@ -548,7 +548,8 @@ class StudentAssignmentPage extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                      onPressed: () => controller.downloadAndOpenFile(assignment.fileUrl),
+                      onPressed: () =>
+                          controller.downloadAndOpenFile(assignment.fileUrl),
                       // onPressed: () => _downloadAssignment(assignment.fileUrl),
                       icon: const Icon(Icons.download, size: 18),
                       label: const Text('Download Assignment'),
@@ -564,7 +565,7 @@ class StudentAssignmentPage extends StatelessWidget {
                 if (assignment.fileUrl.isNotEmpty) const SizedBox(height: 12),
 
                 // Submit button or status display
-                if (!isOverdue)...[
+                if (!isOverdue) ...[
                   Container(
                     width: double.infinity,
                     child: ElevatedButton.icon(
@@ -615,8 +616,9 @@ class StudentAssignmentPage extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                      onPressed: () => controller.downloadAndOpenFile(assignment.submittedFileUrl!),
-                      // onPressed: () => 
+                      onPressed: () => controller
+                          .downloadAndOpenFile(assignment.submittedFileUrl!),
+                      // onPressed: () =>
                       //     _downloadSubmittedFile(assignment.submittedFileUrl!),
                       icon: const Icon(Icons.download_done, size: 18),
                       label: const Text('Download Submitted File'),

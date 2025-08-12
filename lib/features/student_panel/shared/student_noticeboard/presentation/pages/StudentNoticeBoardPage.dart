@@ -269,14 +269,29 @@ class _StudentNoticeBoardPageState extends State<StudentNoticeBoardPage> {
             child: Row(
               children: [
                 Expanded(
-                  child: Text(
-                    notice.title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Get.theme.primaryColor,
-                      fontFamily: 'Ubuntu',
-                      fontSize: 18,
-                    ),
+                  child: Column(
+                    children: [
+                      Text(
+                        notice.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Get.theme.primaryColor,
+                          fontFamily: 'Ubuntu',
+                          fontSize: 18,
+                        ),
+                      ),
+                      Text(
+                        notice.department != null
+                            ? 'Notice From ${notice.department!} Dept'
+                            : 'Notice From University',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Get.theme.primaryColor,
+                          fontFamily: 'Ubuntu',
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

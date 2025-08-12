@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/departments/domain/usecases/AllSemestersUseCase.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/departments/presentation/pages/DepartmentDetailPage.dart';
@@ -26,7 +25,12 @@ class DepartmentController extends GetxController {
   final AllDepartmentsUseCase allDepartmentsUseCase;
   final AllSemestersUseCase allSemestersUseCase;
 
-  DepartmentController({required this.addDepartmentUseCase, required this.deleteDepartmentUseCase, required this.editDepartmentUseCase, required this.allDepartmentsUseCase, required this.allSemestersUseCase});
+  DepartmentController(
+      {required this.addDepartmentUseCase,
+      required this.deleteDepartmentUseCase,
+      required this.editDepartmentUseCase,
+      required this.allDepartmentsUseCase,
+      required this.allSemestersUseCase});
 
   @override
   void onInit() {
@@ -48,11 +52,15 @@ class DepartmentController extends GetxController {
 
   void filterDepartments(String query) {
     if (query.isEmpty) {
-      filteredDepartmentList.assignAll(departmentList); // Reset to full list if no query
+      filteredDepartmentList
+          .assignAll(departmentList); // Reset to full list if no query
     } else {
       filteredDepartmentList.assignAll(
-        departmentList.where((department) =>
-            department.departmentName.toLowerCase().contains(query.toLowerCase())).toList(),
+        departmentList
+            .where((department) => department.departmentName
+                .toLowerCase()
+                .contains(query.toLowerCase()))
+            .toList(),
       );
     }
   }
@@ -80,27 +88,25 @@ class DepartmentController extends GetxController {
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
+        Get.snackbar('Error', message,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
             colorText: Colors.white,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+            icon: const Icon(CupertinoIcons.clear_circled_solid,
+                color: Colors.white));
       }, (department) {
-        Get.snackbar(
-            'Success',
-            'Department added successfully...',
+        Get.snackbar('Success', 'Department added successfully...',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Get.theme.primaryColor,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
-        );
+            icon: const Icon(
+              CupertinoIcons.checkmark_alt_circle_fill,
+              color: Colors.white,
+            ));
         Get.off(DepartmentDetailPage(department: department));
       });
-
     } finally {
       clearFields();
       isLoading(false);
@@ -133,35 +139,33 @@ class DepartmentController extends GetxController {
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
+        Get.snackbar('Error', message,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
             colorText: Colors.white,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+            icon: const Icon(CupertinoIcons.clear_circled_solid,
+                color: Colors.white));
       }, (right) {
-        Get.snackbar(
-            'Success',
-            'Department updated successfully...',
+        Get.snackbar('Success', 'Department updated successfully...',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Get.theme.primaryColor,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
-        );
+            icon: const Icon(
+              CupertinoIcons.checkmark_alt_circle_fill,
+              color: Colors.white,
+            ));
         // Get.to(HomeScreen());
       });
     } finally {
       clearFields();
-      isLoading(false);
       EasyLoading.dismiss();
+      showAllDepartments();
     }
   }
 
   Future<void> deleteDepartment(Department department) async {
-
     try {
       isLoading(true);
       EasyLoading.show(status: 'Deleting');
@@ -169,77 +173,71 @@ class DepartmentController extends GetxController {
 
       result.fold((left) {
         String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
+        Get.snackbar('Error', message,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
             colorText: Colors.white,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+            icon: const Icon(CupertinoIcons.clear_circled_solid,
+                color: Colors.white));
       }, (right) {
-        Get.snackbar(
-            'Success',
-            'Department deleted successfully...',
+        Get.snackbar('Success', 'Department deleted successfully...',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Get.theme.primaryColor,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             colorText: Colors.white,
-            icon: const Icon(CupertinoIcons.checkmark_alt_circle_fill, color: Colors.white,)
-        );
+            icon: const Icon(
+              CupertinoIcons.checkmark_alt_circle_fill,
+              color: Colors.white,
+            ));
         Get.offAndToNamed('departments');
       });
-
     } finally {
       EasyLoading.dismiss();
-      isLoading(false);
+      showAllDepartments();
     }
   }
 
   Future<void> showAllDepartments() async {
-      isLoading(true);
-      final result = await allDepartmentsUseCase.execute(null);
+    isLoading(true);
+    final result = await allDepartmentsUseCase.execute(null);
 
-      result.fold((left) {
-        String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
+    result.fold((left) {
+      String message = left.failure.toString();
+      Get.snackbar('Error', message,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          icon: const Icon(CupertinoIcons.clear_circled_solid,
+              color: Colors.white));
+    }, (departments) {
+      departmentList.assignAll(departments);
+      filteredDepartmentList.assignAll(departments);
+      print('departments fetched');
+    });
 
-      }, (departments) {
-        departmentList.assignAll(departments);
-        filteredDepartmentList.assignAll(departments);
-        print('departments fetched');
-      });
-
-      isLoading(false);
+    isLoading(false);
   }
 
   Future<void> showAllSemesters(String deptName) async {
-      final result = await allSemestersUseCase.execute(deptName);
+    final result = await allSemestersUseCase.execute(deptName);
 
-      result.fold((left) {
-        String message = left.failure.toString();
-        Get.snackbar(
-            'Error', message,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            icon: const Icon(CupertinoIcons.clear_circled_solid, color: Colors.white)
-        );
-        if (kDebugMode) {
-          print(message);
-        }
-      }, (semesters) {
-        semestersList.assignAll(semesters);
-        print('semesters fetched');
-      });
-
+    result.fold((left) {
+      String message = left.failure.toString();
+      Get.snackbar('Error', message,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          icon: const Icon(CupertinoIcons.clear_circled_solid,
+              color: Colors.white));
+      if (kDebugMode) {
+        print(message);
+      }
+    }, (semesters) {
+      semestersList.assignAll(semesters);
+      print('semesters fetched');
+    });
   }
 }

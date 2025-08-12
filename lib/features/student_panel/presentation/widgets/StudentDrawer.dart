@@ -1,185 +1,227 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../pages/StudentInfoPage.dart';
+import '../pages/StudentDashboardPage.dart';
 
 class StudentDrawer extends StatelessWidget {
   const StudentDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final student = StudentDashboardPage.studentProfile;
     return Drawer(
       backgroundColor: Colors.white,
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
+          // Modern Header with gradient and profile icon
+          Container(
             decoration: BoxDecoration(
-              color: Get.theme.primaryColor,
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).primaryColor,
+                  const Color(0xFF1B7660),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(32),
+                bottomRight: Radius.circular(32),
+              ),
             ),
-            child: Column(
+            padding:
+                const EdgeInsets.only(top: 40, left: 24, right: 24, bottom: 24),
+            child: Row(
               children: [
-                SizedBox(
-                    height: 90,
-                    child: Image.asset('assets/images/DAP_logo_light.png')),
-                const SizedBox(height: 7),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Digital',
+                // Profile avatar
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Get.to(() => StudentInfoPage());
+                  },
+                  child: CircleAvatar(
+                    radius: 32,
+                    backgroundColor: Colors.white,
+                    child: Text(
+                      student?.studentName[0].toUpperCase() ?? '?',
                       style: TextStyle(
-                          fontFamily: 'Belanosima',
-                          color: Get.theme.primaryColorLight,
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold),
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 32,
+                      ),
                     ),
-                    Text(
-                      ' Academic ',
-                      style: TextStyle(
-                          fontFamily: 'Belanosima',
-                          color: Get.theme.primaryColorLight,
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'Portal',
-                      style: TextStyle(
-                          fontFamily: 'Belanosima',
-                          color: Get.theme.primaryColorLight,
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        student?.studentName ?? 'Student',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Ubuntu',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        student?.studentEmail ?? '',
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                          fontFamily: 'Ubuntu',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-          ListTile(
-            leading: Image.asset('assets/images/attendance2.png',
-                height: 30, width: 30),
-            title: Text('Attendance',
-                style: TextStyle(
-                    fontFamily: 'Ubuntu',
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          _modernListTile(
+            context,
+            icon: 'assets/images/attendance2.png',
+            title: 'Attendance',
             onTap: () {
+              Navigator.of(context).pop();
               Get.toNamed('/student_attendance');
             },
           ),
-          const Divider(),
-          ListTile(
-            leading:
-                Image.asset('assets/images/assign.png', height: 30, width: 30),
-            title: Text('Pending Assignments',
-                style: TextStyle(
-                    fontFamily: 'Ubuntu',
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
+          _modernListTile(
+            context,
+            icon: 'assets/images/assign.png',
+            title: 'Pending Assignments',
             onTap: () {
+              Navigator.of(context).pop();
               Get.toNamed('/pendingAssignment');
             },
           ),
-          const Divider(),
-          ListTile(
-            leading: Image.asset('assets/images/students_icon.png',
-                height: 30, width: 30),
-            title: Text('Students',
-                style: TextStyle(
-                    fontFamily: 'Ubuntu',
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
+          _modernListTile(
+            context,
+            icon: 'assets/images/course_icon.png',
+            title: 'Courses',
             onTap: () {
-              Get.toNamed('/allStudents');
+              Navigator.of(context).pop();
+              Get.toNamed('/studentCoursesPage',
+                  arguments: {'studentDept': student?.studentDepartment ?? ''});
             },
           ),
-          const Divider(),
-          ListTile(
-            leading:
-                Image.asset('assets/images/grades.png', height: 30, width: 30),
-            title: Text('Grades',
-                style: TextStyle(
-                    fontFamily: 'Ubuntu',
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
+          _modernListTile(
+            context,
+            icon: 'assets/images/gradesbg.png',
+            title: 'Course Material',
             onTap: () {
-              Get.toNamed('/student_gradesScreen');
+              Navigator.of(context).pop();
+              Get.toNamed('/studentCoursesPage', arguments: {
+                'studentDept': student?.studentDepartment ?? '',
+                'detailPage': 0
+              });
             },
           ),
-          const Divider(),
-          ListTile(
-            leading: Image.asset('assets/images/course_icon.png',
-                height: 30, width: 30),
-            title: Text('Courses',
-                style: TextStyle(
-                    fontFamily: 'Ubuntu',
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
+          _modernListTile(
+            context,
+            icon: 'assets/images/ask.png',
+            title: 'Ask Query',
             onTap: () {
-              Get.toNamed('/student_allCourses');
+              Navigator.of(context).pop();
+              Get.toNamed('/studentCoursesPage', arguments: {
+                'studentDept': student?.studentDepartment ?? '',
+                'detailPage': 1
+              });
             },
           ),
-          const Divider(),
-          ListTile(
-            leading: Image.asset('assets/images/noticeboard_icon.png',
-                height: 30, width: 30),
-            title: Text('Notice Board',
-                style: TextStyle(
-                    fontFamily: 'Ubuntu',
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
+          _modernListTile(
+            context,
+            icon: 'assets/images/noticeboard_icon.png',
+            title: 'Announcements',
             onTap: () {
-              Get.toNamed('/studentNoticeBoard');
+              Navigator.of(context).pop();
+              Get.toNamed('/studentCoursesPage', arguments: {
+                'studentDept': student?.studentDepartment ?? '',
+                'detailPage': 2
+              });
             },
           ),
-          const Divider(),
-          ListTile(
-            leading: Image.asset('assets/images/calendar_icon.png',
-                height: 30, width: 30),
-            title: Text('Calendar',
-                style: TextStyle(
-                    fontFamily: 'Ubuntu',
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
+          _modernListTile(
+            context,
+            icon: 'assets/images/diary.png',
+            title: 'Students Diary',
             onTap: () {
-              Get.toNamed('/studentCalendarPage');
+              Navigator.of(context).pop();
+              Get.toNamed('/studentDiary', arguments: {
+                'deptName': student?.studentDepartment ?? '',
+                'studentRollNo': student?.studentRollNo ?? '',
+              });
             },
           ),
-          const Divider(),
-          ListTile(
-            leading: Image.asset('assets/images/chatbot_icon.png',
-                height: 30, width: 30),
-            title: Text('ChatBot',
-                style: TextStyle(
-                    fontFamily: 'Ubuntu',
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
+          _modernListTile(
+            context,
+            icon: 'assets/images/calendar_icon.png',
+            title: 'Calendar',
             onTap: () {
+              Navigator.of(context).pop();
+              Get.toNamed('/calendarViewPage');
+            },
+          ),
+          _modernListTile(
+            context,
+            icon: 'assets/images/chatbot_icon.png',
+            title: 'ChatBot',
+            onTap: () {
+              Navigator.of(context).pop();
               Get.toNamed('/studentChatbotPage');
             },
           ),
-          const Divider(),
-          ListTile(
-            leading: Image.asset('assets/images/bugreport_icon.png',
-                height: 30, width: 30),
-            title: Text('Reports',
-                style: TextStyle(
-                    fontFamily: 'Ubuntu',
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
+          _modernListTile(
+            context,
+            icon: 'assets/images/bugreport_icon.png',
+            title: 'Reports',
             onTap: () {
+              Navigator.of(context).pop();
               Get.toNamed('/Stu_report');
             },
           ),
+          const SizedBox(height: 16),
         ],
       ),
     );
   }
+}
+
+Widget _modernListTile(BuildContext context,
+    {required String icon,
+    required String title,
+    required VoidCallback onTap}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+    child: Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      child: ListTile(
+        leading: Image.asset(icon, height: 30, width: 30),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontFamily: 'Ubuntu',
+            color: Theme.of(context).primaryColor,
+            fontSize: 17,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        onTap: onTap,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        hoverColor: Theme.of(context).primaryColor.withOpacity(0.07),
+        splashColor: Theme.of(context).primaryColor.withOpacity(0.12),
+      ),
+    ),
+  );
 }

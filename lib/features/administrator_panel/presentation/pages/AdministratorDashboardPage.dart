@@ -97,89 +97,91 @@ class _AdministratorDashboardPageState
                     ),
                   ],
                 ),
-                background: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Theme.of(context).primaryColor,
-                        const Color(0xFF1B7660),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                background: Obx(
+                  () => Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(context).primaryColor,
+                          const Color(0xFF1B7660),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                     ),
-                  ),
-                  child: Stack(
-                    children: [
-                      // Decorative circles
-                      Positioned(
-                        top: -30,
-                        right: -30,
-                        child: Container(
-                          width: 120,
-                          height: 120,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
-                            shape: BoxShape.circle,
+                    child: Stack(
+                      children: [
+                        // Decorative circles
+                        Positioned(
+                          top: -30,
+                          right: -30,
+                          child: Container(
+                            width: 120,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
                           ),
                         ),
-                      ),
-                      Positioned(
-                        bottom: -20,
-                        left: -20,
-                        child: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
-                            shape: BoxShape.circle,
+                        Positioned(
+                          bottom: -20,
+                          left: -20,
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
                           ),
                         ),
-                      ),
-                      // Stats cards
-                      Positioned(
-                        bottom: 20,
-                        left: 20,
-                        right: 20,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _buildStatCard(
-                              icon: Icons.school_rounded,
-                              title: 'Departments',
-                              value: adminDashboardController
-                                  .departmentsCount.value
-                                  .toString(),
-                              isLoading:
-                                  adminDashboardController.isLoading.value,
-                              hasError: adminDashboardController.hasError,
-                              color: Colors.white,
-                            ),
-                            _buildStatCard(
-                              icon: Icons.person_rounded,
-                              title: 'Teachers',
-                              value: adminDashboardController
-                                  .teachersCount.value
-                                  .toString(),
-                              isLoading:
-                                  adminDashboardController.isLoading.value,
-                              hasError: adminDashboardController.hasError,
-                              color: Colors.white,
-                            ),
-                            _buildStatCard(
-                              icon: Icons.people_rounded,
-                              title: 'Students',
-                              value: adminDashboardController
-                                  .studentsCount.value
-                                  .toString(),
-                              isLoading:
-                                  adminDashboardController.isLoading.value,
-                              hasError: adminDashboardController.hasError,
-                              color: Colors.white,
-                            ),
-                          ],
+                        // Stats cards
+                        Positioned(
+                          bottom: 20,
+                          left: 20,
+                          right: 20,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _buildStatCard(
+                                icon: Icons.school_rounded,
+                                title: 'Departments',
+                                value: adminDashboardController
+                                    .departmentsCount.value
+                                    .toString(),
+                                isLoading:
+                                    adminDashboardController.isLoading.value,
+                                hasError: adminDashboardController.hasError,
+                                color: Colors.white,
+                              ),
+                              _buildStatCard(
+                                icon: Icons.person_rounded,
+                                title: 'Teachers',
+                                value: adminDashboardController
+                                    .teachersCount.value
+                                    .toString(),
+                                isLoading:
+                                    adminDashboardController.isLoading.value,
+                                hasError: adminDashboardController.hasError,
+                                color: Colors.white,
+                              ),
+                              _buildStatCard(
+                                icon: Icons.people_rounded,
+                                title: 'Students',
+                                value: adminDashboardController
+                                    .studentsCount.value
+                                    .toString(),
+                                isLoading:
+                                    adminDashboardController.isLoading.value,
+                                hasError: adminDashboardController.hasError,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -293,7 +295,7 @@ class _AdministratorDashboardPageState
                               child: _buildActionButton(
                                 icon: 'assets/images/admin.png',
                                 title: 'Sub Admins',
-                                onTap: () => Get.toNamed('/allCourses'),
+                                onTap: () => Get.toNamed('/subAdminsPage'),
                                 color: Theme.of(context).primaryColor,
                               ),
                             ),
@@ -328,7 +330,7 @@ class _AdministratorDashboardPageState
                               child: _buildActionButton(
                                 icon: 'assets/images/chatbot_icon.png',
                                 title: 'ChatBot',
-                                onTap: () => Get.toNamed('/'),
+                                onTap: () => Get.toNamed('/adminChatBotPage'),
                                 color: Theme.of(context).primaryColor,
                               ),
                             ),
@@ -339,7 +341,7 @@ class _AdministratorDashboardPageState
                               child: _buildActionButton(
                                 icon: 'assets/images/bugreport_icon.png',
                                 title: 'Reports',
-                                onTap: () => Get.toNamed('/'),
+                                onTap: () => Get.toNamed('/adminReportsPage'),
                                 color: Theme.of(context).primaryColor,
                               ),
                             ),

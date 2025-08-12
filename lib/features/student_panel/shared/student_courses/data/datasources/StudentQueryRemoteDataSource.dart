@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../../presentation/pages/StudentPanelDashboardPage.dart';
+import '../../../../presentation/pages/StudentDashboardPage.dart';
 import '../models/StudentQueryModel.dart';
 import 'package:digital_academic_portal/shared/domain/entities/Query.dart'
     as student_query_entity;
@@ -14,7 +14,7 @@ abstract class StudentQueryRemoteDataSource {
 
 class StudentQueryRemoteDataSourceImpl implements StudentQueryRemoteDataSource {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final student = StudentPortalDashboardPage.studentProfile;
+  final student = StudentDashboardPage.studentProfile;
 
   @override
   Future<List<StudentQueryModel>> getQueries(

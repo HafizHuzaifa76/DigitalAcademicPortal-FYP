@@ -8,26 +8,48 @@ class StudentChatbotRemoteDataSource {
   StudentChatbotRemoteDataSource({required this.openAIApiKey});
 
   Future<String> sendMessageToOpenAI(String message) async {
-    final url = Uri.parse('https://api.openai.com/v1/chat/completions');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $openAIApiKey',
-      },
-      body: jsonEncode({
-        'model': 'gpt-3.5-turbo',
-        'messages': [
-          {'role': 'user', 'content': message},
-        ],
-        'max_tokens': 150,
-      }),
-    );
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data['choices'][0]['message']['content'] as String;
-    } else {
-      throw Exception('Failed to get response from OpenAI: ${response.body}');
+    print('message');
+    print(message);
+
+    try {
+      final url = Uri.parse(
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
+      );
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-goog-api-key': openAIApiKey,
+        },
+        body: jsonEncode({
+          "contents": [
+            {
+              "parts": [
+                {"text": message}
+              ]
+            }
+          ]
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // Navigate safely in the JSON structure
+        final textResponse =
+            data['candidates']?[0]['content']?['parts']?[0]['text'];
+        if (textResponse != null) {
+          return textResponse;
+        } else {
+          throw Exception("No text found in Gemini response");
+        }
+      } else {
+        print('Failed to get response from Gemini: ${response.body}');
+        throw Exception('Failed to get response from Gemini: ${response.body}');
+      }
+    } catch (e) {
+      print('Failed to get response from Gemini in catch block: $e');
+      throw Exception('Failed to get response from Gemini: $e');
     }
   }
 }

@@ -6,6 +6,7 @@ import '../../../../core/services/SharedPrefService.dart';
 
 abstract class AuthRemoteDataSource {
   Future<String> login(String identifier, String password); // Now returns role
+  Future<String> forgetPassword(String email);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -47,7 +48,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       String userDept = parts.length > 1 ? parts[1] : '';
 
       // 1. Check if admin (based on UID)
-      final adminDoc = await _firestore.collection('admins').doc(uid).get();
+      final adminDoc = await _firestore.collection('sub_admins').doc(uid).get();
       if (adminDoc.exists) {
         return 'admin';
       }
@@ -74,6 +75,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return 'admin';
     } catch (e) {
       print('login error: $e');
+      throw e;
+    }
+  }
+
+  @override
+  Future<String> forgetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      return 'Password reset email sent successfully. Please check your inbox.';
+    } catch (e) {
+      print('forget password error: $e');
       throw e;
     }
   }

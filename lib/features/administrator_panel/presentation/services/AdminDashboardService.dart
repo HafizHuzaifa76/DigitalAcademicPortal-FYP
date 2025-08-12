@@ -14,57 +14,61 @@ class AdminDashboardService {
     }
   }
 
-  /// Fetch total count of teachers across all departments
+  /// Fetch total count of teachers across all departments (parallel)
   Future<int> getTeachersCount() async {
     try {
-      int totalTeachers = 0;
       final departmentsSnapshot =
           await _firestore.collection('departments').get();
 
-      for (var deptDoc in departmentsSnapshot.docs) {
+      // Each async callback returns int
+      final futures = departmentsSnapshot.docs.map((deptDoc) async {
         final teachersSnapshot =
             await deptDoc.reference.collection('teachers').get();
-        totalTeachers += teachersSnapshot.docs.length;
-      }
+        return teachersSnapshot.docs.length; // returns int
+      }).toList();
 
-      return totalTeachers;
+      // Wait for all and sum results
+      final List<int> counts = await Future.wait(futures);
+      return counts.fold<int>(0, (sum, count) => sum + count);
     } catch (e) {
       print('Error fetching teachers count: $e');
       return 0;
     }
   }
 
-  /// Fetch total count of students across all departments
+  /// Fetch total count of students across all departments (parallel)
   Future<int> getStudentsCount() async {
     try {
-      int totalStudents = 0;
       final departmentsSnapshot =
           await _firestore.collection('departments').get();
 
-      for (var deptDoc in departmentsSnapshot.docs) {
+      final futures = departmentsSnapshot.docs.map((deptDoc) async {
         final studentsSnapshot =
             await deptDoc.reference.collection('students').get();
-        totalStudents += studentsSnapshot.docs.length;
-      }
+        return studentsSnapshot.docs.length; // returns int
+      }).toList();
 
-      return totalStudents;
+      final List<int> counts = await Future.wait(futures);
+      return counts.fold<int>(0, (sum, count) => sum + count);
     } catch (e) {
       print('Error fetching students count: $e');
       return 0;
     }
   }
 
-  /// Fetch all dashboard statistics at once
+  /// Fetch all dashboard statistics at once (parallel)
   Future<Map<String, int>> getDashboardStats() async {
     try {
-      final departmentsCount = await getDepartmentsCount();
-      final teachersCount = await getTeachersCount();
-      final studentsCount = await getStudentsCount();
+      final results = await Future.wait([
+        getDepartmentsCount(),
+        getTeachersCount(),
+        getStudentsCount(),
+      ]);
 
       return {
-        'departments': departmentsCount,
-        'teachers': teachersCount,
-        'students': studentsCount,
+        'departments': results[0],
+        'teachers': results[1],
+        'students': results[2],
       };
     } catch (e) {
       print('Error fetching dashboard stats: $e');

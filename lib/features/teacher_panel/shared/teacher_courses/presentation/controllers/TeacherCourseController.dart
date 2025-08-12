@@ -37,7 +37,7 @@ class TeacherCourseController extends GetxController {
     final result = await fetchAllTeacherCourses.execute(teacherDept);
     result.fold(
       (failure) {
-        Utils().showErrorSnackBar('Error', failure.toString());
+        Utils().showErrorSnackBar('Error', failure.failure.toString());
         isLoading.value = false;
       },
       (courses) {
@@ -61,8 +61,8 @@ class TeacherCourseController extends GetxController {
     final result = await getStudentNamesUseCase.execute(params);
     result.fold(
       (failure) {
-        Utils().showErrorSnackBar(
-            'Error', 'Failed to fetch student names: ${failure.toString()}');
+        Utils().showErrorSnackBar('Error',
+            'Failed to fetch student names: ${failure.failure.toString()}');
         isLoadingStudentNames.value = false;
       },
       (names) {
@@ -79,7 +79,7 @@ class TeacherCourseController extends GetxController {
     result.fold(
       (failure) {
         Utils().showErrorSnackBar(
-            'Error', 'Failed to fetch queries: ${failure.toString()}');
+            'Error', 'Failed to fetch queries: ${failure.failure.toString()}');
         isLoadingQueries.value = false;
       },
       (queries) {
@@ -92,22 +92,20 @@ class TeacherCourseController extends GetxController {
 
   Future<void> respondToQuery(String queryId, String response) async {
     final params = RespondToQueryParams(
-      queryId: queryId,
-      response: response,
-      course: selectedCourse!
-    );
+        queryId: queryId, response: response, course: selectedCourse!);
 
     final result = await respondToQueryUseCase.execute(params);
     result.fold(
       (failure) {
-        Utils().showErrorSnackBar(
-            'Error', 'Failed to respond to query: ${failure.toString()}');
+        Utils().showErrorSnackBar('Error',
+            'Failed to respond to query: ${failure.failure.toString()}');
       },
       (_) {
         Utils().showSuccessSnackBar('Success', 'Response sent successfully');
         // Refresh queries to update the list
         if (allQueries.isNotEmpty) {
-          fetchQueries(selectedCourse!); // This will need to be updated with actual courseId
+          fetchQueries(
+              selectedCourse!); // This will need to be updated with actual courseId
         }
       },
     );

@@ -2,10 +2,12 @@ import 'package:digital_academic_portal/features/administrator_panel/presentatio
 import 'package:digital_academic_portal/features/administrator_panel/presentation/pages/AdministratorDashboardPage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/courses/presentation/bindings/CourseBindings.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/courses/presentation/pages/AllCoursesPage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/noticeboard/presentation/pages/DepartmentNoticeBoardPage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/noticeboard/presentation/pages/NoticeBoardPage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/sections/presentation/bindings/SectionBindings.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/student/presentation/bindings/StudentBindings.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/student/presentation/pages/DepartmentStudentsPage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/student/presentation/pages/SectionStudentsPage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/student/presentation/pages/SemesterStudentsPage.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/presentation/bindings/TeacherBindings.dart';
 import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/presentation/pages/AllTeachersPage.dart';
@@ -38,28 +40,35 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'features/administrator_panel/shared/chatbot/AdminChatbotPage.dart';
 import 'features/administrator_panel/shared/courses/presentation/pages/DepartmentCoursePage.dart';
+import 'features/administrator_panel/shared/courses/presentation/pages/SectionCoursePage.dart';
 import 'features/administrator_panel/shared/courses/presentation/pages/SemesterCoursePage.dart';
 import 'features/administrator_panel/shared/departments/presentation/bindings/DepartmentBindings.dart';
 import 'features/administrator_panel/shared/departments/presentation/pages/DepartmentPage.dart';
 import 'features/administrator_panel/shared/noticeboard/presentation/bindings/NoticeBoardBindings.dart';
+import 'features/administrator_panel/shared/reports/presentation/bindings/AdminReportBinding.dart';
+import 'features/administrator_panel/shared/reports/presentation/pages/AdminReportsPage.dart';
 import 'features/administrator_panel/shared/sections/presentation/pages/SectionListPage.dart';
 import 'features/administrator_panel/shared/student/presentation/pages/AllStudentsPage.dart';
+import 'features/administrator_panel/shared/teachers/presentation/pages/SemesterTeacherPage.dart';
+import 'features/administrator_panel/shared/sub_admins/presentation/bindings/SubAdminBinding.dart';
+import 'features/administrator_panel/shared/sub_admins/presentation/pages/SubAdminsPage.dart';
 import 'features/auth/presentation/bindings/AuthBinding.dart';
 import 'features/student_panel/presentation/bindings/StudentPanelBinding.dart';
-import 'features/student_panel/presentation/pages/StudentPanelDashboardPage.dart';
+import 'features/student_panel/presentation/pages/StudentDashboardPage.dart';
 import 'features/student_panel/shared/student_assignment/presentation/bindings/StudentAssignmentBinding.dart';
 import 'features/student_panel/shared/student_assignment/presentation/pages/Stu_Assignments.dart';
 import 'features/student_panel/shared/student_assignment/presentation/pages/StudentAssignmentPage.dart';
 import 'features/student_panel/shared/student_attendance/presentation/pages/StudentAttendancePage.dart';
 import 'features/student_panel/shared/student_chatbot/presentation/bindings/StudentChatbotBinding.dart';
-import 'features/student_panel/shared/student_chatbot/presentation/pages/Stu_ChatBot.dart';
 import 'features/student_panel/shared/student_chatbot/presentation/pages/StudentChatbotPage.dart';
 import 'features/student_panel/shared/student_courses/presentation/bindings/StudentCoursesBinding.dart';
 import 'features/student_panel/shared/student_grades/presentation/pages/StudentGradePage.dart';
 import 'features/student_panel/shared/student_grades/presentation/bindings/StudentGradeBindings.dart';
 import 'features/student_panel/shared/student_noticeboard/presentation/bindings/StudentNoticeBoardBindings.dart';
-import 'features/student_panel/shared/student_report/presentation/pages/Stu_Reports.dart';
+import 'features/student_panel/shared/student_report/presentation/bindings/StudentReportBindings.dart';
+import 'features/student_panel/shared/student_report/presentation/pages/StudentReportsPage.dart';
 import 'features/student_panel/shared/student_timetable/presentation/pages/Stu_TimeTablePage.dart';
 import 'features/student_panel/shared/students_Diary/presentation/pages/StudentDiaryPage.dart';
 import 'features/teacher_panel/shared/teacher_announcement/presentation/bindings/TeacherAnnouncementBinding.dart';
@@ -68,7 +77,6 @@ import 'features/teacher_panel/shared/teacher_attendance/presentation/pages/Teac
 import 'features/teacher_panel/shared/teacher_calendar_events/presentation/pages/Tch_CalendarEventPage.dart';
 import 'features/teacher_panel/shared/teacher_announcement/presentation/pages/TeacherAnnouncementPage.dart';
 import 'features/teacher_panel/shared/teacher_courses/presentation/pages/TeacherCourseDetailsPage.dart';
-import 'features/teacher_panel/shared/teacher_queries/presentation/pages/TeacherQueryPage.dart';
 import 'features/teacher_panel/shared/teacher_timetable/presentation/pages/TeacherTimeTablePage.dart';
 import 'features/teacher_panel/shared/teacher_grades/presentation/bindings/TeacherGradeBinding.dart';
 import 'shared/calendar_events/presentation/bindings/CalendarEventBindings.dart';
@@ -123,7 +131,7 @@ class MyApp extends StatelessWidget {
           appBarTheme: const AppBarTheme(
               backgroundColor: Color(0xFF145849),
               iconTheme:
-              IconThemeData(color: Colors.white), // Set icon color to white
+                  IconThemeData(color: Colors.white), // Set icon color to white
               centerTitle: true,
               titleTextStyle: TextStyle(
                   color: Colors.white,
@@ -132,21 +140,21 @@ class MyApp extends StatelessWidget {
                   fontWeight: FontWeight.bold)),
           elevatedButtonTheme: ElevatedButtonThemeData(
               style: ButtonStyle(
-                fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
-                textStyle:
+            fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
+            textStyle:
                 const WidgetStatePropertyAll(TextStyle(color: Colors.white)),
-                backgroundColor: const WidgetStatePropertyAll(Color(0xFF145849)),
-                shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15))),
-              )),
+            backgroundColor: const WidgetStatePropertyAll(Color(0xFF145849)),
+            shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15))),
+          )),
           outlinedButtonTheme: OutlinedButtonThemeData(
               style: ButtonStyle(
-                fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
-                side: WidgetStatePropertyAll(
-                    BorderSide(color: Theme.of(context).primaryColor, width: 2)),
-                shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15))),
-              ))),
+            fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
+            side: WidgetStatePropertyAll(
+                BorderSide(color: Theme.of(context).primaryColor, width: 2)),
+            shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15))),
+          ))),
       initialBinding: AuthBinding(),
       builder: EasyLoading.init(),
       getPages: [
@@ -165,7 +173,7 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
             name: '/studentDashboard',
-            page: () => const StudentPortalDashboardPage(),
+            page: () => const StudentDashboardPage(),
             binding: StudentPanelBinding()),
         GetPage(
             name: '/departments',
@@ -183,9 +191,17 @@ class MyApp extends StatelessWidget {
         GetPage(
             name: '/semesterStudents',
             page: () => SemesterStudentsPage(
-              deptName: Get.arguments['deptName'],
-              semester: Get.arguments['semester'],
-            ),
+                  deptName: Get.arguments['deptName'],
+                  semester: Get.arguments['semester'],
+                ),
+            binding: StudentBinding()),
+        GetPage(
+            name: '/sectionStudents',
+            page: () => SectionStudentsPage(
+                  deptName: Get.arguments['deptName'],
+                  semester: Get.arguments['semester'],
+                  section: Get.arguments['section'],
+                ),
             binding: StudentBinding()),
         GetPage(
           name: '/allStudents',
@@ -195,6 +211,13 @@ class MyApp extends StatelessWidget {
         GetPage(
             name: '/deptTeachers',
             page: () => DeptTeacherPage(deptName: Get.arguments['deptName']),
+            binding: TeacherBinding()),
+        GetPage(
+            name: '/semesterTeachers',
+            page: () => SemesterTeacherPage(
+                  deptName: Get.arguments['deptName'],
+                  semester: Get.arguments['semester'],
+                ),
             binding: TeacherBinding()),
         GetPage(
             name: '/allTeachers',
@@ -215,6 +238,13 @@ class MyApp extends StatelessWidget {
                 semester: Get.arguments['semester']),
             binding: CourseBinding()),
         GetPage(
+            name: '/sectionCourses',
+            page: () => SectionCoursePage(
+                deptName: Get.arguments['deptName'],
+                section: Get.arguments['section'],
+                semester: Get.arguments['semester']),
+            binding: CourseBinding()),
+        GetPage(
           name: '/allCourses',
           page: () => const AllCoursesPage(),
           binding: CourseBinding(),
@@ -222,13 +252,22 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/allSections',
           page: () => MainSectionsListPage(
-              deptName: Get.arguments['deptName'],
-              semester: Get.arguments['semester']),
+            deptName: Get.arguments['deptName'],
+            semester: Get.arguments['semester'],
+            numOfTeachers: Get.arguments['numOfTeachers'],
+            numOfCourses: Get.arguments['numOfCourses'],
+          ),
           binding: SectionBinding(),
         ),
         GetPage(
           name: '/mainNoticeBoard',
           page: () => const MainNoticeBoardPage(),
+          binding: NoticeBoardBinding(),
+        ),
+        GetPage(
+          name: '/departmentNoticeBoard',
+          page: () => DepartmentNoticeBoardPage(
+              department: Get.arguments['department']),
           binding: NoticeBoardBinding(),
         ),
         GetPage(
@@ -262,6 +301,15 @@ class MyApp extends StatelessWidget {
           ),
           binding: TimeTableBinding(),
         ),
+        GetPage(name: '/adminChatBotPage', page: () => AdminChatbotPage()),
+        GetPage(
+            name: '/adminReportsPage',
+            page: () => AdminReportsPage(),
+            binding: AdminReportBinding()),
+        GetPage(
+            name: '/subAdminsPage',
+            page: () => SubAdminsPage(),
+            binding: SubAdminBinding()),
         GetPage(
           name: '/studentCalendarPage',
           page: () => const StudentCalendarPage(),
@@ -269,9 +317,7 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/student_timetablePage',
-          page: () => Stu_TimeTablePage(
-            studentDept: Get.arguments['studentDept'] ?? '',
-          ),
+          page: () => const Stu_TimeTablePage(),
           binding: StudentCoursesBinding(),
         ),
         GetPage(
@@ -290,8 +336,10 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/studentCoursesPage',
-          page: () =>
-              StudentCoursesPage(studentDept: Get.arguments['studentDept']),
+          page: () => StudentCoursesPage(
+            studentDept: Get.arguments['studentDept'],
+            detailPage: Get.arguments['detailPage'],
+          ),
           binding: StudentCoursesBinding(),
         ),
         GetPage(
@@ -309,8 +357,8 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/Stu_report',
-          page: () => const Stu_Reports(),
-          //binding: CalendarEventBinding(),
+          page: () => const StudentReportsPage(),
+          binding: StudentReportBindings(),
         ),
         GetPage(
           name: '/teacherCalendarPage',
@@ -335,19 +383,19 @@ class MyApp extends StatelessWidget {
           binding: TeacherAssignmentBinding(),
         ),
         GetPage(
-          name: '/teacherQueryPage',
-          page: () => const TeacherQueryPage(),
-          //binding: CalendarEventBinding(),
-        ),
-        GetPage(
           name: '/teacherCoursesPage',
-          page: () =>
-              TeacherCoursesPage(teacherDept: Get.arguments['teacherDept']),
+          page: () => TeacherCoursesPage(
+            teacherDept: Get.arguments['teacherDept'],
+            detailPage: Get.arguments['detailPage'],
+          ),
           binding: TeacherCourseBinding(),
         ),
         GetPage(
           name: '/teacherCourseDetailPage',
-          page: () => TeacherCourseDetailsPage(course: Get.arguments['course']),
+          page: () => TeacherCourseDetailsPage(
+            course: Get.arguments['course'],
+            detailPage: Get.arguments['detailPage'],
+          ),
           binding: UploadedFileBinding(),
         ),
         GetPage(
@@ -384,19 +432,19 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
 
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
 
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
 
       default:

@@ -189,47 +189,48 @@ class TeacherGradeRemoteDataSourceImpl implements TeacherGradeRemoteDataSource {
   }
 
   @override
-  Future<void> submitCourseGrades(List<PreviousCourseGradeModel> grades, TeacherCourse course) async {
+  Future<void> submitCourseGrades(
+      List<PreviousCourseGradeModel> grades, TeacherCourse course) async {
     try {
       if (teacher == null) throw Exception('Teacher data not found');
 
-      course = TeacherCourse(courseCode: 'CS-PHY-1101', courseName: 'Applied Physics', courseDept: 'Computer Science', courseSemester: 'SEM-I', courseType: 'compulsory', courseCreditHours: 3, courseSection: 'Evening E1', studentIds: []);
-      // Fetch previous grades from all students in Computer Science department
       final studentsSnapshot = await _firestore
           .collection('departments')
           .doc('Computer Science')
           .collection('students')
           .get();
 
-      final List<PreviousCourseGradeModel> allPreviousGrades = [];
-      
-      for (final studentDoc in studentsSnapshot.docs) {
+      // Fetch first previous_course doc for all students in parallel
+      final futures = studentsSnapshot.docs.map((studentDoc) async {
         final previousCoursesSnapshot = await studentDoc.reference
             .collection('previous_courses')
-            .limit(1) // Get only first document
+            .limit(1)
             .get();
-            
+
         if (previousCoursesSnapshot.docs.isNotEmpty) {
           final gradeData = previousCoursesSnapshot.docs.first.data();
-          final grade = PreviousCourseGradeModel.fromMap(gradeData);
-          allPreviousGrades.add(grade);
+          return PreviousCourseGradeModel.fromMap(gradeData);
         }
-      }
+        return null;
+      }).toList();
 
-      grades = allPreviousGrades;
+      final results = await Future.wait(futures);
 
-      // Submit grades to students' previous courses
+      // Filter out nulls
+      grades = results.whereType<PreviousCourseGradeModel>().toList();
+
+      // Prepare batch operations
       final batch = _firestore.batch();
       for (final grade in grades) {
-        // // Add to previous_courses collection
-        // final previousCourseRef = _firestore
-        //     .collection('departments')
-        //     .doc(teacher!.teacherDept)
-        //     .collection('students')
-        //     .doc(grade.studentId)
-        //     .collection('previous_courses')
-        //     .doc(grade.course);
-        // batch.set(previousCourseRef, grade.toMap());
+        // Add to previous_courses collection
+        final previousCourseRef = _firestore
+            .collection('departments')
+            .doc(teacher!.teacherDept)
+            .collection('students')
+            .doc(grade.studentId)
+            .collection('previous_courses')
+            .doc(grade.course);
+        batch.set(previousCourseRef, grade.toMap());
 
         // Remove from current_courses collection
         final currentCourseRef = _firestore
@@ -243,17 +244,16 @@ class TeacherGradeRemoteDataSourceImpl implements TeacherGradeRemoteDataSource {
       }
 
       // Remove the course from teacher's course list
-      // final teacherCourseRef = _firestore
-      //     .collection('departments')
-      //     .doc(teacher!.teacherDept)
-      //     .collection('teachers')
-      //     .doc(teacher!.teacherCNIC)
-      //     .collection('sections')
-      //     .doc('${course.courseSemester}-${course.courseSection}')
-      //     .collection('courses')
-      //     .doc(course.courseName);
-
-      // batch.delete(teacherCourseRef);
+      final teacherCourseRef = _firestore
+          .collection('departments')
+          .doc(teacher!.teacherDept)
+          .collection('teachers')
+          .doc(teacher!.teacherCNIC)
+          .collection('sections')
+          .doc('${course.courseSemester}-${course.courseSection}')
+          .collection('courses')
+          .doc(course.courseName);
+      batch.delete(teacherCourseRef);
 
       // Delete the section from departments structure
       final sectionRef = _firestore
@@ -265,7 +265,6 @@ class TeacherGradeRemoteDataSourceImpl implements TeacherGradeRemoteDataSource {
           .doc(course.courseName)
           .collection('sections')
           .doc(course.courseSection);
-
       batch.delete(sectionRef);
 
       await batch.commit();

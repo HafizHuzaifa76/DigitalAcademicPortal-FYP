@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:digital_academic_portal/features/student_panel/presentation/pages/StudentPanelDashboardPage.dart';
+import 'package:digital_academic_portal/features/student_panel/presentation/pages/StudentDashboardPage.dart';
 import 'package:digital_academic_portal/shared/domain/entities/Student.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -21,7 +21,7 @@ class StudentCoursesRemoteDataSourceImpl
     try {
       final User? currentUser = _auth.currentUser;
       if (currentUser == null) throw Exception('No user logged in');
-      final Student? studentData = StudentPortalDashboardPage.studentProfile;
+      final Student? studentData = StudentDashboardPage.studentProfile;
       if (studentData == null || studentData.studentDepartment != studentDept)
         throw Exception('Student data not match');
 
@@ -52,7 +52,8 @@ class StudentCoursesRemoteDataSourceImpl
     }
   }
 
-  Future<List<StudentCourse>> fetchAllStudentCourses(Student studentData) async {
+  Future<List<StudentCourse>> fetchAllStudentCourses(
+      Student studentData) async {
     final String studentDept = studentData.studentDepartment;
     final String rollNo = studentData.studentRollNo;
     final String semester = studentData.studentSemester;
@@ -71,10 +72,10 @@ class StudentCoursesRemoteDataSourceImpl
 
     for (var courseDoc in coursesSnapshot.docs) {
       String courseSection = section;
-      if(!courseSection.contains(shift)){
+      if (!courseSection.contains(shift)) {
         courseSection = '$shift $section';
       }
-      
+
       final sectionDoc = await coursesRef
           .doc(courseDoc.id)
           .collection('sections')
@@ -104,7 +105,7 @@ class StudentCoursesRemoteDataSourceImpl
               .doc(courseDoc.id)
               .set(courseModel.toMap());
         } else {
-            throw Exception('rollNo not enrolled');
+          throw Exception('rollNo not enrolled');
         }
       }
     }

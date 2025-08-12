@@ -43,13 +43,14 @@ class DepartmentModel extends Department {
     };
   }
 
-  factory DepartmentModel.fromMap(Map<String, dynamic> map, String docID) {
+  factory DepartmentModel.fromMap(Map<String, dynamic> map, String docID,
+      int studentCount, int teacherCount) {
     print(docID);
     return DepartmentModel(
       departmentID: map['departmentID'].toInt(),
       totalSemesters: map['totalSemesters'].toInt(),
-      totalStudents: map['totalStudents'].toInt(),
-      totalTeachers: map['totalTeachers'].toInt(),
+      totalStudents: studentCount,
+      totalTeachers: teacherCount,
       totalCourses: map['totalCourses'].toInt(),
       sectionLength: map['sectionLength'].toInt(),
       departmentName: docID,

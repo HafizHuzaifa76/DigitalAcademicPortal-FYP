@@ -1,5 +1,5 @@
 // lib/features/auth/presentation/pages/login_page.dart
-import 'package:digital_academic_portal/features/student_panel/presentation/pages/StudentPanelDashboardPage.dart';
+import 'package:digital_academic_portal/features/auth/presentation/pages/ForgetPasswordScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -333,7 +333,7 @@ class _LoginPageState extends State<LoginPage> {
                                   alignment: Alignment.centerRight,
                                   child: TextButton(
                                     onPressed: () {
-                                      // TODO: Implement forgot password
+                                      Get.to(ForegetPasswordScreen());
                                     },
                                     child: Text(
                                       'Forgot Password?',
@@ -436,30 +436,6 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           ),
-        ),
-      ),
-    );
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Obx(() {
-              if (controller.isLoading.value) {
-                return const CircularProgressIndicator();
-              }
-
-              return ElevatedButton(
-                onPressed: () {
-                  controller.login();
-                },
-                child: const Text('Login'),
-              );
-            }),
-          ],
         ),
       ),
     );

@@ -4,7 +4,8 @@ import '../controllers/TeacherCourseController.dart';
 
 class TeacherCoursesPage extends StatefulWidget {
   final String teacherDept;
-  const TeacherCoursesPage({super.key, required this.teacherDept});
+  final int? detailPage;
+  const TeacherCoursesPage({super.key, required this.teacherDept, this.detailPage});
 
   @override
   State<TeacherCoursesPage> createState() => _TeacherCoursesPageState();
@@ -24,9 +25,9 @@ class _TeacherCoursesPageState extends State<TeacherCoursesPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
-          'My Courses',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          widget.detailPage == null ? 'My Courses' : 'Select Course',
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: Obx(() {
@@ -66,7 +67,7 @@ class _TeacherCoursesPageState extends State<TeacherCoursesPage> {
   Widget _buildCourseCard(course) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/teacherCourseDetailPage', arguments: {'course': course});
+        Get.toNamed('/teacherCourseDetailPage', arguments: {'course': course, 'detailPage': widget.detailPage});
       },
       child: Card(
         elevation: 4,

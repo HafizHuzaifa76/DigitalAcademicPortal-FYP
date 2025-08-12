@@ -5,7 +5,10 @@ import 'StudentCourseDetailsPage.dart';
 
 class StudentCoursesPage extends StatefulWidget {
   final String studentDept;
-  const StudentCoursesPage({required this.studentDept, Key? key}) : super(key: key);
+  final int? detailPage;
+  const StudentCoursesPage(
+      {required this.studentDept, Key? key, this.detailPage})
+      : super(key: key);
 
   @override
   State<StudentCoursesPage> createState() => _StudentCoursesPageState();
@@ -24,7 +27,7 @@ class _StudentCoursesPageState extends State<StudentCoursesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Courses'),
+        title: Text(widget.detailPage == null ? 'My Courses' : 'Select Course'),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -54,7 +57,10 @@ class _StudentCoursesPageState extends State<StudentCoursesPage> {
             final course = controller.coursesList[index];
             return GestureDetector(
               onTap: () {
-                Get.to(() => StudentCourseDetailsPage(course: course));
+                Get.to(() => StudentCourseDetailsPage(
+                      course: course,
+                      detailPage: widget.detailPage,
+                    ));
               },
               child: Container(
                 margin: const EdgeInsets.only(bottom: 16),
