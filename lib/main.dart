@@ -1,28 +1,86 @@
-import 'package:digital_academic_portal/features/admin/presentation/pages/AdministratorDashboardPage.dart';
-import 'package:digital_academic_portal/features/admin/shared/courses/presentation/bindings/CourseBindings.dart';
-import 'package:digital_academic_portal/features/admin/shared/courses/presentation/pages/AllCoursesPage.dart';
-import 'package:digital_academic_portal/features/admin/shared/courses/presentation/pages/DepartmentCoursePage.dart';
-import 'package:digital_academic_portal/features/admin/shared/sections/presentation/bindings/SectionBindings.dart';
-import 'package:digital_academic_portal/features/admin/shared/student/presentation/bindings/StudentBindings.dart';
-import 'package:digital_academic_portal/features/admin/shared/student/presentation/pages/DepartmentStudentsPage.dart';
-import 'package:digital_academic_portal/features/admin/shared/student/presentation/pages/SemesterStudentsPage.dart';
-import 'package:digital_academic_portal/features/admin/shared/teachers/presentation/bindings/TeacherBindings.dart';
-import 'package:digital_academic_portal/features/admin/shared/teachers/presentation/pages/AllTeachersPage.dart';
-import 'package:digital_academic_portal/features/admin/shared/teachers/presentation/pages/DeptTeacherPage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/presentation/bindings/AdminDashboardBinding.dart';
+import 'package:digital_academic_portal/features/administrator_panel/presentation/pages/AdministratorDashboardPage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/courses/presentation/bindings/CourseBindings.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/courses/presentation/pages/AllCoursesPage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/noticeboard/presentation/pages/DepartmentNoticeBoardPage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/noticeboard/presentation/pages/NoticeBoardPage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/sections/presentation/bindings/SectionBindings.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/student/presentation/bindings/StudentBindings.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/student/presentation/pages/DepartmentStudentsPage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/student/presentation/pages/SectionStudentsPage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/student/presentation/pages/SemesterStudentsPage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/presentation/bindings/TeacherBindings.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/presentation/pages/AllTeachersPage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/teachers/presentation/pages/DeptTeacherPage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/bindings/TimeTableBindings.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SectionTimeTablePage.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/timetable/presentation/pages/SemesterTimeTablePage.dart';
+import 'package:digital_academic_portal/features/auth/presentation/pages/LoginPage.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_attendance/presentation/bindings/StudentAttendanceBindings.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_calendar_events/presentation/bindings/StudentCalendarEventBinding.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_calendar_events/presentation/pages/StudentCalendarPage.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_courses/presentation/pages/StudentCoursesPage.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/student_noticeboard/presentation/pages/StudentNoticeBoardPage.dart';
+import 'package:digital_academic_portal/features/student_panel/shared/students_Diary/presentation/bindings/StudentDiaryBinding.dart';
+import 'package:digital_academic_portal/features/teacher_panel/presentation/bindings/TeacherPanelBinding.dart';
+import 'package:digital_academic_portal/features/teacher_panel/presentation/pages/TeacherDashboardPage.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_assignment/presentation/bindings/TeacherAssignmentBinding.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_assignment/presentation/pages/TeacherAssignmentPage.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_attendance/presentation/bindings/TeacherAttendanceBinding.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_calendar_events/presentation/bindings/TeacherCalendarEventBinding.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/bindings/TeacherCourseBinding.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/bindings/UploadedFileBinding.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_courses/presentation/pages/TeacherCoursesPage.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_grades/presentation/pages/TeachersGradePage.dart';
+import 'package:digital_academic_portal/features/teacher_panel/shared/teacher_timetable/presentation/bindings/TeacherTimeTableBinding.dart';
+import 'package:digital_academic_portal/shared/calendar_events/presentation/pages/CalendarViewPage.dart';
 import 'package:digital_academic_portal/shared/presentation/pages/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
-
-import 'features/admin/shared/courses/presentation/pages/SemesterCoursePage.dart';
-import 'features/admin/shared/departments/presentation/bindings/DepartmentBindings.dart';
-import 'features/admin/shared/departments/presentation/pages/DepartmentPage.dart';
-import 'features/admin/shared/sections/presentation/pages/SectionListPage.dart';
-import 'features/admin/shared/student/presentation/pages/AllStudentsPage.dart';
+import 'features/administrator_panel/shared/chatbot/AdminChatbotPage.dart';
+import 'features/administrator_panel/shared/courses/presentation/pages/DepartmentCoursePage.dart';
+import 'features/administrator_panel/shared/courses/presentation/pages/SectionCoursePage.dart';
+import 'features/administrator_panel/shared/courses/presentation/pages/SemesterCoursePage.dart';
+import 'features/administrator_panel/shared/departments/presentation/bindings/DepartmentBindings.dart';
+import 'features/administrator_panel/shared/departments/presentation/pages/DepartmentPage.dart';
+import 'features/administrator_panel/shared/noticeboard/presentation/bindings/NoticeBoardBindings.dart';
+import 'features/administrator_panel/shared/reports/presentation/bindings/AdminReportBinding.dart';
+import 'features/administrator_panel/shared/reports/presentation/pages/AdminReportsPage.dart';
+import 'features/administrator_panel/shared/sections/presentation/pages/SectionListPage.dart';
+import 'features/administrator_panel/shared/student/presentation/pages/AllStudentsPage.dart';
+import 'features/administrator_panel/shared/teachers/presentation/pages/SemesterTeacherPage.dart';
+import 'features/administrator_panel/shared/sub_admins/presentation/bindings/SubAdminBinding.dart';
+import 'features/administrator_panel/shared/sub_admins/presentation/pages/SubAdminsPage.dart';
 import 'features/auth/presentation/bindings/AuthBinding.dart';
+import 'features/student_panel/presentation/bindings/StudentPanelBinding.dart';
+import 'features/student_panel/presentation/pages/StudentDashboardPage.dart';
+import 'features/student_panel/shared/student_assignment/presentation/bindings/StudentAssignmentBinding.dart';
+import 'features/student_panel/shared/student_assignment/presentation/pages/Stu_Assignments.dart';
+import 'features/student_panel/shared/student_assignment/presentation/pages/StudentAssignmentPage.dart';
+import 'features/student_panel/shared/student_attendance/presentation/pages/StudentAttendancePage.dart';
+import 'features/student_panel/shared/student_chatbot/presentation/bindings/StudentChatbotBinding.dart';
+import 'features/student_panel/shared/student_chatbot/presentation/pages/StudentChatbotPage.dart';
+import 'features/student_panel/shared/student_courses/presentation/bindings/StudentCoursesBinding.dart';
+import 'features/student_panel/shared/student_grades/presentation/pages/StudentGradePage.dart';
+import 'features/student_panel/shared/student_grades/presentation/bindings/StudentGradeBindings.dart';
+import 'features/student_panel/shared/student_noticeboard/presentation/bindings/StudentNoticeBoardBindings.dart';
+import 'features/student_panel/shared/student_report/presentation/bindings/StudentReportBindings.dart';
+import 'features/student_panel/shared/student_report/presentation/pages/StudentReportsPage.dart';
+import 'features/student_panel/shared/student_timetable/presentation/pages/Stu_TimeTablePage.dart';
+import 'features/student_panel/shared/students_Diary/presentation/pages/StudentDiaryPage.dart';
+import 'features/teacher_panel/shared/teacher_announcement/presentation/bindings/TeacherAnnouncementBinding.dart';
+import 'features/teacher_panel/shared/teacher_assignment/presentation/pages/Tch_Assignment.dart';
+import 'features/teacher_panel/shared/teacher_attendance/presentation/pages/TeacherAttendancePage.dart';
+import 'features/teacher_panel/shared/teacher_calendar_events/presentation/pages/Tch_CalendarEventPage.dart';
+import 'features/teacher_panel/shared/teacher_announcement/presentation/pages/TeacherAnnouncementPage.dart';
+import 'features/teacher_panel/shared/teacher_courses/presentation/pages/TeacherCourseDetailsPage.dart';
+import 'features/teacher_panel/shared/teacher_timetable/presentation/pages/TeacherTimeTablePage.dart';
+import 'features/teacher_panel/shared/teacher_grades/presentation/bindings/TeacherGradeBinding.dart';
+import 'shared/calendar_events/presentation/bindings/CalendarEventBindings.dart';
+import 'shared/calendar_events/presentation/pages/CalendarEventPage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +100,11 @@ void configLoading() {
     ..backgroundColor = const Color(0xFF9FE2BF)
     ..indicatorColor = const Color(0xFF145849)
     ..textColor = const Color(0xFF145849)
-    ..textStyle = const TextStyle(fontSize: 18, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold, color: Color(0xFF145849))
+    ..textStyle = const TextStyle(
+        fontSize: 18,
+        fontFamily: 'Ubuntu',
+        fontWeight: FontWeight.bold,
+        color: Color(0xFF145849))
     ..maskColor = Colors.blue.withOpacity(0.5)
     ..userInteractions = false;
 }
@@ -56,85 +118,132 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Digital Academic Portal',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF145849)),
-        primaryColor: const Color(0xFF145849),
-        primaryColorLight: const Color(0xFFF2E8AD),
-        // primaryColorDark: const Color(0xFFE1AD01),
-        primaryColorDark: const Color(0xFF9FE2BF),
-        // primaryColorDark: const Color(0xFFc3dfb7),
-        // primaryColorLight: const Color(0xFF581420),
-        // primaryColorLight: const Color(0xFF881452),
-        useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF145849),
-          iconTheme: IconThemeData(color: Colors.white), // Set icon color to white
-          centerTitle: true,
-          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu', fontWeight: FontWeight.bold)
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            fixedSize: const MaterialStatePropertyAll(Size(double.maxFinite, 45)),
-            textStyle: const MaterialStatePropertyAll(TextStyle(color: Colors.white)),
-            backgroundColor: const MaterialStatePropertyAll(Color(0xFF145849)),
-            shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-          )
-        ),
-        outlinedButtonTheme: OutlinedButtonThemeData(
-            style: ButtonStyle(
-              fixedSize: const MaterialStatePropertyAll(Size(double.maxFinite, 45)),
-              side: MaterialStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor, width: 2)),
-              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-            ))
-      ),
+          fontFamily: 'Ubuntu',
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF145849)),
+          primaryColor: const Color(0xFF145849),
+          primaryColorLight: const Color(0xFFF2E8AD),
+          // primaryColorDark: const Color(0xFFE1AD01),
+          primaryColorDark: const Color(0xFF9FE2BF),
+          // primaryColorDark: const Color(0xFFc3dfb7),
+          // primaryColorLight: const Color(0xFF581420),
+          // primaryColorLight: const Color(0xFF881452),
+          useMaterial3: true,
+          appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xFF145849),
+              iconTheme:
+                  IconThemeData(color: Colors.white), // Set icon color to white
+              centerTitle: true,
+              titleTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontFamily: 'Ubuntu',
+                  fontWeight: FontWeight.bold)),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+            fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
+            textStyle:
+                const WidgetStatePropertyAll(TextStyle(color: Colors.white)),
+            backgroundColor: const WidgetStatePropertyAll(Color(0xFF145849)),
+            shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15))),
+          )),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+              style: ButtonStyle(
+            fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 45)),
+            side: WidgetStatePropertyAll(
+                BorderSide(color: Theme.of(context).primaryColor, width: 2)),
+            shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15))),
+          ))),
       initialBinding: AuthBinding(),
       builder: EasyLoading.init(),
-
       getPages: [
+        GetPage(
+            name: '/login',
+            page: () => const LoginPage(),
+            binding: AuthBinding()),
         GetPage(
             name: '/admin',
             page: () => const AdministratorDashboardPage(),
-          // binding: DepartmentBinding()
+            binding: AdminDashboardBinding()),
+        GetPage(
+          name: '/teacherDashboard',
+          page: () => const TeacherDashboardPage(),
+          binding: TeacherPanelBinding(),
         ),
+        GetPage(
+            name: '/studentDashboard',
+            page: () => const StudentDashboardPage(),
+            binding: StudentPanelBinding()),
         GetPage(
             name: '/departments',
             page: () => const DepartmentPage(),
-          binding: DepartmentBinding()
-        ),
+            binding: DepartmentBinding()),
         GetPage(
-            name: '/departmentStudents',
-            page: () => DepartmentStudentsPage(deptName: Get.arguments['deptName'], deptCode: Get.arguments['deptCode'], semesterList: Get.arguments['semesterList'],),
-          binding: StudentBinding()
+          name: '/departmentStudents',
+          page: () => DepartmentStudentsPage(
+            deptName: Get.arguments['deptName'],
+            deptCode: Get.arguments['deptCode'],
+            semesterList: Get.arguments['semesterList'],
+          ),
+          binding: StudentBinding(),
         ),
         GetPage(
             name: '/semesterStudents',
-            page: () => SemesterStudentsPage(deptName: Get.arguments['deptName'], semester: Get.arguments['semester'],),
-          binding: StudentBinding()
-        ),
+            page: () => SemesterStudentsPage(
+                  deptName: Get.arguments['deptName'],
+                  semester: Get.arguments['semester'],
+                ),
+            binding: StudentBinding()),
         GetPage(
-            name: '/allStudents',
-            page: () => const AllStudentsPage(),
-            binding: StudentBinding()
+            name: '/sectionStudents',
+            page: () => SectionStudentsPage(
+                  deptName: Get.arguments['deptName'],
+                  semester: Get.arguments['semester'],
+                  section: Get.arguments['section'],
+                ),
+            binding: StudentBinding()),
+        GetPage(
+          name: '/allStudents',
+          page: () => const AllStudentsPage(),
+          binding: StudentBinding(),
         ),
         GetPage(
             name: '/deptTeachers',
             page: () => DeptTeacherPage(deptName: Get.arguments['deptName']),
-            binding: TeacherBinding()
-        ),
+            binding: TeacherBinding()),
+        GetPage(
+            name: '/semesterTeachers',
+            page: () => SemesterTeacherPage(
+                  deptName: Get.arguments['deptName'],
+                  semester: Get.arguments['semester'],
+                ),
+            binding: TeacherBinding()),
         GetPage(
             name: '/allTeachers',
             page: () => const AllTeachersPage(),
-            binding: TeacherBinding()
-        ),
+            binding: TeacherBinding()),
         GetPage(
           name: '/deptCourses',
-          page: () => DepartmentCoursePage(deptName: Get.arguments['deptName'], semestersList: Get.arguments['semesterList']),
+          page: () => DepartmentCoursePage(
+              deptName: Get.arguments['deptName'],
+              deptCode: Get.arguments['deptCode'],
+              semestersList: Get.arguments['semesterList']),
           binding: CourseBinding(),
         ),
         GetPage(
             name: '/semesterCourses',
-            page: () => SemesterCoursePage(deptName: Get.arguments['deptName'], semester: Get.arguments['semester']),
-            binding: CourseBinding()
-        ),
+            page: () => SemesterCoursePage(
+                deptName: Get.arguments['deptName'],
+                semester: Get.arguments['semester']),
+            binding: CourseBinding()),
+        GetPage(
+            name: '/sectionCourses',
+            page: () => SectionCoursePage(
+                deptName: Get.arguments['deptName'],
+                section: Get.arguments['section'],
+                semester: Get.arguments['semester']),
+            binding: CourseBinding()),
         GetPage(
           name: '/allCourses',
           page: () => const AllCoursesPage(),
@@ -142,8 +251,165 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/allSections',
-          page: () => MainSectionsListPage(deptName: Get.arguments['deptName'], semester: Get.arguments['semester']),
+          page: () => MainSectionsListPage(
+            deptName: Get.arguments['deptName'],
+            semester: Get.arguments['semester'],
+            numOfTeachers: Get.arguments['numOfTeachers'],
+            numOfCourses: Get.arguments['numOfCourses'],
+          ),
           binding: SectionBinding(),
+        ),
+        GetPage(
+          name: '/mainNoticeBoard',
+          page: () => const MainNoticeBoardPage(),
+          binding: NoticeBoardBinding(),
+        ),
+        GetPage(
+          name: '/departmentNoticeBoard',
+          page: () => DepartmentNoticeBoardPage(
+              department: Get.arguments['department']),
+          binding: NoticeBoardBinding(),
+        ),
+        GetPage(
+          name: '/studentNoticeBoard',
+          page: () => const StudentNoticeBoardPage(),
+          binding: StudentNoticeBoardBinding(),
+        ),
+        GetPage(
+          name: '/calendarPage',
+          page: () => const CalendarEventPage(),
+          binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/calendarViewPage',
+          page: () => const CalendarViewPage(),
+          binding: CalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/semesterTimeTablePage',
+          page: () => SemesterTimeTablePage(
+              deptName: Get.arguments['deptName'],
+              semester: Get.arguments['semester']),
+          binding: TimeTableBinding(),
+        ),
+        GetPage(
+          name: '/sectionTimeTablePage',
+          page: () => SectionTimeTablePage(
+            deptName: Get.arguments['deptName'],
+            semester: Get.arguments['semester'],
+            section: Get.arguments['section'],
+          ),
+          binding: TimeTableBinding(),
+        ),
+        GetPage(name: '/adminChatBotPage', page: () => AdminChatbotPage()),
+        GetPage(
+            name: '/adminReportsPage',
+            page: () => AdminReportsPage(),
+            binding: AdminReportBinding()),
+        GetPage(
+            name: '/subAdminsPage',
+            page: () => SubAdminsPage(),
+            binding: SubAdminBinding()),
+        GetPage(
+          name: '/studentCalendarPage',
+          page: () => const StudentCalendarPage(),
+          binding: StudentCalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/student_timetablePage',
+          page: () => const Stu_TimeTablePage(),
+          binding: StudentCoursesBinding(),
+        ),
+        GetPage(
+          name: '/student_gradesScreen',
+          page: () => const StudentGradePage(),
+          binding: StudentGradeBinding(),
+        ),
+        GetPage(
+            name: '/pendingAssignment',
+            page: () => const StudentAssignmentPage(),
+            binding: StudentAssignmentBinding()),
+        GetPage(
+          name: '/studentChatbotPage',
+          page: () => StudentChatbotPage(),
+          binding: StudentChatbotBinding(),
+        ),
+        GetPage(
+          name: '/studentCoursesPage',
+          page: () => StudentCoursesPage(
+            studentDept: Get.arguments['studentDept'],
+            detailPage: Get.arguments['detailPage'],
+          ),
+          binding: StudentCoursesBinding(),
+        ),
+        GetPage(
+          name: '/student_attendance',
+          page: () => const StudentAttendancePage(),
+          binding: StudentAttendanceBinding(),
+        ),
+        GetPage(
+          name: '/studentDiary',
+          page: () => StudentDiaryPage(
+            deptName: Get.arguments['deptName'],
+            studentRollNo: Get.arguments['studentRollNo'],
+          ),
+          binding: StudentDiaryBinding(),
+        ),
+        GetPage(
+          name: '/Stu_report',
+          page: () => const StudentReportsPage(),
+          binding: StudentReportBindings(),
+        ),
+        GetPage(
+          name: '/teacherCalendarPage',
+          page: () => const TeacherCalendarPage(),
+          binding: TeacherCalendarEventBinding(),
+        ),
+        GetPage(
+          name: '/teacherTimetablePage',
+          page: () => TeacherTimeTablePage(
+            teacherCNIC: Get.arguments['teacherCNIC'],
+          ),
+          binding: TeacherTimeTableBinding(),
+        ),
+        GetPage(
+          name: '/teacherAnnouncement',
+          page: () => const TeacherAnnouncementPage(),
+          binding: TeacherAnnouncementBinding(),
+        ),
+        GetPage(
+          name: '/teacherAssignments',
+          page: () => const TeacherAssignmentPage(),
+          binding: TeacherAssignmentBinding(),
+        ),
+        GetPage(
+          name: '/teacherCoursesPage',
+          page: () => TeacherCoursesPage(
+            teacherDept: Get.arguments['teacherDept'],
+            detailPage: Get.arguments['detailPage'],
+          ),
+          binding: TeacherCourseBinding(),
+        ),
+        GetPage(
+          name: '/teacherCourseDetailPage',
+          page: () => TeacherCourseDetailsPage(
+            course: Get.arguments['course'],
+            detailPage: Get.arguments['detailPage'],
+          ),
+          binding: UploadedFileBinding(),
+        ),
+        GetPage(
+          name: '/teacherGradePage',
+          page: () =>
+              TeachersGradePage(teacherDept: Get.arguments['teacherDept']),
+          binding: TeacherGradeBinding(),
+        ),
+        GetPage(
+          name: '/teacherAttendancePage',
+          page: () => TeacherAttendancePage(
+            teacherDept: Get.arguments['teacherDept'],
+          ),
+          binding: TeacherAttendanceBinding(),
         ),
       ],
       home: const SplashScreen(),
@@ -153,7 +419,6 @@ class MyApp extends StatelessWidget {
 
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
-
     if (kIsWeb) {
       return web;
     }
@@ -167,26 +432,25 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
 
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
 
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
 
       default:
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
         );
-
     }
   }
 
@@ -195,16 +459,14 @@ class DefaultFirebaseOptions {
       appId: '1:849792758725:android:10b9b0b477898c6a8911ac',
       messagingSenderId: '849792758725',
       projectId: 'digital-academic-portal',
-      storageBucket: 'digital-academic-portal.appspot.com'
-  );
+      storageBucket: 'digital-academic-portal.appspot.com');
 
   static const FirebaseOptions ios = FirebaseOptions(
       apiKey: "AIzaSyCQTEbgi-zFbwqcv922K1zmrMXTMFmNu6U",
       appId: '1:849792758725:ios:3f0b2a778608e17a8911ac',
       messagingSenderId: '849792758725',
       projectId: 'digital-academic-portal',
-      storageBucket: 'digital-academic-portal.appspot.com'
-  );
+      storageBucket: 'digital-academic-portal.appspot.com');
 
   static const FirebaseOptions web = FirebaseOptions(
       apiKey: "AIzaSyBGxWAnEytzIE2JAN4wE0Nv2RZbchBTZpo",
@@ -213,6 +475,5 @@ class DefaultFirebaseOptions {
       storageBucket: "digital-academic-portal.firebasestorage.app",
       messagingSenderId: "849792758725",
       appId: "1:849792758725:web:1239caff45159a088911ac",
-      measurementId: "G-YX93SV1GFK"
-  );
+      measurementId: "G-YX93SV1GFK");
 }

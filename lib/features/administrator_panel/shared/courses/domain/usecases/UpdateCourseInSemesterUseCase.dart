@@ -1,0 +1,16 @@
+import 'package:dartz/dartz.dart';
+import 'package:digital_academic_portal/core/usecases/UseCase.dart';
+import 'package:digital_academic_portal/features/administrator_panel/shared/departments/data/models/SemesterModel.dart';
+import '../../../departments/domain/usecases/UpdateSemesterCoursesUseCase.dart';
+
+
+class UpdateCourseInSemesterUseCase implements UseCase<SemesterModel, UpdateSemesterParams>{
+  final UpdateSemesterCourseUseCase useCase;
+
+  UpdateCourseInSemesterUseCase(this.useCase);
+
+  @override
+  Future<Either<Fail, SemesterModel>> execute(UpdateSemesterParams semesterParams) async {
+    return await useCase.execute(semesterParams);
+  }
+}

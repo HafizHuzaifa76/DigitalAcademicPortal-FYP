@@ -11,17 +11,30 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Fail, void>> login(String email, String password) async {
+  Future<Either<Fail, String>> login(String email, String password) async {
     try {
       return Right(await remoteDataSource.login(email, password));
     } catch (e) {
       String message = e.toString();
       int startIndex = message.indexOf(']');
-      if (startIndex != -1){
-        message = message.substring(startIndex+2);
+      if (startIndex != -1) {
+        message = message.substring(startIndex + 2);
       }
       return Left(Fail(message));
     }
   }
 
+  @override
+  Future<Either<Fail, String>> forgetPassword(String email) async {
+    try {
+      return Right(await remoteDataSource.forgetPassword(email));
+    } catch (e) {
+      String message = e.toString();
+      int startIndex = message.indexOf(']');
+      if (startIndex != -1) {
+        message = message.substring(startIndex + 2);
+      }
+      return Left(Fail(message));
+    }
+  }
 }
